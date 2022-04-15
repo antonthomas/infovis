@@ -12,6 +12,7 @@ import { SurfaceComponent } from './components/surface/surface.component';
 import { BettingComponent } from './components/betting/betting.component';
 import { GeoComponent } from './components/geo/geo.component';
 import { RivalComponent } from './components/rival/rival.component';
+import { AngularResizeEventModule } from 'angular-resize-event';
 
 @NgModule({
   declarations: [
@@ -21,15 +22,16 @@ import { RivalComponent } from './components/rival/rival.component';
     SurfaceComponent,
     BettingComponent,
     GeoComponent,
-    RivalComponent
+    RivalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatCardModule
+    MatCardModule,
+    AngularResizeEventModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

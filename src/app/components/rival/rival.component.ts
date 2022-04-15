@@ -1,4 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Scale from 'd3';
 import * as d3Shape from 'd3';
@@ -21,7 +29,6 @@ import * as d3Axis from 'd3';
  * Tutorials:
  *  - https://bl.ocks.org/sarahob/1e291c95c4169ddabb77bbd10b6a7ef7
  *  - http://bl.ocks.org/nelliemckesson/5315143
- *
  */
 
 type surface = 'clay' | 'grass' | 'hard court';
@@ -32,40 +39,59 @@ type surface = 'clay' | 'grass' | 'hard court';
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RivalComponent implements OnInit {
+export class RivalComponent implements OnInit, AfterViewInit {
+  width: number = 0;
+  height: number = 0;
+  data: number[] = [100, 35];
+  chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
+
+  @ViewChild('rivalContainer')
+  rivalContainer!: ElementRef;
+
   constructor() {}
 
-  ngOnInit(): void {
-    let data = [560, 350]; // here are the data values; v1 = total, v2 = current value
+  ngAfterViewInit(): void {
+    this.width = this.rivalContainer.nativeElement.offsetWidth;
+    this.height = this.rivalContainer.nativeElement.offsetHeight;
+  }
 
-    let chart = d3
+  ngOnInit(): void {
+    this.drawChart();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerWidth: any } }) {
+    // console.log('width: ', this.width);
+    // console.log('height', this.height);
+  }
+
+  createSvg(): void {
+    this.chart = d3
       .select('#rival-container')
       .append('svg') // creating the svg object inside the container div
       .attr('class', 'chart')
-      .attr('width', 200) // bar has a fixed width
-      .attr('height', 20 * data.length);
+      .attr('width', '100%')
+      .attr('height', 20 * this.data.length);
+  }
 
-    // const num = d3.max(data) ?? 560;
-    const num = 560;
-    // const x = d3.scaleLinear([0, 200]).domain([0, num]);
-    let x = d3Scale.scaleLinear([0, 200]).domain([0, num]);
-    // .linear() // takes the fixed width and creates the percentage from the data values
-    // .domain([0, d3.max(data)])
-    // .range([0, 200]);
-
-    chart
-      .selectAll('rect') // this is what actually creates the bars
-      .data(data)
+  createBars(): void {
+    let x = d3Scale.scaleLinear([0, '100%']).domain([0, 100]);
+    this.chart
+      .selectAll('rect')
+      .data(this.data)
       .enter()
       .append('rect')
       .attr('width', x)
       .attr('height', 20)
-      .attr('rx', 5) // rounded corners
+      .attr('rx', 5)
       .attr('ry', 5);
+  }
 
-    chart
-      .selectAll('text') // adding the text labels to the bar
-      .data(data)
+  createText(): void {
+    let x = d3Scale.scaleLinear([0, '100%']).domain([0, 100]);
+    this.chart
+      .selectAll('text')
+      .data(this.data)
       .enter()
       .append('text')
       .attr('x', x)
@@ -74,5 +100,11 @@ export class RivalComponent implements OnInit {
       .attr('dy', '.35em') // vertical-align: middle
       .attr('text-anchor', 'end') // text-align: right
       .text(String);
+  }
+
+  drawChart(): void {
+    this.createSvg();
+    this.createBars();
+    this.createText();
   }
 }
