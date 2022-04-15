@@ -1,1 +1,13 @@
-<div #rivalContainer id="rival-container"></div>
+<div>
+  <div #rivalContainer id="rival-container"></div>
+  <div id="last-5-games">
+    <mat-card
+      class="game-card"
+      *ngFor="let game of lastFiveGames"
+      [ngClass]="{ won: game.won, lost: !game.won }"
+    >
+      <p *ngIf="game.won">W</p>
+      <p *ngIf="!game.won">L</p>
+    </mat-card>
+  </div>
+</div>

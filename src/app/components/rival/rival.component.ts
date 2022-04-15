@@ -31,7 +31,15 @@ import * as d3Axis from 'd3';
  *  - http://bl.ocks.org/nelliemckesson/5315143
  */
 
-type surface = 'clay' | 'grass' | 'hard court';
+type Surface = 'clay' | 'grass' | 'hard court';
+type Player = {
+  name: string;
+  nationality: string;
+};
+
+type Game = {
+  won: boolean;
+};
 
 @Component({
   selector: 'app-rival',
@@ -39,10 +47,22 @@ type surface = 'clay' | 'grass' | 'hard court';
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RivalComponent implements OnInit, AfterViewInit {
-  width: number = 0;
-  height: number = 0;
-  data: number[] = [100, 35];
+export class RivalComponent implements OnInit {
+  // player1: Player;
+  // player2: Player;
+  progressbarHeight: number = 30;
+  totalGames: number = 100;
+  gamesWonPlayer1: number = 60;
+  gamesWonPlayer2: number = 40;
+  lastFiveGames: Game[] = [
+    { won: true },
+    { won: false },
+    { won: true },
+    { won: false },
+    { won: true },
+  ];
+
+  data: number[] = [this.totalGames, this.gamesWonPlayer1];
   chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
   @ViewChild('rivalContainer')
@@ -50,19 +70,8 @@ export class RivalComponent implements OnInit, AfterViewInit {
 
   constructor() {}
 
-  ngAfterViewInit(): void {
-    this.width = this.rivalContainer.nativeElement.offsetWidth;
-    this.height = this.rivalContainer.nativeElement.offsetHeight;
-  }
-
   ngOnInit(): void {
     this.drawChart();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: { target: { innerWidth: any } }) {
-    // console.log('width: ', this.width);
-    // console.log('height', this.height);
   }
 
   createSvg(): void {
@@ -71,35 +80,31 @@ export class RivalComponent implements OnInit, AfterViewInit {
       .append('svg') // creating the svg object inside the container div
       .attr('class', 'chart')
       .attr('width', '100%')
-      .attr('height', 20 * this.data.length);
+      .attr('height', this.progressbarHeight);
   }
 
   createBars(): void {
-    let x = d3Scale.scaleLinear([0, '100%']).domain([0, 100]);
     this.chart
       .selectAll('rect')
       .data(this.data)
       .enter()
       .append('rect')
-      .attr('width', x)
-      .attr('height', 20)
-      .attr('rx', 5)
-      .attr('ry', 5);
+      .attr('width', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr('height', this.progressbarHeight);
   }
 
   createText(): void {
-    let x = d3Scale.scaleLinear([0, '100%']).domain([0, 100]);
     this.chart
       .selectAll('text')
       .data(this.data)
       .enter()
       .append('text')
-      .attr('x', x)
-      .attr('y', 10) // y position of the text inside bar
+      .attr('x', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
       .attr('dx', -3) // padding-right
       .attr('dy', '.35em') // vertical-align: middle
       .attr('text-anchor', 'end') // text-align: right
-      .text(String);
+      .text((x) => x + '%');
   }
 
   drawChart(): void {
