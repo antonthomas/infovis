@@ -1,5 +1,26 @@
 <div>
+  <p class="component-title">Rival track record - all time</p>
+  <div id="player-info">
+    <div id="player1-tag">
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + player1.countryCode + '.svg' }}"
+        alt="Country of player 1"
+      />
+      <p>{{ player1.name }}</p>
+    </div>
+    <div id="vs-tag"><p>VS</p></div>
+    <div id="player2-tag">
+      <p>{{ player2.name }}</p>
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + player2.countryCode + '.svg' }}"
+        alt="Country of player 2"
+      />
+    </div>
+  </div>
   <div #rivalContainer id="rival-container"></div>
+  <p>Win percentage - all surfaces</p>
   <div id="last-5-games">
     <mat-card
       class="game-card"
@@ -9,5 +30,6 @@
       <p *ngIf="game.won">W</p>
       <p *ngIf="!game.won">L</p>
     </mat-card>
+    <p>Last 5 games - all surfaces</p>
   </div>
 </div>

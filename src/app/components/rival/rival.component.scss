@@ -45,11 +45,14 @@ text {
 
 .game-card {
   display: inline-block;
-  margin: 5px;
+  margin: 3px;
   width: 15px;
   height: 15px;
+  border-radius: 0.8em;
   p {
     text-align: center;
+    color: #fff;
+    font-weight: 500;
   }
 }
 
@@ -59,4 +62,41 @@ text {
 
 .lost {
   background: $red;
+}
+
+#player-info {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 1fr;
+  grid-template-rows: 0.5fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "player1 . vs . player2";
+
+  #player1-tag {
+    grid-area: player1;
+    text-align: left;
+  }
+
+  #vs-tag {
+    grid-area: vs;
+    text-align: center;
+  }
+
+  #player2-tag {
+    grid-area: player2;
+    text-align: right;
+  }
+
+  .flag {
+    width: 15%;
+    height: auto;
+    display: inline-block;
+    margin: 0px 5px;
+    padding: 0;
+    border-radius: 3px;
+  }
+
+  p {
+    display: inline-block;
+  }
 }
