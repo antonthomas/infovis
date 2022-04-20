@@ -26,89 +26,218 @@ export class SurfaceComponent implements OnInit {
   @ViewChild('surfaceContainer')
   surfaceContainer!: ElementRef;
 
-  data = [{
-    "letter": "A",
-    "frequency": 0.08167
-  }, {
-    "letter": "B",
-    "frequency": 0.01492
-  }, {
-    "letter": "C",
-    "frequency": 0.02782
-  }, {
-    "letter": "D",
-    "frequency": 0.04253
-  }, {
-    "letter": "E",
-    "frequency": 0.12702
-  }]
+  data = [
+    {
+        "year": "2015", 
+        "values": [
+            {
+                "surface": "clay", 
+                "playingPercentage": 30
+            }, 
+            {
+              "surface": "hard", 
+              "playingPercentage": 30
+            }, 
+            {
+              "surface": "grass", 
+              "playingPercentage": 40
+            }
+        ]
+    },
+    {
+      "year": "2016", 
+      "values": [
+          {
+              "surface": "clay", 
+              "playingPercentage": 15
+          }, 
+          {
+            "surface": "hard", 
+            "playingPercentage": 30
+          }, 
+          {
+            "surface": "grass", 
+            "playingPercentage": 55
+          }
+      ]
+    },
+    {
+      "year": "2017", 
+      "values": [
+          {
+              "surface": "clay", 
+              "playingPercentage": 31
+          }, 
+          {
+            "surface": "hard", 
+            "playingPercentage": 29
+          }, 
+          {
+            "surface": "grass", 
+            "playingPercentage": 40
+          }
+      ]
+    },
+    {
+      "year": "2018", 
+      "values": [
+          {
+              "surface": "clay", 
+              "playingPercentage": 37
+          }, 
+          {
+            "surface": "hard", 
+            "playingPercentage": 12
+          }, 
+          {
+            "surface": "grass", 
+            "playingPercentage": 51
+          }
+      ]
+    },
+    {
+      "year": "2019", 
+      "values": [
+          {
+              "surface": "clay", 
+              "playingPercentage": 15
+          }, 
+          {
+            "surface": "hard", 
+            "playingPercentage": 30
+          }, 
+          {
+            "surface": "grass", 
+            "playingPercentage": 55
+          }
+      ]
+    }
+  ]
+  
 
   constructor() { }
 
   ngOnInit(): void {
-    this.drawChart();
+    this.draw();
   }
 
-  createSvg(): void {
-    
-  }
+  draw(): void {
+    var color = d3.scaleOrdinal()
+    .range(["#fe8320","#3d86f0","#6de170"]);
 
-  createBars(): void {
-    }
+    var margin = { top: 10, right: 10, bottom: 15, left: 30 },
+        width = 700 - margin.left - margin.right,
+        height = 396 - margin.top - margin.bottom;
 
-  createText(): void {
-  }
 
-  drawChart(): void {
-    this.chart = d3
-      .select('#surface-container')
-      
-    const data = this.data;
+    //Create chart svg
+    var svg = d3.select("#surface-container").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const svg = this.chart.append('svg')
-      .attr('width', '100%')
-      .attr('height', 500);
+    //Create bar chart axis
+    var years = this.data.map(d => d.year);
+    var rateNames = this.data[0].values.map(d => d.surface);
 
-    const contentWidth = 700;
-    const contentHeight = 350;
-
-    const x = d3
+    //Add X axis
+    var x0 = d3
       .scaleBand()
-      .rangeRound([0, contentWidth])
-      .padding(0.1)
-      .domain(data.map(d => d.letter));
+      .range([0, width])
+      .domain(years)
+      // @ts-ignore
+      .padding([0.5]);
 
-    const y = d3
-      .scaleLinear()
-      .rangeRound([contentHeight, 0])
-      .domain([0, d3.max(data, d => d.frequency) as number]);
+    var xAxis = d3.axisBottom(x0).tickSize(0);
 
-    const g = svg.append('g')
-      .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+    //Add Y axis
+    var y = d3.scaleLinear()
+        .range([height, 0])
+        .domain([0, 100]);
 
-    g.append('g')
-      .attr('class', 'axis axis--x')
-      .attr('transform', 'translate(0,' + contentHeight + ')')
-      .call(d3.axisBottom(x));
+    var yAxis = d3.axisLeft(y);
 
-    g.append('g')
-      .attr('class', 'axis axis--y')
-      .call(d3.axisLeft(y).ticks(10, '%'))
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 6)
-      .attr('dy', '0.71em')
-      .attr('text-anchor', 'end')
-      .text('Frequency');
+    //Add scale for subgroups
+    var x1 = d3.scaleBand()
+      .domain(rateNames)
+      .range([0, x0.bandwidth()])
+    
+    //Draw XY
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-    g.selectAll('.bar')
-      .data(data)
-      .enter().append('rect')
-      .attr('class', 'bar')
-      .attr('x', d => x(d.letter) as number)
-      .attr('y', d => y(d.frequency))
-      .attr('width', x.bandwidth())
-      .attr('height', d => contentHeight - y(d.frequency));
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style('font-weight','bold')
+        .style('fill', 'black')
+      .text("Playing percentage");
+
+    svg.selectAll("text").style('fill', 'black')
+
+
+
+    //Slice
+    svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
+
+    var slice = svg.selectAll(".slice")
+        .data(this.data)
+        .enter().append("g")
+        .attr("class", "g")
+        .attr("transform",function(d) { return "translate(" + x0(d.year) + ",0)"; });
+
+    slice.selectAll("rect")
+        .data(function(d) { return d.values; })
+        .enter().append("rect")
+        .attr("width", 20)
+        // @ts-ignore
+        .attr("x", function(d) { return x1(d.surface); })
+        // @ts-ignore
+        .style("fill", function(d) { return color(d.surface) })
+        .style("margin-left", 15)
+        .attr("y", function(d) { return y(0); })
+        .attr("height", function(d) { return height - y(0); });
+
+    slice.selectAll("rect")
+      .transition()
+      .delay(function (d) {return Math.random()*1000;})
+      .duration(1000)
+      // @ts-ignore
+      .attr("y", function(d) { return y(d.playingPercentage); })
+      // @ts-ignore
+      .attr("height", function(d) { return height - y(d.playingPercentage); });;
+
+
+    //Legend
+    var legend = svg.selectAll(".legend")
+      .data(this.data[0].values.map(function(d) { return d.surface; }).reverse())
+      .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; })
+      .style("opacity","0");
+
+    legend.append("rect")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        // @ts-ignore
+        .style("fill", function(d) { return color(d); });
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .style('fill', 'black')
+        .text(function(d) {return d; });
+
+    legend.transition().duration(500).delay(function(d,i){ return 1300 + 100 * i; }).style("opacity","1");
   }
-
 }

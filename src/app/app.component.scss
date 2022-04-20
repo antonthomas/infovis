@@ -34,3 +34,8 @@ main {
 .rival {
   grid-area: rival;
 }
+
+mat-card {
+  padding-top: 0;
+  overflow: scroll;
+}

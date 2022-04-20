@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -13,6 +14,7 @@ $red: #fe6262;
 $blue: #80a3fb;
 $green: #6fd371;
 
-.component-title {
+h2 {
   color: #bababa;
+  font-size: 0.9rem !important;
 }
