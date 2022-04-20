@@ -1,32 +1,22 @@
 <div>
-  <p class="component-title">Rival track record - all time</p>
+  <h2>Rival track record</h2>
   <div id="player-info">
     <div id="player1-tag">
-      <img
-        class="flag"
-        src="{{ 'assets/flags/4x3/' + player1.countryCode + '.svg' }}"
-        alt="Country of player 1"
-      />
+      <img class="flag" src="{{ 'assets/flags/4x3/' + player1.countryCode + '.svg' }}" alt="Country of player 1" />
       <p>{{ player1.name }}</p>
     </div>
-    <div id="vs-tag"><p>VS</p></div>
+    <div id="vs-tag">
+      <p>VS</p>
+    </div>
     <div id="player2-tag">
       <p>{{ player2.name }}</p>
-      <img
-        class="flag"
-        src="{{ 'assets/flags/4x3/' + player2.countryCode + '.svg' }}"
-        alt="Country of player 2"
-      />
+      <img class="flag" src="{{ 'assets/flags/4x3/' + player2.countryCode + '.svg' }}" alt="Country of player 2" />
     </div>
   </div>
   <div #rivalContainer id="rival-container"></div>
   <p>Win percentage - all surfaces</p>
   <div id="last-5-games">
-    <mat-card
-      class="game-card"
-      *ngFor="let game of lastFiveGames"
-      [ngClass]="{ won: game.won, lost: !game.won }"
-    >
+    <mat-card class="game-card" *ngFor="let game of lastFiveGames" [ngClass]="{ won: game.won, lost: !game.won }">
       <p *ngIf="game.won">W</p>
       <p *ngIf="!game.won">L</p>
     </mat-card>
