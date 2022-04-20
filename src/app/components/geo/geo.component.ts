@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as d3 from 'd3';
+import geodata from 'src/assets/data/geo.json';
 
 @Component({
   selector: 'app-geo',
@@ -12,20 +13,10 @@ export class GeoComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    // this.http.get('assets/data/all_matches.csv', { responseType: 'text' }).subscribe(data => {
-    //   var objs = d3.csvParse(data);
-    //   console.log(data)
-    //   this.drawMap(objs);
-    // });
-    // this.drawMap()
+    this.drawMap()
   }
 
   drawMap() {
-    // console.log(csvData)
-    // csvData.forEach((row: any) => {
-    //   console.log('oi')
-    // });
-
     // SVG
     const svg = d3.select('#svg-geo')
     const width = parseInt(svg.style('width'))
@@ -46,24 +37,14 @@ export class GeoComponent implements OnInit {
 
     // Load external data and boot
     Promise.all([
-      d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'),
-      //@ts-ignore
-      d3.json('/assets/data/geo.json', (d: any) => {
-        console.log('test')
-        if (d.name == 'Adrian Partl') data.set(d.country_code, d.percentage)
-      })
-      // d3.csv('src/assets/data/all_matches.csv', (d: any) => {
-      //   if (d.player_id == 'adrian-partl') {
-      //     data.set(d.location, 1)
-      //   }
-      // })
+      d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
     ]).then(function (loadData) {
 
-      // csvData.forEach((row: any) => {
-      //   if (row.player_id == 'adrian-partl') {
-      //     data.set(row.location, 1)
-      //   }
-      // });
+      geodata.filter((g: any) => g.name == "Adrian Partl").forEach((g: any) => {
+        data.set(g.country_code, g.percentage)
+      })
+
+      console.log('data: ', data)
 
       let topo: any = loadData[0]
 
