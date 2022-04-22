@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  NgZone,
   OnInit,
   ViewChild,
   ViewEncapsulation,
@@ -12,6 +13,7 @@ import * as d3Scale from 'd3';
 import * as d3Shape from 'd3';
 import * as d3Array from 'd3';
 import * as d3Axis from 'd3';
+import { DataService } from 'src/app/services/data-example.service';
 
 /**
  * Necessary data:
@@ -46,6 +48,7 @@ type Game = {
   templateUrl: './rival.component.html',
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  providers: [DataService],
 })
 export class RivalComponent implements OnInit {
   player1: Player = { name: 'Roger Federer', countryCode: 'ch' };
@@ -68,7 +71,16 @@ export class RivalComponent implements OnInit {
   @ViewChild('rivalContainer')
   rivalContainer!: ElementRef;
 
-  constructor() {}
+  constructor(private service: DataService, private ngZone: NgZone) {
+    this.service.logged.subscribe((r) => {
+      // The ng-gapi runs outside Angular, so you need to initially explicitly assign the
+      // incoming response to the collection the Grid is bound to in the NgZone.
+      // this.ngZone.run(() => {
+      //   this.products = orderBy(r, [{ field: 'productid', dir: 'asc' }]);
+      // });
+      console.log(r);
+    });
+  }
 
   ngOnInit(): void {
     this.drawChart();

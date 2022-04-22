@@ -20,8 +20,11 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "@types/gapi": "^0.0.41",
+    "@types/gapi.auth2": "^0.0.56",
     "angular-resize-event": "^3.1.1",
     "d3": "^7.4.4",
+    "ng-gapi": "^0.0.94",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
