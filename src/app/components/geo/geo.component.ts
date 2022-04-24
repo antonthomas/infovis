@@ -14,7 +14,6 @@ export class GeoComponent implements OnInit {
   constructor(private search: SearchService) { }
 
   ngOnInit(): void {
-    // this.drawMap();
     this.search.getPlayer().subscribe({ next: p => this.drawMap(p) })
   }
 
