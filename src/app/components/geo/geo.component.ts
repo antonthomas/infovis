@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as d3 from 'd3';
 import geodata from 'src/assets/data/geo.json';
+import { SearchService } from 'src/app/services/search/search.service';
 
 @Component({
   selector: 'app-geo',
@@ -10,13 +11,14 @@ import geodata from 'src/assets/data/geo.json';
 })
 export class GeoComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private search: SearchService) { }
 
   ngOnInit(): void {
-    this.drawMap()
+    // this.drawMap();
+    this.search.getPlayer().subscribe({ next: p => this.drawMap(p) })
   }
 
-  drawMap() {
+  drawMap(player: string) {
     // SVG
     const svg = d3.select('#svg-geo')
     const width = parseInt(svg.style('width'))
@@ -40,11 +42,9 @@ export class GeoComponent implements OnInit {
       d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
     ]).then(function (loadData) {
 
-      geodata.filter((g: any) => g.name == "Adrian Partl").forEach((g: any) => {
+      geodata.filter((g: any) => g.name == player).forEach((g: any) => {
         data.set(g.country_code, g.percentage)
       })
-
-      console.log('data: ', data)
 
       let topo: any = loadData[0]
 

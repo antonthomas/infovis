@@ -3,7 +3,7 @@
         <mat-label>Player</mat-label>
         <input type="text" placeholder="Pick one" aria-label="Player" matInput [formControl]="playerControl"
             [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updatePlayer($event)">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                 {{option}}
             </mat-option>
