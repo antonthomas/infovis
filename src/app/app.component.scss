@@ -2,38 +2,66 @@ main {
   margin: 1em;
 }
 
-.container {
-  height: calc(100vh - 4em - 50px);
+// .container {
+//   height: calc(100vh - 4em - 50px);
 
+//   display: grid;
+//   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+//   grid-template-rows: 50% 50%;
+//   gap: 1em 1em;
+//   grid-auto-flow: row;
+//   grid-template-areas:
+//     "overview overview overview surface surface surface surface surface betting betting betting betting"
+//     "geo geo geo geo geo geo rival rival rival rival rival rival";
+// }
+
+// .overview {
+//   grid-area: overview;
+// }
+
+// .surface {
+//   grid-area: surface;
+// }
+
+// .betting {
+//   grid-area: betting;
+// }
+
+// .geo {
+//   grid-area: geo;
+// }
+
+// .rival {
+//   grid-area: rival;
+// }
+
+.container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 50% 50%;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 1em 1em;
   grid-auto-flow: row;
   grid-template-areas:
-    "overview overview overview surface surface surface surface surface betting betting betting betting"
-    "geo geo geo geo geo geo rival rival rival rival rival rival";
+    "overview-player overview-player overview-player head-to-head head-to-head head-to-head head-to-head head-to-head head-to-head overview-opponent overview-opponent overview-opponent"
+    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent";
 }
 
-.overview {
-  grid-area: overview;
+.overview-player {
+  grid-area: overview-player;
+}
+
+.overview-opponent {
+  grid-area: overview-opponent;
+}
+
+.head-to-head {
+  grid-area: head-to-head;
 }
 
 .surface {
   grid-area: surface;
 }
 
-.betting {
-  grid-area: betting;
-}
-
-.geo {
-  grid-area: geo;
-}
-
-.rival {
-  grid-area: rival;
-}
 
 mat-card {
   padding-top: 0;
