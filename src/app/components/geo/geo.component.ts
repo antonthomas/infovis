@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import * as d3 from 'd3';
 import geodata from 'src/assets/data/geo.json';
 import { SearchService } from 'src/app/services/search/search.service';
