@@ -18,21 +18,25 @@ import * as d3 from 'd3';
 
 export class DivergingbarComponent implements AfterViewInit {
   states = [
-    {2010: 37254523, 2019: 39512223, State: "California"},
-    {2010: 25145561, 2019: 28995881, State: "Texas"},
-    {2010: 18801310, 2019: 21477737, State: "Florida"},
-    {2010: 19378102, 2019: 19453561, State: "New York"}]
+    {2010: 37254523, 2019: 39512223, metric: "1st serve"},
+    {2010: 37254523, 2019: 39512223, metric: "2nd serve"},
+    {2010: 25145561, 2019: 28995881, metric: "Tie break win"},
+    {2010: 25145561, 2019: 28995881, metric: "Service games win"},
+    {2010: 25145561, 2019: 28995881, metric: "Return games win"},
+    {2010: 25145561, 2019: 28995881, metric: "Double Fault"},
+    {2010: 18801310, 2019: 21477737, metric: "Break point save"},
+    {2010: 19378102, 2019: 19453561, metric: "Break point against"}]
     chart: any = null
   ngAfterViewInit(): void {
     this.chart = DivergingBarChart(this.states, {
       x: d => d[2019] / d[2010] - 1,
-      y: d => d.State,
-      yDomain: d3.groupSort(this.states, ([d]) => d[2019] - d[2010], d => d.State),
+      y: d => d.metric,
+      yDomain: d3.groupSort(this.states, ([d]) => d[2019] - d[2010], d => d.metric),
       xFormat:"+%",
       xLabel: "← performance metrics →",
       width: document.querySelector('#player').offsetWidth,
-      marginRight: 70,
-      marginLeft: 70,
+      marginRight: 50,
+      marginLeft: 120,
       colors: d3.schemeRdBu[3]
     })
     document.querySelector("#diverging").appendChild(this.chart)
