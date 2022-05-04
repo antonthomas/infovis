@@ -19,7 +19,7 @@ export class BettingComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
-    let svg: any = d3.select(`#svg-${this.htmlId}`)
+    let svg: any = d3.select(`#svg-betting-${this.htmlId}`)
     // @ts-ignore
     const width = d3.select('.overview-opponent').node().getBoundingClientRect().width - 32
     console.log(width)

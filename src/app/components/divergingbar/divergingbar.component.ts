@@ -18,30 +18,33 @@ import * as d3 from 'd3';
 
 export class DivergingbarComponent implements AfterViewInit {
   states = [
-    {2010: 37254523, 2019: 39512223, metric: "1st serve"},
-    {2010: 37254523, 2019: 39512223, metric: "2nd serve"},
-    {2010: 25145561, 2019: 28995881, metric: "Tie break win"},
-    {2010: 25145561, 2019: 28995881, metric: "Service games win"},
-    {2010: 25145561, 2019: 28995881, metric: "Return games win"},
-    {2010: 25145561, 2019: 28995881, metric: "Double Fault"},
-    {2010: 18801310, 2019: 21477737, metric: "Break point save"},
-    {2010: 19378102, 2019: 19453561, metric: "Break point against"}]
-    chart: any = null
+    { 2010: 37254523, 2019: 39512223, metric: "1st serve" },
+    { 2010: 37254523, 2019: 39512223, metric: "2nd serve" },
+    { 2010: 25145561, 2019: 28995881, metric: "Tie break win" },
+    { 2010: 25145561, 2019: 28995881, metric: "Service games win" },
+    { 2010: 25145561, 2019: 28995881, metric: "Return games win" },
+    { 2010: 25145561, 2019: 28995881, metric: "Double Fault" },
+    { 2010: 18801310, 2019: 21477737, metric: "Break point save" },
+    { 2010: 19378102, 2019: 19453561, metric: "Break point against" }]
+
+  chart: any = null
+  @Input() htmlId = '';
+
   ngAfterViewInit(): void {
     this.chart = DivergingBarChart(this.states, {
       x: d => d[2019] / d[2010] - 1,
       y: d => d.metric,
       yDomain: d3.groupSort(this.states, ([d]) => d[2019] - d[2010], d => d.metric),
-      xFormat:"+%",
+      xFormat: "+%",
       xLabel: "← performance metrics →",
       width: document.querySelector('#player').offsetWidth,
       marginRight: 50,
       marginLeft: 120,
       colors: d3.schemeRdBu[3]
     })
-    document.querySelector("#diverging").appendChild(this.chart)
+    document.querySelector(`#diverging-${this.htmlId}`).appendChild(this.chart)
   }
-  
+
 }
 
 function DivergingBarChart(data, {
@@ -99,58 +102,58 @@ function DivergingBarChart(data, {
   }
 
   const svg = d3.create("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+    .attr("width", width)
+    .attr("height", height)
+    .attr("viewBox", [0, 0, width, height])
+    .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
   svg.append("g")
-      .attr("transform", `translate(0,${marginTop})`)
-      .call(xAxis)
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").clone()
-          .attr("y2", height - marginTop - marginBottom)
-          .attr("stroke-opacity", 0.1))
-      .call(g => g.append("text")
-          .attr("x", xScale(0))
-          .attr("y", -22)
-          .attr("fill", "currentColor")
-          .attr("text-anchor", "center")
-          .text(xLabel));
+    .attr("transform", `translate(0,${marginTop})`)
+    .call(xAxis)
+    .call(g => g.select(".domain").remove())
+    .call(g => g.selectAll(".tick line").clone()
+      .attr("y2", height - marginTop - marginBottom)
+      .attr("stroke-opacity", 0.1))
+    .call(g => g.append("text")
+      .attr("x", xScale(0))
+      .attr("y", -22)
+      .attr("fill", "currentColor")
+      .attr("text-anchor", "center")
+      .text(xLabel));
 
   const bar = svg.append("g")
     .selectAll("rect")
     .data(I)
     .join("rect")
-      .attr("fill", i => colors[X[i] > 0 ? colors.length - 1 : 0])
-      .attr("x", i => Math.min(xScale(0), xScale(X[i])))
-      .attr("y", i => yScale(Y[i]))
-      .attr("width", i => Math.abs(xScale(X[i]) - xScale(0)))
-      .attr("height", yScale.bandwidth());
+    .attr("fill", i => colors[X[i] > 0 ? colors.length - 1 : 0])
+    .attr("x", i => Math.min(xScale(0), xScale(X[i])))
+    .attr("y", i => yScale(Y[i]))
+    .attr("width", i => Math.abs(xScale(X[i]) - xScale(0)))
+    .attr("height", yScale.bandwidth());
 
   if (title) bar.append("title")
-      .text(title);
+    .text(title);
 
   svg.append("g")
-      .attr("text-anchor", "end")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
+    .attr("text-anchor", "end")
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 10)
     .selectAll("text")
     .data(I)
     .join("text")
-      .attr("text-anchor", i => X[i] < 0 ? "end" : "start")
-      .attr("x", i => xScale(X[i]) + Math.sign(X[i] - 0) * 4)
-      .attr("y", i => yScale(Y[i]) + yScale.bandwidth() / 2)
-      .attr("dy", "0.35em")
-      .text(i => format(X[i]));
+    .attr("text-anchor", i => X[i] < 0 ? "end" : "start")
+    .attr("x", i => xScale(X[i]) + Math.sign(X[i] - 0) * 4)
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth() / 2)
+    .attr("dy", "0.35em")
+    .text(i => format(X[i]));
 
   svg.append("g")
-      .attr("transform", `translate(${xScale(0)},0)`)
-      .call(yAxis)
-      .call(g => g.selectAll(".tick text")
-        .filter(y => YX.get(y) < 0)
-          .attr("text-anchor", "start")
-          .attr("x", 6));
+    .attr("transform", `translate(${xScale(0)},0)`)
+    .call(yAxis)
+    .call(g => g.selectAll(".tick text")
+      .filter(y => YX.get(y) < 0)
+      .attr("text-anchor", "start")
+      .attr("x", 6));
 
   return svg.node();
 }
