@@ -38,12 +38,15 @@ main {
 .container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(4, auto);
   gap: 1em 1em;
   grid-auto-flow: row;
   grid-template-areas:
     "overview-player overview-player overview-player head-to-head head-to-head head-to-head head-to-head head-to-head head-to-head overview-opponent overview-opponent overview-opponent"
+    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent"
+    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent"
     "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent";
+
 }
 
 .overview-player {
