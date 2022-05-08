@@ -1,19 +1,36 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Player } from '../../../types';
+import playerJSON from '../../../assets/data/players.json';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SearchService {
-  player: BehaviorSubject<string> = new BehaviorSubject<string>('Albert Ramos Vinolas');  // TODO - Get first name of list
+  players: Player[] = playerJSON;
+  player: BehaviorSubject<Player> = new BehaviorSubject<Player>(
+    this.players[0]
+  );
 
-  constructor() { }
-
-  setPlayer(player: string) {
-    this.player.next(player);
+  constructor() {
+    this.players = playerJSON;
   }
 
-  getPlayer(): BehaviorSubject<string> {
+  getPlayers(): Player[] {
+    return this.players;
+  }
+
+  getPlayerNames(): string[] {
+    return this.players.map((p) => p.name);
+  }
+
+  setPlayer(name: string) {
+    let player: Player | undefined = this.players.find((p) => p.name === name);
+    if (player) this.player.next(player);
+    else console.error("setPlayer: player with 'name'" + name + 'not found.');
+  }
+
+  getPlayer(): BehaviorSubject<Player> {
     return this.player;
   }
 }
