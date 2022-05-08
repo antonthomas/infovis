@@ -10,15 +10,22 @@ import { SearchService } from 'src/app/services/search/search.service';
 })
 export class TopBarComponent implements OnInit {
   playerControl = new FormControl();
+  opponentControl = new FormControl();
   options: string[] = [];
-  filteredOptions: Observable<string[]> | undefined;
+  filteredOptionsPlayer: Observable<string[]> | undefined;
+  filteredOptionsOpponent: Observable<string[]> | undefined;
 
   constructor(private search: SearchService) {
     this.options = this.search.getPlayerNames();
   }
 
   ngOnInit(): void {
-    this.filteredOptions = this.playerControl.valueChanges.pipe(
+    this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+
+    this.filteredOptionsOpponent = this.opponentControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
@@ -32,6 +39,14 @@ export class TopBarComponent implements OnInit {
   }
 
   updatePlayer(event: any) {
+    console.log('a', event);
     this.search.setPlayer(event.option.value);
+  }
+
+  // TODO: this method is not being called...
+  // It does work when commenting out first form field in HTML
+  updateOpponent(event: any) {
+    console.log('b', event);
+    this.search.setOpponent(event.option.value);
   }
 }

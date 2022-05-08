@@ -11,6 +11,9 @@ export class SearchService {
   player: BehaviorSubject<Player> = new BehaviorSubject<Player>(
     this.players[0]
   );
+  opponent: BehaviorSubject<Player> = new BehaviorSubject<Player>(
+    this.players[1]
+  );
 
   constructor() {
     this.players = playerJSON;
@@ -25,12 +28,26 @@ export class SearchService {
   }
 
   setPlayer(name: string) {
+    console.log('Set player', name);
     let player: Player | undefined = this.players.find((p) => p.name === name);
     if (player) this.player.next(player);
     else console.error("setPlayer: player with 'name'" + name + 'not found.');
   }
 
+  setOpponent(name: string) {
+    console.log('Set opponent', name);
+    let opponent: Player | undefined = this.players.find(
+      (p) => p.name === name
+    );
+    if (opponent) this.opponent.next(opponent);
+    else console.error("setOpponent: player with 'name'" + name + 'not found.');
+  }
+
   getPlayer(): BehaviorSubject<Player> {
     return this.player;
+  }
+
+  getOpponent(): BehaviorSubject<Player> {
+    return this.opponent;
   }
 }
