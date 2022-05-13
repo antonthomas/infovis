@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  Input,
   OnInit,
   ViewChild,
   ViewEncapsulation,
@@ -12,6 +13,7 @@ import * as d3Scale from 'd3';
 import * as d3Shape from 'd3';
 import * as d3Array from 'd3';
 import * as d3Axis from 'd3';
+import { Player } from '../../.././types';
 
 /**
  * Necessary data:
@@ -31,12 +33,6 @@ import * as d3Axis from 'd3';
  *  - http://bl.ocks.org/nelliemckesson/5315143
  */
 
-type Surface = 'clay' | 'grass' | 'hard court';
-type Player = {
-  name: string;
-  countryCode: string;
-};
-
 type Game = {
   won: boolean;
 };
@@ -48,8 +44,14 @@ type Game = {
   encapsulation: ViewEncapsulation.None,
 })
 export class RivalComponent implements OnInit {
-  player1: Player = { name: 'Roger Federer', countryCode: 'ch' };
-  player2: Player = { name: 'Rafael Nadal', countryCode: 'es' };
+  @Input() player: Player = { name: '', id: '', countryCode: '' };
+
+  // player1: Player = {
+  //   name: 'Roger Federer',
+  //   id: 'roger-federer',
+  //   countryCode: 'ch',
+  // };
+  @Input() opponent: Player = { name: '', id: '', countryCode: '' };
   progressbarHeight: number = 30;
   totalGames: number = 100;
   gamesWonPlayer1: number = 60;

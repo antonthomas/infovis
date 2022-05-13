@@ -1,7 +1,7 @@
 <h2>Quick overview</h2>
 <div class="container">
     <div class="donut">
-        <div id="my_dataviz"></div>
+        <div [id]="htmlId"></div>
     </div>
     <div class="games">
         <h1>137</h1>
@@ -20,3 +20,7 @@
         <p>Average losing odd</p>
     </div>
 </div>
+
+<app-betting id="betting-{{htmlId}}" [htmlId]="htmlId"></app-betting>
+
+<app-divergingbar [htmlId]="htmlId"></app-divergingbar>

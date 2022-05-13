@@ -32,10 +32,12 @@ text {
   display: inline-block;
   position: relative;
   width: 100%;
-  padding-bottom: 100%; /* aspect ratio */
+  padding-bottom: 100%;
+  /* aspect ratio */
   vertical-align: top;
   overflow: hidden;
 }
+
 .svg-content-responsive {
   display: inline-block;
   position: absolute;
@@ -49,6 +51,7 @@ text {
   width: 15px;
   height: 15px;
   border-radius: 0.8em;
+
   p {
     text-align: center;
     color: #fff;
@@ -70,20 +73,24 @@ text {
   grid-template-rows: 0.5fr;
   gap: 0px 0px;
   grid-auto-flow: row;
-  grid-template-areas: "player1 . vs . player2";
+  grid-template-areas: "player . vs . opponent";
 
-  #player1-tag {
-    grid-area: player1;
+  #player-tag {
+    grid-area: player;
     text-align: left;
   }
 
   #vs-tag {
     grid-area: vs;
     text-align: center;
+
+    p {
+      font-size: 1.2rem;
+    }
   }
 
-  #player2-tag {
-    grid-area: player2;
+  #opponent-tag {
+    grid-area: opponent;
     text-align: right;
   }
 
@@ -96,7 +103,20 @@ text {
     border-radius: 3px;
   }
 
-  p {
+  h5 {
     display: inline-block;
+    position: relative;
+    top: -4px;
+    padding: 0 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
   }
+}
+
+p {
+  margin: 0;
+  padding-top: 0;
+  font-size: small;
+  color: gray;
+  font-weight: bold;
 }

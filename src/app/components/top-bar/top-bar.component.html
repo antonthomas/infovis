@@ -1,3 +1,47 @@
-<div class="container">
-    <p>top-bar works!</p>
-</div>
+<form>
+  <mat-form-field appearance="fill">
+    <mat-label>Player</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Player"
+      matInput
+      [formControl]="playerControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="updatePlayer($event)"
+    >
+      <mat-option
+        *ngFor="let option of filteredOptionsPlayer | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Opponent</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Opponent"
+      matInput
+      [formControl]="opponentControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="updateOpponent($event)"
+    >
+      <mat-option
+        *ngFor="let option of filteredOptionsOpponent | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

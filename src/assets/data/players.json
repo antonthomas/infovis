@@ -1,0 +1,64 @@
+[
+  { "name": "Novak Djokovic", "id": "novak-djokovic", "countryCode": "rs" },
+  { "name": "Daniil Medvedev", "id": "daniil-medvedev", "countryCode": "ru" },
+  { "name": "Alexander Zverev", "id": "alexander-zverev", "countryCode": "de" },
+  { "name": "Rafael Nadal", "id": "rafael-nadal", "countryCode": "es" },
+  {
+    "name": "Stefanos Tsitsipas",
+    "id": "stefanos-tsitsipas",
+    "countryCode": "gr"
+  },
+  {
+    "name": "Matteo Berrettini",
+    "id": "matteo-berrettini",
+    "countryCode": "it"
+  },
+  { "name": "Casper Ruud", "id": "casper-ruud", "countryCode": "no" },
+  { "name": "Andrey Rublev", "id": "andrey-rublev", "countryCode": "ru" },
+  { "name": "Carlos Alcaraz", "id": "carlos-alcaraz", "countryCode": "es" },
+  {
+    "name": "Felix Auger-Aliassime",
+    "id": "felix-auger-aliassime",
+    "countryCode": "ca"
+  },
+  { "name": "Cameron Norrie", "id": "cameron-norrie", "countryCode": "gb" },
+  { "name": "Jannik Sinner", "id": "jannik-sinner", "countryCode": "it" },
+  { "name": "Taylor Fritz", "id": "taylor-fritz", "countryCode": "us" },
+  { "name": "Hubert Hurkacz", "id": "hubert-hurkacz", "countryCode": "pl" },
+  {
+    "name": "Diego Schwartzman",
+    "id": "diego-schwartzman",
+    "countryCode": "ar"
+  },
+  { "name": "Denis Shapovalov", "id": "denis-shapovalov", "countryCode": "ca" },
+  { "name": "Reilly Opelka", "id": "reilly-opelka", "countryCode": "us" },
+  {
+    "name": "Pablo Carreno Busta",
+    "id": "pablo-carreno-busta",
+    "countryCode": "es"
+  },
+  {
+    "name": "Roberto Bautista Agut",
+    "id": "roberto-bautista-agut",
+    "countryCode": "es"
+  },
+  {
+    "name": "Nikoloz Basilashvili",
+    "id": "nikoloz-basilashvili",
+    "countryCode": "ge"
+  },
+  { "name": "Gael Monfils", "id": "gael-monfils", "countryCode": "fr" },
+  { "name": "Grigor Dimitrov", "id": "grigor-dimitrov", "countryCode": "bg" },
+  { "name": "Marin Cilic", "id": "marin-cilic", "countryCode": "hr" },
+  { "name": "Alex de Minaur", "id": "alex-de-minaur", "countryCode": "au" },
+  { "name": "John Isner", "id": "john-isner", "countryCode": "us" },
+  { "name": "Karen Khachanov", "id": "karen-khachanov", "countryCode": "ru" },
+  { "name": "Lorenzo Sonego", "id": "lorenzo-sonego", "countryCode": "it" },
+  {
+    "name": "Alejandro Davidovich Fokina",
+    "id": "alejandro-davidovich-fokina",
+    "countryCode": "es"
+  },
+  { "name": "Frances Tiafoe", "id": "frances-tiafoe", "countryCode": "us" },
+  { "name": "Cristian Garin", "id": "cristian-garin", "countryCode": "cl" }
+]

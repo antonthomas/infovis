@@ -1,7 +1,7 @@
 <main>
   <app-top-bar></app-top-bar>
 
-  <div class="container">
+  <!-- <div class="container">
     <mat-card class="overview">
       <app-overview></app-overview>
     </mat-card>
@@ -16,6 +16,21 @@
     </mat-card>
     <mat-card class="rival">
       <app-rival></app-rival>
+    </mat-card>
+  </div> -->
+
+  <div class="container">
+    <mat-card class="overview-player">
+      <app-overview htmlId="player"></app-overview>
+    </mat-card>
+    <mat-card class="overview-opponent">
+      <app-overview htmlId="opponent"></app-overview>
+    </mat-card>
+    <mat-card class="head-to-head">
+      <app-rival [player]="player" [opponent]="opponent"></app-rival>
+    </mat-card>
+    <mat-card class="surface">
+      <app-surface></app-surface>
     </mat-card>
   </div>
 

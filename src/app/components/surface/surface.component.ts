@@ -49,7 +49,7 @@ export class SurfaceComponent implements OnInit {
         ]
     },
     {
-      "year": "2016", 
+      "year": "2016",
       "values": [
           {
               "surface": "clay", 
@@ -69,7 +69,7 @@ export class SurfaceComponent implements OnInit {
       ]
     },
     {
-      "year": "2017", 
+      "year": "2017",
       "values": [
           {
               "surface": "clay", 
@@ -89,7 +89,7 @@ export class SurfaceComponent implements OnInit {
       ]
     },
     {
-      "year": "2018", 
+      "year": "2018",
       "values": [
           {
               "surface": "clay", 
@@ -109,7 +109,7 @@ export class SurfaceComponent implements OnInit {
       ]
     },
     {
-      "year": "2019", 
+      "year": "2019",
       "values": [
           {
               "surface": "clay", 
@@ -129,7 +129,7 @@ export class SurfaceComponent implements OnInit {
       ]
     }
   ]
-  
+
 
   color = d3.scaleOrdinal()
     .range(["#fe8320","#3d86f0","#6de170"]);
@@ -177,6 +177,8 @@ export class SurfaceComponent implements OnInit {
 
   drawbarChart(): void {
     
+    var color = d3.scaleOrdinal()
+      .range(["#fe8320", "#3d86f0", "#6de170"]);
 
     //Create bar chart axis
     var years = this.data.map(d => d.year);
@@ -203,7 +205,7 @@ export class SurfaceComponent implements OnInit {
     var x1 = d3.scaleBand()
       .domain(surfaceNames)
       .range([0, x0.bandwidth()])
-    
+
     //Draw XY
     this.svg.append("g")
         .attr("class", "x axis")
@@ -249,12 +251,12 @@ export class SurfaceComponent implements OnInit {
 
     slice.selectAll("rect")
       .transition()
-      .delay(function (d) {return Math.random()*1000;})
+      .delay(function (d) { return Math.random() * 1000; })
       .duration(1000)
       // @ts-ignore
-      .attr("y", function(d) { return y(d.playingPercentage); })
+      .attr("y", function (d) { return y(d.playingPercentage); })
       // @ts-ignore
-      .attr("height", function(d) { return height - y(d.playingPercentage); });;
+      .attr("height", function (d) { return height - y(d.playingPercentage); });;
 
 
     //Legend
@@ -262,8 +264,8 @@ export class SurfaceComponent implements OnInit {
       .data(this.data[0].values.map(function(d) { return d.surface; }).reverse())
       .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; })
-      .style("opacity","0");
+      .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
+      .style("opacity", "0");
 
     legend.append("rect")
         .attr("x", this.width - 18)
