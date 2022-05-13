@@ -12,6 +12,7 @@ import * as d3Scale from 'd3';
 import * as d3Shape from 'd3';
 import * as d3Array from 'd3';
 import * as d3Axis from 'd3';
+import { color } from 'd3';
 
 @Component({
   selector: 'app-surface',
@@ -32,15 +33,18 @@ export class SurfaceComponent implements OnInit {
         "values": [
             {
                 "surface": "clay", 
-                "playingPercentage": 30
+                "p1WinPercentage": 58,
+                "p2WinPercentage": 65
             }, 
             {
               "surface": "hard", 
-              "playingPercentage": 30
+              "p1WinPercentage": 34,
+              "p2WinPercentage": 49
             }, 
             {
               "surface": "grass", 
-              "playingPercentage": 40
+              "p1WinPercentage": 65,
+              "p2WinPercentage": 68
             }
         ]
     },
@@ -49,15 +53,18 @@ export class SurfaceComponent implements OnInit {
       "values": [
           {
               "surface": "clay", 
-              "playingPercentage": 15
+              "p1WinPercentage": 61,
+              "p2WinPercentage": 65
           }, 
           {
             "surface": "hard", 
-            "playingPercentage": 30
+            "p1WinPercentage": 68,
+            "p2WinPercentage": 69
           }, 
           {
             "surface": "grass", 
-            "playingPercentage": 55
+            "p1WinPercentage": 41,
+            "p2WinPercentage": 48
           }
       ]
     },
@@ -66,15 +73,18 @@ export class SurfaceComponent implements OnInit {
       "values": [
           {
               "surface": "clay", 
-              "playingPercentage": 31
+              "p1WinPercentage": 34,
+              "p2WinPercentage": 51
           }, 
           {
             "surface": "hard", 
-            "playingPercentage": 29
+            "p1WinPercentage": 39,
+            "p2WinPercentage": 49
           }, 
           {
             "surface": "grass", 
-            "playingPercentage": 40
+            "p1WinPercentage": 47,
+            "p2WinPercentage": 59
           }
       ]
     },
@@ -83,15 +93,18 @@ export class SurfaceComponent implements OnInit {
       "values": [
           {
               "surface": "clay", 
-              "playingPercentage": 37
+              "p1WinPercentage": 37,
+              "p2WinPercentage": 34
           }, 
           {
             "surface": "hard", 
-            "playingPercentage": 12
+            "p1WinPercentage": 22,
+            "p2WinPercentage": 38
           }, 
           {
             "surface": "grass", 
-            "playingPercentage": 51
+            "p1WinPercentage": 51,
+            "p2WinPercentage": 47
           }
       ]
     },
@@ -100,51 +113,79 @@ export class SurfaceComponent implements OnInit {
       "values": [
           {
               "surface": "clay", 
-              "playingPercentage": 15
+              "p1WinPercentage": 37,
+              "p2WinPercentage": 43
           }, 
           {
             "surface": "hard", 
-            "playingPercentage": 30
+            "p1WinPercentage": 30,
+            "p2WinPercentage": 58
           }, 
           {
             "surface": "grass", 
-            "playingPercentage": 55
+            "p1WinPercentage": 55,
+            "p2WinPercentage": 65
           }
       ]
     }
   ]
   
 
+  color = d3.scaleOrdinal()
+    .range(["#fe8320","#3d86f0","#6de170"]);
+
+  marginTop = 10
+  marginLeft = 10
+  marginRight = 10
+  marginBottom = 10  
+  width: number = 700 - this.marginLeft - this.marginRight
+  height: number = 396 - this.marginTop - this.marginBottom;
+
+
+  //Create chart svg
+  svg = d3.select("#surface-container").append("svg")
+  .attr("width", this.width + this.marginLeft + this.marginRight)
+  .attr("height", this.height + this.marginTop + this.marginBottom)
+  .append("g")
+  .attr("transform", "translate(" + this.marginLeft + "," +this.marginTop + ")");
+
   constructor() { }
 
   ngOnInit(): void {
-    this.draw();
+    this.drawbarChart();
   }
 
-  draw(): void {
-    var color = d3.scaleOrdinal()
-    .range(["#fe8320","#3d86f0","#6de170"]);
+  drawLineChart(): void {
+    this.svg.selectAll(".line")
+    .data(this.data)
+    .enter()
+    .append("path")
+      .attr("fill", "none")
+      // @ts-ignore
+      .attr("stroke", function(d){ return color(d.surface) })
+      .attr("stroke-width", 1.5)
+      .attr("d", function(d){
+        return d3.line()
+          // @ts-ignore
+          .x(function(d) { return x(d.year); })
+          // @ts-ignore
+          .y(function(d) { return y(d.values.p1WinPercentage); })
+          // @ts-ignore
+          (d.values)
+      })
+  }
 
-    var margin = { top: 10, right: 10, bottom: 15, left: 30 },
-        width = 700 - margin.left - margin.right,
-        height = 396 - margin.top - margin.bottom;
-
-
-    //Create chart svg
-    var svg = d3.select("#surface-container").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  drawbarChart(): void {
+    
 
     //Create bar chart axis
     var years = this.data.map(d => d.year);
-    var rateNames = this.data[0].values.map(d => d.surface);
+    var surfaceNames = this.data[0].values.map(d => d.surface);
 
     //Add X axis
     var x0 = d3
       .scaleBand()
-      .range([0, width])
+      .range([0, this.width])
       .domain(years)
       // @ts-ignore
       .padding([0.5]);
@@ -153,23 +194,23 @@ export class SurfaceComponent implements OnInit {
 
     //Add Y axis
     var y = d3.scaleLinear()
-        .range([height, 0])
+        .range([this.height, 0])
         .domain([0, 100]);
 
     var yAxis = d3.axisLeft(y);
 
     //Add scale for subgroups
     var x1 = d3.scaleBand()
-      .domain(rateNames)
+      .domain(surfaceNames)
       .range([0, x0.bandwidth()])
     
     //Draw XY
-    svg.append("g")
+    this.svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + this.height + ")")
         .call(xAxis);
 
-    svg.append("g")
+    this.svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
         .append("text")
@@ -180,14 +221,14 @@ export class SurfaceComponent implements OnInit {
         .style('fill', 'black')
       .text("Playing percentage");
 
-    svg.selectAll("text").style('fill', 'black')
+    this.svg.selectAll("text").style('fill', 'black')
 
 
 
     //Slice
-    svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
+    this.svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
 
-    var slice = svg.selectAll(".slice")
+    var slice = this.svg.selectAll(".slice")
         .data(this.data)
         .enter().append("g")
         .attr("class", "g")
@@ -203,7 +244,8 @@ export class SurfaceComponent implements OnInit {
         .style("fill", function(d) { return color(d.surface) })
         .style("margin-left", 15)
         .attr("y", function(d) { return y(0); })
-        .attr("height", function(d) { return height - y(0); });
+        // @ts-ignore
+        .attr("height", function(d) { return this.height - y(0); });
 
     slice.selectAll("rect")
       .transition()
@@ -216,7 +258,7 @@ export class SurfaceComponent implements OnInit {
 
 
     //Legend
-    var legend = svg.selectAll(".legend")
+    var legend = this.svg.selectAll(".legend")
       .data(this.data[0].values.map(function(d) { return d.surface; }).reverse())
       .enter().append("g")
       .attr("class", "legend")
@@ -224,14 +266,14 @@ export class SurfaceComponent implements OnInit {
       .style("opacity","0");
 
     legend.append("rect")
-        .attr("x", width - 18)
+        .attr("x", this.width - 18)
         .attr("width", 18)
         .attr("height", 18)
         // @ts-ignore
         .style("fill", function(d) { return color(d); });
 
     legend.append("text")
-        .attr("x", width - 24)
+        .attr("x", this.width - 24)
         .attr("y", 9)
         .attr("dy", ".35em")
         .style("text-anchor", "end")
