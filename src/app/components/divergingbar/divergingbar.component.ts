@@ -17,30 +17,31 @@ import * as d3 from 'd3';
 })
 
 export class DivergingbarComponent implements AfterViewInit {
-  states = [
-    { 2010: 37254523, 2019: 39512223, metric: "1st serve" },
-    { 2010: 37254523, 2019: 39512223, metric: "2nd serve" },
-    { 2010: 25145561, 2019: 28995881, metric: "Tie break win" },
-    { 2010: 25145561, 2019: 28995881, metric: "Service games win" },
-    { 2010: 25145561, 2019: 28995881, metric: "Return games win" },
-    { 2010: 25145561, 2019: 28995881, metric: "Double Fault" },
-    { 2010: 18801310, 2019: 21477737, metric: "Break point save" },
-    { 2010: 19378102, 2019: 19453561, metric: "Break point against" }]
+  data = [
+    { player: 60, opponent: 50 , average: 90, metric: "1st serve" },
+    { player: 60,opponent: 60 , average: 50, metric: "2nd serve" },
+    { player: 60,opponent: 70 , average: 50, metric: "Tie break win" },
+    { player: 30,opponent: 20 , average: 50, metric: "Service games win" },
+    { player: 30,opponent: 30 , average: 50, metric: "Return games win" },
+    { player: 40,opponent: 35 , average: 50, metric: "Double Fault" },
+    { player: 80,opponent: 50 , average: 50, metric: "Break point save" },
+    { player: 40,opponent: 70 , average: 50, metric: "Break point against" }]
 
   chart: any = null
   @Input() htmlId = '';
 
   ngAfterViewInit(): void {
-    this.chart = DivergingBarChart(this.states, {
-      x: d => d[2019] / d[2010] - 1,
+    this.chart = DivergingBarChart(this.data, {
+      xPlayer: d => d.average / d.player - 1,
+      xOpponent: d => d.average / d.opponent -1,
       y: d => d.metric,
-      yDomain: d3.groupSort(this.states, ([d]) => d[2019] - d[2010], d => d.metric),
+      yDomain: d3.groupSort(this.data, ([d]) => d.average - d.player, d => d.metric),
       xFormat: "+%",
       xLabel: "← performance metrics →",
       width: document.querySelector('#player').offsetWidth,
       marginRight: 50,
       marginLeft: 120,
-      colors: d3.schemeRdBu[3]
+      colorsPlayer: d3.schemeRdBu[3]
     })
     document.querySelector(`#diverging-${this.htmlId}`).appendChild(this.chart)
   }
@@ -48,7 +49,8 @@ export class DivergingbarComponent implements AfterViewInit {
 }
 
 function DivergingBarChart(data, {
-  x = d => d, // given d in data, returns the (quantitative) x-value
+  xPlayer = d => d, // given d in data, returns the (quantitative) x-value
+  xOpponent = d => d,
   y = (d, i) => i, // given d in data, returns the (ordinal) y-value
   title, // given d in data, returns the title text
   marginTop = 30, // top margin, in pixels
@@ -62,24 +64,30 @@ function DivergingBarChart(data, {
   xRange = [marginLeft, width - marginRight], // [left, right]
   xFormat, // a format specifier string for the x-axis
   xLabel, // a label for the x-axis
-  yPadding = 0.1, // amount of y-range to reserve to separate bars
+  yPadding = 0.3, // amount of y-range to reserve to separate bars
   yDomain, // an array of (ordinal) y-values
   yRange, // [top, bottom]
-  colors = d3.schemePiYG[3] // [negative, …, positive] colors
+  colorsPlayer = d3.schemePiYG[3], // [negative, …, positive] colors
+  colorsOpponent = d3.schemeBrBG[3] // [negative, …, positive] colors
 } = {}) {
   // Compute values.
-  const X = d3.map(data, x);
+  const Xplayer = d3.map(data, xPlayer);
+  const Xopponent = d3.map(data, xOpponent);
+
   const Y = d3.map(data, y);
 
+
+
   // Compute default domains, and unique the y-domain.
-  if (xDomain === undefined) xDomain = d3.extent(X);
+  if (xDomain === undefined) xDomain = d3.extent(Xplayer);
   if (yDomain === undefined) yDomain = Y;
   yDomain = new d3.InternSet(yDomain);
 
   // Omit any data not present in the y-domain.
   // Lookup the x-value for a given y-value.
-  const I = d3.range(X.length).filter(i => yDomain.has(Y[i]));
-  const YX = d3.rollup(I, ([i]) => X[i], i => Y[i]);
+  const playerData = d3.range(Xplayer.length).filter(i => yDomain.has(Y[i]));
+  const opponentData = d3.range(Xopponent.length).filter(i => yDomain.has(Y[i]));
+  const YX = d3.rollup(playerData, ([i]) => Xplayer[i], i => Y[i]);
 
   // Compute the default height.
   if (height === undefined) height = Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
@@ -94,7 +102,7 @@ function DivergingBarChart(data, {
 
   // Compute titles.
   if (title === undefined) {
-    title = i => `${Y[i]}\n${format(X[i])}`;
+    title = i => `${Y[i]}\n${format(Xplayer[i])}`;
   } else if (title !== null) {
     const O = d3.map(data, d => d);
     const T = title;
@@ -123,13 +131,23 @@ function DivergingBarChart(data, {
 
   const bar = svg.append("g")
     .selectAll("rect")
-    .data(I)
+    .data(playerData)
     .join("rect")
-    .attr("fill", i => colors[X[i] > 0 ? colors.length - 1 : 0])
-    .attr("x", i => Math.min(xScale(0), xScale(X[i])))
+    .attr("fill", i => colorsPlayer[Xplayer[i] > 0 ? colorsPlayer.length - 1 : 0])
+    .attr("x", i => Math.min(xScale(0), xScale(Xplayer[i])))
     .attr("y", i => yScale(Y[i]))
-    .attr("width", i => Math.abs(xScale(X[i]) - xScale(0)))
-    .attr("height", yScale.bandwidth());
+    .attr("width", i => Math.abs(xScale(Xplayer[i]) - xScale(0)))
+    .attr("height", yScale.bandwidth()/2);
+
+  const bar2 = svg.append("g")
+    .selectAll("rect")
+    .data(opponentData)
+    .join("rect")
+    .attr("fill", i => colorsOpponent[Xopponent[i] > 0 ? colorsPlayer.length - 1 : 0])
+    .attr("x", i => Math.min(xScale(0), xScale(Xopponent[i])))
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth()/2)
+    .attr("width", i => Math.abs(xScale(Xopponent[i]) - xScale(0)))
+    .attr("height",  yScale.bandwidth()/2);
 
   if (title) bar.append("title")
     .text(title);
@@ -137,15 +155,30 @@ function DivergingBarChart(data, {
   svg.append("g")
     .attr("text-anchor", "end")
     .attr("font-family", "sans-serif")
-    .attr("font-size", 10)
+    .attr("font-size", 8)
     .selectAll("text")
-    .data(I)
+    .data(playerData)
     .join("text")
-    .attr("text-anchor", i => X[i] < 0 ? "end" : "start")
-    .attr("x", i => xScale(X[i]) + Math.sign(X[i] - 0) * 4)
-    .attr("y", i => yScale(Y[i]) + yScale.bandwidth() / 2)
-    .attr("dy", "0.35em")
-    .text(i => format(X[i]));
+    .attr("class", "value")
+    .attr("text-anchor", i => Xplayer[i] < 0 ? "end" : "start")
+    .attr("x", i => xScale(Xplayer[i]) + Math.sign(Xplayer[i] - 0) * 4)
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth()/2 -2)
+    // .attr("dy", "0.35em")
+    .text(i => format(Xplayer[i]));
+
+    svg.append("g")
+    .attr("text-anchor", "end")
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 8)
+    .selectAll("text")
+    .data(playerData)
+    .join("text")
+    .attr("text-anchor", i => Xplayer[i] < 0 ? "end" : "start")
+    .attr("class", "value")
+    .attr("x", i => xScale(Xopponent[i]) + Math.sign(Xplayer[i] - 0) * 4)
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth())
+    // .attr("dy", "0.35em")
+    .text(i => format(Xopponent[i]));
 
   svg.append("g")
     .attr("transform", `translate(${xScale(0)},0)`)
