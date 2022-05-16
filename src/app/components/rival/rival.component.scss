@@ -4,13 +4,13 @@
   &:first-of-type {
     color: #fff;
     stroke: #fff;
-    fill: $red;
+    fill: $opp-color;
   }
 
   &:nth-of-type(2) {
     color: #fff;
     stroke: transparent;
-    fill: $blue;
+    fill: $player-color;
   }
 }
 
@@ -60,11 +60,11 @@ text {
 }
 
 .won {
-  background: $green;
+  background: $player-color;
 }
 
 .lost {
-  background: $red;
+  background: $opp-color;
 }
 
 #player-info {
@@ -101,6 +101,7 @@ text {
     margin: 0px 5px;
     padding: 0;
     border-radius: 3px;
+    border: 1px solid #ccc;
   }
 
   h5 {
@@ -119,4 +120,8 @@ p {
   font-size: small;
   color: gray;
   font-weight: bold;
+}
+
+.wl {
+  font-size: 1rem;
 }

@@ -25,14 +25,13 @@ interface Data {
 export class OverviewComponent implements AfterViewInit {
 
   @Input() htmlId = '';
+  @Input() barColor = '';
 
   //initial dimensions
   width = 120;
   height = 120;
   margin = 40;
   radius = Math.min(this.width, this.height) / 2 - this.margin;
-
-
 
   data: Data[] = [
     {
@@ -45,25 +44,22 @@ export class OverviewComponent implements AfterViewInit {
     }
   ];
 
-
-  pie = d3.pie<Data>().sort(null).value((data) => data.quantity)
-
-  data_ready = this.pie(this.data)
-
-
-  color = d3
-    .scaleOrdinal()
-    .domain(
-      (d3.extent(this.data, (d) => {
-        return d.category
-      }) as unknown) as string
-    )
-    .range(["#fe6262", "#c9c9c9"])
-
-
   constructor() { }
 
   ngAfterViewInit(): void {
+    let pie = d3.pie<Data>().sort(null).value((data) => data.quantity)
+
+    let data_ready = pie(this.data)
+
+    let color = d3
+      .scaleOrdinal()
+      .domain(
+        (d3.extent(this.data, (d) => {
+          return d.category
+        }) as unknown) as string
+      )
+      .range([this.barColor, "#c9c9c9"])
+
     const svg = d3.select(`#${this.htmlId}`)
       .append("svg")
       .attr("width", this.width)
@@ -83,13 +79,13 @@ export class OverviewComponent implements AfterViewInit {
 
 
     svg.selectAll('whatever')
-      .data(this.data_ready)
+      .data(data_ready)
       .join('path')
       .attr('d', d3.arc<PieArcDatum<Data>>()
         .innerRadius(59)
         .outerRadius(43) // This is the size of the donut hole
       )
-      .attr('fill', d => { return this.color(d.data.category) as string })
+      .attr('fill', d => { return color(d.data.category) as string })
       .style("opacity", 0.7)
 
 

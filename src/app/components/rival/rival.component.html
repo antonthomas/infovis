@@ -2,11 +2,7 @@
   <h2>Rival track record</h2>
   <div id="player-info">
     <div id="player-tag">
-      <img
-        class="flag"
-        src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}"
-        alt="Country of player 1"
-      />
+      <img class="flag" src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}" alt="Country of player 1" />
       <h5>{{ player.name }}</h5>
     </div>
     <div id="vs-tag">
@@ -14,23 +10,15 @@
     </div>
     <div id="opponent-tag">
       <h5>{{ opponent.name }}</h5>
-      <img
-        class="flag"
-        src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}"
-        alt="Country of player 2"
-      />
+      <img class="flag" src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}" alt="Country of player 2" />
     </div>
   </div>
   <div #rivalContainer id="rival-container"></div>
   <p>Win percentage - all surfaces</p>
   <div id="last-5-games">
-    <mat-card
-      class="game-card"
-      *ngFor="let game of lastFiveGames"
-      [ngClass]="{ won: game.won, lost: !game.won }"
-    >
-      <p *ngIf="game.won">W</p>
-      <p *ngIf="!game.won">L</p>
+    <mat-card class="game-card" *ngFor="let game of lastFiveGames" [ngClass]="{ won: game.won, lost: !game.won }">
+      <p class="wl" *ngIf="game.won">W</p>
+      <p class="wl" *ngIf="!game.won">L</p>
     </mat-card>
     <p>Last 5 games - all surfaces</p>
   </div>
