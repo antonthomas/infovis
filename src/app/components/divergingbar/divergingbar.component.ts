@@ -3,7 +3,6 @@ import {
   AfterViewInit,
   Component,
   Input,
-  OnInit,
   ViewEncapsulation
 } from "@angular/core";
 
@@ -18,14 +17,14 @@ import * as d3 from 'd3';
 
 export class DivergingbarComponent implements AfterViewInit {
   data = [
-    { player: 60, opponent: 50 , average: 90, metric: "1st serve" },
-    { player: 60,opponent: 60 , average: 50, metric: "2nd serve" },
-    { player: 60,opponent: 70 , average: 50, metric: "Tie break win" },
-    { player: 30,opponent: 20 , average: 50, metric: "Service games win" },
-    { player: 30,opponent: 30 , average: 50, metric: "Return games win" },
-    { player: 40,opponent: 35 , average: 50, metric: "Double Fault" },
-    { player: 80,opponent: 50 , average: 50, metric: "Break point save" },
-    { player: 40,opponent: 70 , average: 50, metric: "Break point against" }]
+    { player: 60, opponent: 50, average: 90, metric: "1st serve" },
+    { player: 60, opponent: 60, average: 50, metric: "2nd serve" },
+    { player: 60, opponent: 70, average: 50, metric: "Tie break win" },
+    { player: 30, opponent: 30, average: 50, metric: "Service games win" },
+    { player: 30, opponent: 30, average: 50, metric: "Return games win" },
+    { player: 40, opponent: 35, average: 50, metric: "Double Fault" },
+    { player: 80, opponent: 50, average: 50, metric: "Break point save" },
+    { player: 40, opponent: 70, average: 50, metric: "Break point against" }]
 
   chart: any = null
   @Input() htmlId = '';
@@ -33,17 +32,17 @@ export class DivergingbarComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.chart = DivergingBarChart(this.data, {
       xPlayer: d => d.average / d.player - 1,
-      xOpponent: d => d.average / d.opponent -1,
+      xOpponent: d => d.average / d.opponent - 1,
       y: d => d.metric,
       yDomain: d3.groupSort(this.data, ([d]) => d.average - d.player, d => d.metric),
       xFormat: "+%",
-      xLabel: "← performance metrics →",
-      width: document.querySelector('#player').offsetWidth,
+      // xLabel: "← performance metrics →",
+      width: document.querySelector('.performance-stats').offsetWidth,
+      height: document.querySelector('.performance-stats').offsetHeight,
       marginRight: 50,
-      marginLeft: 120,
-      colorsPlayer: d3.schemeRdBu[3]
+      marginLeft: 50,
     })
-    document.querySelector(`#diverging-${this.htmlId}`).appendChild(this.chart)
+    document.querySelector("#diverging").appendChild(this.chart)
   }
 
 }
@@ -57,7 +56,7 @@ function DivergingBarChart(data, {
   marginRight = 40, // right margin, in pixels
   marginBottom = 10, // bottom margin, in pixels
   marginLeft = 40, // left margin, in pixels
-  width = 640, // outer width of chart, in pixels
+  width, // outer width of chart, in pixels
   height, // the outer height of the chart, in pixels
   xType = d3.scaleLinear, // type of x-scale
   xDomain, // [xmin, xmax]
@@ -67,16 +66,12 @@ function DivergingBarChart(data, {
   yPadding = 0.3, // amount of y-range to reserve to separate bars
   yDomain, // an array of (ordinal) y-values
   yRange, // [top, bottom]
-  colorsPlayer = d3.schemePiYG[3], // [negative, …, positive] colors
-  colorsOpponent = d3.schemeBrBG[3] // [negative, …, positive] colors
 } = {}) {
   // Compute values.
   const Xplayer = d3.map(data, xPlayer);
   const Xopponent = d3.map(data, xOpponent);
 
   const Y = d3.map(data, y);
-
-
 
   // Compute default domains, and unique the y-domain.
   if (xDomain === undefined) xDomain = d3.extent(Xplayer);
@@ -133,21 +128,21 @@ function DivergingBarChart(data, {
     .selectAll("rect")
     .data(playerData)
     .join("rect")
-    .attr("fill", i => colorsPlayer[Xplayer[i] > 0 ? colorsPlayer.length - 1 : 0])
+    .attr("fill", "#6dadee" /*i => colorsPlayer[Xplayer[i] > 0 ? colorsPlayer.length - 1 : 0]*/)
     .attr("x", i => Math.min(xScale(0), xScale(Xplayer[i])))
     .attr("y", i => yScale(Y[i]))
     .attr("width", i => Math.abs(xScale(Xplayer[i]) - xScale(0)))
-    .attr("height", yScale.bandwidth()/2);
+    .attr("height", yScale.bandwidth() / 2);
 
   const bar2 = svg.append("g")
     .selectAll("rect")
     .data(opponentData)
     .join("rect")
-    .attr("fill", i => colorsOpponent[Xopponent[i] > 0 ? colorsPlayer.length - 1 : 0])
+    .attr("fill", "#ea6f59" /*i => colorsOpponent[Xopponent[i] > 0 ? colorsPlayer.length - 1 : 0]*/)
     .attr("x", i => Math.min(xScale(0), xScale(Xopponent[i])))
-    .attr("y", i => yScale(Y[i]) + yScale.bandwidth()/2)
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth() / 2)
     .attr("width", i => Math.abs(xScale(Xopponent[i]) - xScale(0)))
-    .attr("height",  yScale.bandwidth()/2);
+    .attr("height", yScale.bandwidth() / 2);
 
   if (title) bar.append("title")
     .text(title);
@@ -162,11 +157,11 @@ function DivergingBarChart(data, {
     .attr("class", "value")
     .attr("text-anchor", i => Xplayer[i] < 0 ? "end" : "start")
     .attr("x", i => xScale(Xplayer[i]) + Math.sign(Xplayer[i] - 0) * 4)
-    .attr("y", i => yScale(Y[i]) + yScale.bandwidth()/2 -2)
+    .attr("y", i => yScale(Y[i]) + yScale.bandwidth() / 2 - 2)
     // .attr("dy", "0.35em")
     .text(i => format(Xplayer[i]));
 
-    svg.append("g")
+  svg.append("g")
     .attr("text-anchor", "end")
     .attr("font-family", "sans-serif")
     .attr("font-size", 8)

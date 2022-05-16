@@ -21,7 +21,7 @@ export class BettingComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     let svg: any = d3.select(`#svg-betting-${this.htmlId}`)
     // @ts-ignore
-    const width = d3.select('.overview-opponent').node().getBoundingClientRect().width - 32
+    const width = d3.select('.player-overview').node().getBoundingClientRect().width - 32
 
     svg.append("line")
       .style("stroke", "#ccc")

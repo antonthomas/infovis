@@ -1,9 +1,14 @@
-#diverging-player text,
-#diverging-opponent text {
+#diverging text {
     opacity: 0.5;
     stroke: black;
 }
 
+#diverging>svg>g:last-child>g>text {
+    font-size: 0.9rem;
+    transform: translateY(-8px);
+}
+
 .value {
-    font-size: 8px!important; 
+    font-size: 0.8rem !important;
+    transform: translateY(-2px);
 }

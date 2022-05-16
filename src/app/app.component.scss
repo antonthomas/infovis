@@ -38,27 +38,28 @@ main {
 .container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(4, auto);
+  grid-template-rows: 1fr 1fr;
   gap: 1em 1em;
   grid-auto-flow: row;
   grid-template-areas:
-    "overview-player overview-player overview-player head-to-head head-to-head head-to-head head-to-head head-to-head head-to-head overview-opponent overview-opponent overview-opponent"
-    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent"
-    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent"
-    "overview-player overview-player overview-player surface surface surface surface surface surface overview-opponent overview-opponent overview-opponent";
-
+    "player-overview player-overview player-overview head-to-head head-to-head head-to-head head-to-head head-to-head head-to-head opponent-overview opponent-overview opponent-overview"
+    "performance-stats performance-stats performance-stats performance-stats performance-stats performance-stats surface surface surface surface surface surface";
 }
 
-.overview-player {
-  grid-area: overview-player;
+.opponent-overview {
+  grid-area: opponent-overview;
 }
 
-.overview-opponent {
-  grid-area: overview-opponent;
+.player-overview {
+  grid-area: player-overview;
 }
 
 .head-to-head {
   grid-area: head-to-head;
+}
+
+.performance-stats {
+  grid-area: performance-stats;
 }
 
 .surface {
