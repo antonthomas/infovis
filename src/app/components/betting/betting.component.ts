@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 import * as d3 from 'd3';
-import { style } from 'd3';
 
 @Component({
   selector: 'app-betting',
@@ -22,7 +21,7 @@ export class BettingComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     let svg: any = d3.select(`#svg-betting-${this.htmlId}`)
     // @ts-ignore
-    const width = d3.select('.overview-opponent').node().getBoundingClientRect().width - 32
+    const width = d3.select('.player-overview').node().getBoundingClientRect().width - 32
 
     svg.append("line")
       .style("stroke", "#ccc")
@@ -47,7 +46,7 @@ export class BettingComponent implements AfterViewInit {
       .attr("cx", (d: any) => d.sequence * (width / 5) - (width / 10))
       .attr("cy", (d: any) => 25 + this.calcYOffset(d.odd))
       .attr("r", 7)
-      .style("fill", (d: any) => d.win ? '#A7C7E7' : '#ffb347')
+      .style("fill", (d: any) => d.win ? '#6dadee' : '#ea6f59')
       .on("mouseover", (e: Event, d: any) => {
         tooltip.text("Odd: " + d.odd);
         tooltip.style("visibility", "visible")

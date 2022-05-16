@@ -25,9 +25,10 @@ interface Data {
   styleUrls: ['./overview.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OverviewComponent implements AfterViewInit, OnChanges {
+export class OverviewComponent implements AfterViewInit  {
   @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0 };
   @Input() isOpponent: boolean = false;
+  @Input() barColor = '';
 
   //initial dimensions
   width = 120;
@@ -35,7 +36,7 @@ export class OverviewComponent implements AfterViewInit, OnChanges {
   margin = 40;
   radius = Math.min(this.width, this.height) / 2 - this.margin;
 
-  data = [
+  data: Data[] = [
     {
       quantity: 0, //winning percentage
       category: 'a'
@@ -47,10 +48,6 @@ export class OverviewComponent implements AfterViewInit, OnChanges {
   ]
 
   constructor(private _search: SearchService) {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    const text = d3.select(`#${this.player.id}`).remove()
-  }
 
   ngAfterViewInit(): void {
     if(!this.isOpponent) this.player = this._search.getOpponent().getValue()
@@ -104,10 +101,8 @@ export class OverviewComponent implements AfterViewInit, OnChanges {
 
     text.text(this.data[0].quantity + "%")
 
-    var path = svg.selectAll('path')
+    svg.selectAll('whatever')
       .data(data_ready)
-
-    path
       .join('path')
       .attr('d', d3.arc<PieArcDatum<Data>>()
         .innerRadius(59)

@@ -2,32 +2,32 @@
   <app-top-bar></app-top-bar>
 
   <!-- <div class="container">
-    <mat-card class="overview">
-      <app-overview></app-overview>
+    <mat-card class="overview-player">
+      <app-overview htmlId="player" barColor="#6dadee"></app-overview>
+    </mat-card>
+    <mat-card class="overview-opponent">
+      <app-overview htmlId="opponent" barColor="#ea6f59"></app-overview>
+    </mat-card>
+    <mat-card class="head-to-head">
+      <app-rival [player]="player" [opponent]="opponent"></app-rival>
     </mat-card>
     <mat-card class="surface">
       <app-surface></app-surface>
-    </mat-card>
-    <mat-card class="betting">
-      <app-betting></app-betting>
-    </mat-card>
-    <mat-card class="geo">
-      <app-geo></app-geo>
-    </mat-card>
-    <mat-card class="rival">
-      <app-rival></app-rival>
     </mat-card>
   </div> -->
 
   <div class="container">
     <mat-card class="overview-player">
-      <app-overview [isOpponent]="true" [player]="player"></app-overview>
+      <app-overview [isOpponent]="false" [player]="player" barColor="#6dadee"></app-overview>
     </mat-card>
     <mat-card class="overview-opponent">
-      <app-overview [isOpponent]="false" [player]="opponent"></app-overview>
+      <app-overview [isOpponent]="true" [player]="opponent" barColor="#ea6f59"></app-overview>
     </mat-card>
     <mat-card class="head-to-head">
       <app-rival [player]="player" [opponent]="opponent"></app-rival>
+    </mat-card>
+    <mat-card class="performance-stats">
+      <app-divergingbar></app-divergingbar>
     </mat-card>
     <mat-card class="surface">
       <app-surface></app-surface>
