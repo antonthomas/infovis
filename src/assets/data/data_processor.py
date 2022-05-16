@@ -6,8 +6,8 @@
 
 import pandas as pd
 
-top_players = ["Novak Djokovic","Daniil Medvedev","Alexander Zverev","Rafael Nadal","Stefanos Tsitsipas","Matteo Berrettini","Casper Ruud","Andrey Rublev","Carlos Alcaraz","Felix Auger-Aliassime","Cameron Norrie","Jannik Sinner","Taylor Fritz","Hubert Hurkacz","Diego Schwartzman",
-"Denis Shapovalov","Reilly Opelka","Pablo Carreno Busta","Roberto Bautista Agut","Nikoloz Basilashvili","Gael Monfils","Grigor Dimitrov","Marin Cilic","Alex de Minaur","John Isner","Karen Khachanov","Lorenzo Sonego","Alejandro Davidovich Fokina","Frances Tiafoe","Cristian Garin"]
+top_players = ["Novak Djokovic","Daniil Medvedev","Alexander Zverev","Rafael Nadal","Stefanos Tsitsipas","Matteo Berrettini","Casper Ruud","Andrey Rublev","Felix Auger-Aliassime","Cameron Norrie","Jannik Sinner","Taylor Fritz","Hubert Hurkacz","Diego Schwartzman",
+"Denis Shapovalov","Reilly Opelka","Pablo Carreno Busta","Roberto Bautista Agut","Nikoloz Basilashvili","Gael Monfils","Grigor Dimitrov","Marin Cilic","Alex de Minaur","John Isner","Karen Khachanov","Lorenzo Sonego","Alejandro Davidovich Fokina","Frances Tiafoe"]
 
 def name_to_id(name):
     parts = name.lower().split(" ")
@@ -170,7 +170,6 @@ def process_diverging_data_players():
 
 
 def process_bollekes_data():
-    df = pd.read_csv("all_matches_filtered.csv")
 
     a = None
     # 10 last matches of player
@@ -190,8 +189,76 @@ def process_bollekes_data():
     #     opponent_ids = x["team2"]
     #     odds = x["odds1"]
 
+# Moneyline betting: favourite i.e. -150
+def generateAverageBettingOdds(id):
+    df = pd.read_csv("betting_moneyline.csv")
+    avg_w_o = 0.0
+    w_counter = 0
+    avg_l_o = 0.0
+    l_counter = 0
+    
+    
+    if id == "carlos-alcaraz":
+        return (0.0, 0.0)
+    
+    
+    x = df[df["team1"] == id]
+    for index, row in x.iterrows():
+        if row["price1"] < row["price2"]:
+            avg_w_o += row["odds1"]
+            w_counter += 1
+        else:
+            avg_l_o += row["odds1"]
+            l_counter += 1
+   
+    
+    x = df[df["team2"] == id]
+    for index, row in x.iterrows():
+        if row["price2"] < row["price1"]:
+            avg_w_o += row["odds2"]
+            w_counter += 1
+        else:
+            avg_l_o += row["odds2"]
+            l_counter += 1
+            
+    avg_w_o = avg_w_o/w_counter
+    avg_l_o = avg_l_o/l_counter     
+            
+    return (avg_w_o,avg_l_o)
+
+def generateOverviewData():
+    # From filtered matches, count nb of games per player
+    df = pd.read_csv("all_matches_filtered.csv")
+
+    rank_player_id_tuple_list = list(enumerate(player_ids, start=1))
+    for (rank, id) in rank_player_id_tuple_list:
+        print(id)
+        x = df[df["player_id"] == id]
+        
+        #games played
+        nb_g = len(x)
+        
+        #games won
+        nb_g_w = 0
+        for index, row in x.iterrows():
+            nb_g_w += 1 if (row["sets_won"] > row["num_sets"] - row["sets_won"]) else 0
+        
+        #tournaments played
+        nb_t = x.groupby("tournament")["year"].nunique().sum()
+
+        #average winning and losing odds
+        avg_w_o, avg_l_o = generateAverageBettingOdds(id)        
+
+        print(", \"gamesPlayed\": " + str(nb_g) + 
+              ", \"gamesWon\": " + str(nb_g_w) + 
+              ", \"tournamentsPlayed\": " + str(nb_t) +
+              ", \"averageWinningOdd\": " + str(round(avg_w_o,2)) +
+              ", \"averageLosingOdd\": " + str(round(avg_l_o, 2)))
+
+
 # process_all_matches()
 # process_all_players()
 # process_diverging_data_all()
 # process_diverging_data_players()
-process_bollekes_data()
+# process_bollekes_data()
+generateOverviewData()

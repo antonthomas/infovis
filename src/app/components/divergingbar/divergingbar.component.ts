@@ -37,7 +37,7 @@ export class DivergingbarComponent implements AfterViewInit {
       yDomain: d3.groupSort(this.states, ([d]) => d[2019] - d[2010], d => d.metric),
       xFormat: "+%",
       xLabel: "← performance metrics →",
-      width: document.querySelector('#player').offsetWidth,
+      width: document.querySelector(`#diverging-${this.htmlId}`).offsetWidth,
       marginRight: 50,
       marginLeft: 120,
       colors: d3.schemeRdBu[3]

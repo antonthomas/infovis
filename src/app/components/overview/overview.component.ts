@@ -1,14 +1,16 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,} from '@angular/core';
 import * as d3 from 'd3';
-import { PieArcDatum } from 'd3';
-
-
-// set the dimensions and margins of the graph
-
-
-function calcPercent(percent: number) {
-  return [percent, 100 - percent];
-};
+import { pie, PieArcDatum } from 'd3';
+import { Player } from '../../.././types';
+import { SearchService } from 'src/app/services/search/search.service';
 
 interface Data {
   quantity: number;
@@ -20,11 +22,12 @@ interface Data {
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss']
+  styleUrls: ['./overview.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class OverviewComponent implements AfterViewInit {
-
-  @Input() htmlId = '';
+export class OverviewComponent implements AfterViewInit, OnChanges {
+  @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0 };
+  @Input() isOpponent: boolean = false;
 
   //initial dimensions
   width = 120;
@@ -32,39 +35,59 @@ export class OverviewComponent implements AfterViewInit {
   margin = 40;
   radius = Math.min(this.width, this.height) / 2 - this.margin;
 
-
-
-  data: Data[] = [
+  data = [
     {
-      quantity: 30, //winning percentage
+      quantity: 0, //winning percentage
       category: 'a'
     },
     {
-      quantity: 70, //remainder (100 - winning %)
+      quantity: 0, //remainder (100 - winning %)
       category: 'b'
     }
-  ];
+  ]
 
+  constructor(private _search: SearchService) {}
 
-  pie = d3.pie<Data>().sort(null).value((data) => data.quantity)
-
-  data_ready = this.pie(this.data)
-
-
-  color = d3
-    .scaleOrdinal()
-    .domain(
-      (d3.extent(this.data, (d) => {
-        return d.category
-      }) as unknown) as string
-    )
-    .range(["#fe6262", "#c9c9c9"])
-
-
-  constructor() { }
+  ngOnChanges(changes: SimpleChanges) {
+    const text = d3.select(`#${this.player.id}`).remove()
+  }
 
   ngAfterViewInit(): void {
-    const svg = d3.select(`#${this.htmlId}`)
+    if(!this.isOpponent) this.player = this._search.getOpponent().getValue()
+    else this.player = this._search.getPlayer().getValue()
+
+    this.drawChart()
+  }
+
+  drawChart(): void {
+    var winPercentage = Math.round((this.player.gamesWon/this.player.gamesPlayed) * 100)
+
+    this.data = [
+      {
+        quantity: winPercentage, //winning percentage
+        category: 'a'
+      },
+      {
+        quantity: 100 - winPercentage, //remainder (100 - winning %)
+        category: 'b'
+      }
+    ];
+
+    var pie = d3.pie<Data>().sort(null).value((data) => data.quantity)
+    var data_ready = pie(this.data)
+
+
+    var color = d3
+      .scaleOrdinal()
+      .domain(
+        (d3.extent(this.data, (d) => {
+          return d.category
+        }) as unknown) as string
+      )
+      .range(["#fe6262", "#c9c9c9"])
+
+
+    var svg = d3.select(`#${this.player.id}`)
       .append("svg")
       .attr("width", this.width)
       .attr("height", this.height)
@@ -81,18 +104,16 @@ export class OverviewComponent implements AfterViewInit {
 
     text.text(this.data[0].quantity + "%")
 
+    var path = svg.selectAll('path')
+      .data(data_ready)
 
-    svg.selectAll('whatever')
-      .data(this.data_ready)
+    path
       .join('path')
       .attr('d', d3.arc<PieArcDatum<Data>>()
         .innerRadius(59)
-        .outerRadius(43) // This is the size of the donut hole
+        .outerRadius(43)
       )
-      .attr('fill', d => { return this.color(d.data.category) as string })
+      .attr('fill', d => { return color(d.data.category) as string })
       .style("opacity", 0.7)
-
-
-
   }
 }

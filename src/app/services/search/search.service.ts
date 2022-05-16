@@ -50,4 +50,12 @@ export class SearchService {
   getOpponent(): BehaviorSubject<Player> {
     return this.opponent;
   }
+
+  getWinPercentage(id: string): number {
+    return 50;
+  }
+
+  isOpponent(id: string): boolean {
+    return id === this.getOpponent().getValue().id;
+  }
 }

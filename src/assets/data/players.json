@@ -1,64 +1,30 @@
 [
-  { "name": "Novak Djokovic", "id": "novak-djokovic", "countryCode": "rs" },
-  { "name": "Daniil Medvedev", "id": "daniil-medvedev", "countryCode": "ru" },
-  { "name": "Alexander Zverev", "id": "alexander-zverev", "countryCode": "de" },
-  { "name": "Rafael Nadal", "id": "rafael-nadal", "countryCode": "es" },
-  {
-    "name": "Stefanos Tsitsipas",
-    "id": "stefanos-tsitsipas",
-    "countryCode": "gr"
-  },
-  {
-    "name": "Matteo Berrettini",
-    "id": "matteo-berrettini",
-    "countryCode": "it"
-  },
-  { "name": "Casper Ruud", "id": "casper-ruud", "countryCode": "no" },
-  { "name": "Andrey Rublev", "id": "andrey-rublev", "countryCode": "ru" },
-  { "name": "Carlos Alcaraz", "id": "carlos-alcaraz", "countryCode": "es" },
-  {
-    "name": "Felix Auger-Aliassime",
-    "id": "felix-auger-aliassime",
-    "countryCode": "ca"
-  },
-  { "name": "Cameron Norrie", "id": "cameron-norrie", "countryCode": "gb" },
-  { "name": "Jannik Sinner", "id": "jannik-sinner", "countryCode": "it" },
-  { "name": "Taylor Fritz", "id": "taylor-fritz", "countryCode": "us" },
-  { "name": "Hubert Hurkacz", "id": "hubert-hurkacz", "countryCode": "pl" },
-  {
-    "name": "Diego Schwartzman",
-    "id": "diego-schwartzman",
-    "countryCode": "ar"
-  },
-  { "name": "Denis Shapovalov", "id": "denis-shapovalov", "countryCode": "ca" },
-  { "name": "Reilly Opelka", "id": "reilly-opelka", "countryCode": "us" },
-  {
-    "name": "Pablo Carreno Busta",
-    "id": "pablo-carreno-busta",
-    "countryCode": "es"
-  },
-  {
-    "name": "Roberto Bautista Agut",
-    "id": "roberto-bautista-agut",
-    "countryCode": "es"
-  },
-  {
-    "name": "Nikoloz Basilashvili",
-    "id": "nikoloz-basilashvili",
-    "countryCode": "ge"
-  },
-  { "name": "Gael Monfils", "id": "gael-monfils", "countryCode": "fr" },
-  { "name": "Grigor Dimitrov", "id": "grigor-dimitrov", "countryCode": "bg" },
-  { "name": "Marin Cilic", "id": "marin-cilic", "countryCode": "hr" },
-  { "name": "Alex de Minaur", "id": "alex-de-minaur", "countryCode": "au" },
-  { "name": "John Isner", "id": "john-isner", "countryCode": "us" },
-  { "name": "Karen Khachanov", "id": "karen-khachanov", "countryCode": "ru" },
-  { "name": "Lorenzo Sonego", "id": "lorenzo-sonego", "countryCode": "it" },
-  {
-    "name": "Alejandro Davidovich Fokina",
-    "id": "alejandro-davidovich-fokina",
-    "countryCode": "es"
-  },
-  { "name": "Frances Tiafoe", "id": "frances-tiafoe", "countryCode": "us" },
-  { "name": "Cristian Garin", "id": "cristian-garin", "countryCode": "cl" }
+  { "name": "Novak Djokovic", "id": "novak-djokovic", "countryCode": "rs", "gamesPlayed": 372, "gamesWon": 318, "tournamentsPlayed": 81, "averageWinningOdd": 0.88, "averageLosingOdd": 0.41 },
+  { "name": "Daniil Medvedev", "id": "daniil-medvedev", "countryCode": "ru", "gamesPlayed": 417, "gamesWon": 253, "tournamentsPlayed": 132, "averageWinningOdd": 0.67, "averageLosingOdd": 0.37 },
+  { "name": "Alexander Zverev", "id": "alexander-zverev", "countryCode": "de", "gamesPlayed": 413, "gamesWon": 275, "tournamentsPlayed": 152, "averageWinningOdd": 0.75, "averageLosingOdd": 0.36 },
+  { "name": "Rafael Nadal", "id": "rafael-nadal", "countryCode": "es", "gamesPlayed": 386, "gamesWon": 319, "tournamentsPlayed": 93, "averageWinningOdd": 0.87, "averageLosingOdd": 0.36 },
+  { "name": "Stefanos Tsitsipas", "id": "stefanos-tsitsipas", "countryCode": "gr", "gamesPlayed": 486, "gamesWon": 324, "tournamentsPlayed": 166, "averageWinningOdd": 0.69, "averageLosingOdd": 0.35 },
+  { "name": "Matteo Berrettini", "id": "matteo-berrettini", "countryCode": "it", "gamesPlayed": 367, "gamesWon": 219, "tournamentsPlayed": 110, "averageWinningOdd": 0.68, "averageLosingOdd": 0.38 },
+  { "name": "Casper Ruud", "id": "casper-ruud", "countryCode": "no", "gamesPlayed": 342, "gamesWon": 221, "tournamentsPlayed": 129, "averageWinningOdd": 0.71, "averageLosingOdd": 0.34 },
+  { "name": "Andrey Rublev", "id": "andrey-rublev", "countryCode": "ru", "gamesPlayed": 437, "gamesWon": 247, "tournamentsPlayed": 147, "averageWinningOdd": 0.67, "averageLosingOdd": 0.37 },
+  { "name": "Felix Auger-Aliassime", "id": "felix-auger-aliassime", "countryCode": "ca", "gamesPlayed": 272, "gamesWon": 193, "tournamentsPlayed": 90, "averageWinningOdd": 0.71, "averageLosingOdd": 0.42 },
+  { "name": "Cameron Norrie", "id": "cameron-norrie", "countryCode": "gb", "gamesPlayed": 264, "gamesWon": 174, "tournamentsPlayed": 94, "averageWinningOdd": 0.69, "averageLosingOdd": 0.33 },
+  { "name": "Jannik Sinner", "id": "jannik-sinner", "countryCode": "it", "gamesPlayed": 129, "gamesWon": 81, "tournamentsPlayed": 48, "averageWinningOdd": 0.73, "averageLosingOdd": 0.36 },
+  { "name": "Taylor Fritz", "id": "taylor-fritz", "countryCode": "us", "gamesPlayed": 409, "gamesWon": 245, "tournamentsPlayed": 128, "averageWinningOdd": 0.7, "averageLosingOdd": 0.36 },
+  { "name": "Hubert Hurkacz", "id": "hubert-hurkacz", "countryCode": "pl", "gamesPlayed": 365, "gamesWon": 230, "tournamentsPlayed": 133, "averageWinningOdd": 0.69, "averageLosingOdd": 0.38 },
+  { "name": "Diego Schwartzman", "id": "diego-schwartzman", "countryCode": "ar", "gamesPlayed": 378, "gamesWon": 227, "tournamentsPlayed": 159, "averageWinningOdd": 0.67, "averageLosingOdd": 0.34 },
+  { "name": "Denis Shapovalov", "id": "denis-shapovalov", "countryCode": "ca", "gamesPlayed": 330, "gamesWon": 227, "tournamentsPlayed": 113, "averageWinningOdd": 0.68, "averageLosingOdd": 0.36 },
+  { "name": "Reilly Opelka", "id": "reilly-opelka", "countryCode": "us", "gamesPlayed": 259, "gamesWon": 154, "tournamentsPlayed": 106, "averageWinningOdd": 0.65, "averageLosingOdd": 0.35 },
+  { "name": "Pablo Carreno Busta", "id": "pablo-carreno-busta", "countryCode": "es", "gamesPlayed": 443, "gamesWon": 259, "tournamentsPlayed": 160, "averageWinningOdd": 0.69, "averageLosingOdd": 0.36 },
+  { "name": "Roberto Bautista Agut", "id": "roberto-bautista-agut", "countryCode": "es", "gamesPlayed": 363, "gamesWon": 227, "tournamentsPlayed": 139, "averageWinningOdd": 0.75, "averageLosingOdd": 0.34 },
+  { "name": "Nikoloz Basilashvili", "id": "nikoloz-basilashvili", "countryCode": "ge", "gamesPlayed": 408, "gamesWon": 196, "tournamentsPlayed": 171, "averageWinningOdd": 0.66, "averageLosingOdd": 0.33 },
+  { "name": "Gael Monfils", "id": "gael-monfils", "countryCode": "fr", "gamesPlayed": 280, "gamesWon": 182, "tournamentsPlayed": 101, "averageWinningOdd": 0.75, "averageLosingOdd": 0.33 },
+  { "name": "Grigor Dimitrov", "id": "grigor-dimitrov", "countryCode": "bg", "gamesPlayed": 341, "gamesWon": 215, "tournamentsPlayed": 129, "averageWinningOdd": 0.75, "averageLosingOdd": 0.33 },
+  { "name": "Marin Cilic", "id": "marin-cilic", "countryCode": "hr", "gamesPlayed": 323, "gamesWon": 223, "tournamentsPlayed": 108, "averageWinningOdd": 0.78, "averageLosingOdd": 0.33 },
+  { "name": "Alex de Minaur", "id": "alex-de-minaur", "countryCode": "au", "gamesPlayed": 407, "gamesWon": 241, "tournamentsPlayed": 122, "averageWinningOdd": 0.66, "averageLosingOdd": 0.33 },
+  { "name": "John Isner", "id": "john-isner", "countryCode": "us", "gamesPlayed": 325, "gamesWon": 208, "tournamentsPlayed": 127, "averageWinningOdd": 0.74, "averageLosingOdd": 0.35 },
+  { "name": "Karen Khachanov", "id": "karen-khachanov", "countryCode": "ru", "gamesPlayed": 384, "gamesWon": 243, "tournamentsPlayed": 150, "averageWinningOdd": 0.69, "averageLosingOdd": 0.33 },
+  { "name": "Lorenzo Sonego", "id": "lorenzo-sonego", "countryCode": "it", "gamesPlayed": 295, "gamesWon": 178, "tournamentsPlayed": 120, "averageWinningOdd": 0.72, "averageLosingOdd": 0.34 },
+  { "name": "Alejandro Davidovich Fokina", "id": "alejandro-davidovich-fokina", "countryCode": "es", "gamesPlayed": 212, "gamesWon": 145, "tournamentsPlayed": 72, "averageWinningOdd": 0.76, "averageLosingOdd": 0.32 },
+  { "name": "Frances Tiafoe", "id": "frances-tiafoe", "countryCode": "us", "gamesPlayed": 235, "gamesWon": 140, "tournamentsPlayed": 99, "averageWinningOdd": 0.67, "averageLosingOdd": 0.38 }
 ]
