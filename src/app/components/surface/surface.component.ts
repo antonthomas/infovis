@@ -1,3 +1,5 @@
+// http://bl.ocks.org/mthh/7e17b680b35b83b49f1c22a3613bd89f
+//@ts-nocheck
 import {
   AfterViewInit,
   Component,
@@ -8,280 +10,455 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import * as d3 from 'd3';
-import * as d3Scale from 'd3';
-import * as d3Shape from 'd3';
-import * as d3Array from 'd3';
-import * as d3Axis from 'd3';
-import { color } from 'd3';
+
+const colorRed = '#fd3f1e';
+const colorBlue = '#55a6f6';
 
 @Component({
   selector: 'app-surface',
   templateUrl: './surface.component.html',
-  styleUrls: ['./surface.component.scss']
+  styleUrls: ['./surface.component.scss'],
 })
-
+// @ts-ignore
 export class SurfaceComponent implements OnInit {
-  margin = { top: 20, right: 20, bottom: 20, left: 10 };
-  chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
-
-  @ViewChild('surfaceContainer')
-  surfaceContainer!: ElementRef;
-
-  data = [
-    {
-        "year": "2015", 
-        "values": [
-            {
-                "surface": "clay", 
-                "p1WinPercentage": 58,
-                "p2WinPercentage": 65
-            }, 
-            {
-              "surface": "hard", 
-              "p1WinPercentage": 34,
-              "p2WinPercentage": 49
-            }, 
-            {
-              "surface": "grass", 
-              "p1WinPercentage": 65,
-              "p2WinPercentage": 68
-            }
-        ]
-    },
-    {
-      "year": "2016",
-      "values": [
-          {
-              "surface": "clay", 
-              "p1WinPercentage": 61,
-              "p2WinPercentage": 65
-          }, 
-          {
-            "surface": "hard", 
-            "p1WinPercentage": 68,
-            "p2WinPercentage": 69
-          }, 
-          {
-            "surface": "grass", 
-            "p1WinPercentage": 41,
-            "p2WinPercentage": 48
-          }
-      ]
-    },
-    {
-      "year": "2017",
-      "values": [
-          {
-              "surface": "clay", 
-              "p1WinPercentage": 34,
-              "p2WinPercentage": 51
-          }, 
-          {
-            "surface": "hard", 
-            "p1WinPercentage": 39,
-            "p2WinPercentage": 49
-          }, 
-          {
-            "surface": "grass", 
-            "p1WinPercentage": 47,
-            "p2WinPercentage": 59
-          }
-      ]
-    },
-    {
-      "year": "2018",
-      "values": [
-          {
-              "surface": "clay", 
-              "p1WinPercentage": 37,
-              "p2WinPercentage": 34
-          }, 
-          {
-            "surface": "hard", 
-            "p1WinPercentage": 22,
-            "p2WinPercentage": 38
-          }, 
-          {
-            "surface": "grass", 
-            "p1WinPercentage": 51,
-            "p2WinPercentage": 47
-          }
-      ]
-    },
-    {
-      "year": "2019",
-      "values": [
-          {
-              "surface": "clay", 
-              "p1WinPercentage": 37,
-              "p2WinPercentage": 43
-          }, 
-          {
-            "surface": "hard", 
-            "p1WinPercentage": 30,
-            "p2WinPercentage": 58
-          }, 
-          {
-            "surface": "grass", 
-            "p1WinPercentage": 55,
-            "p2WinPercentage": 65
-          }
-      ]
-    }
-  ]
-
-
-  color = d3.scaleOrdinal()
-    .range(["#fe8320","#3d86f0","#6de170"]);
-
-  marginTop = 10
-  marginLeft = 10
-  marginRight = 10
-  marginBottom = 10  
-  width: number = 700 - this.marginLeft - this.marginRight
-  height: number = 396 - this.marginTop - this.marginBottom;
-
-
-  //Create chart svg
-  svg = d3.select("#surface-container").append("svg")
-  .attr("width", this.width + this.marginLeft + this.marginRight)
-  .attr("height", this.height + this.marginTop + this.marginBottom)
-  .append("g")
-  .attr("transform", "translate(" + this.marginLeft + "," +this.marginTop + ")");
-
-  constructor() { }
-
   ngOnInit(): void {
-    this.drawbarChart();
-  }
+    var radarChartOptions2 = {
+      w: 290,
+      h: 350,
+      margin: margin,
+      maxValue: 60,
+      levels: 6,
+      roundStrokes: false,
+      color: d3.scaleOrdinal().range([colorBlue, colorRed]),
+      format: '.0f',
+      legend: { title: '', translateX: 100, translateY: 20 },
+      unit: '$',
+    };
 
-  drawLineChart(): void {
-    this.svg.selectAll(".line")
-    .data(this.data)
-    .enter()
-    .append("path")
-      .attr("fill", "none")
-      // @ts-ignore
-      .attr("stroke", function(d){ return color(d.surface) })
-      .attr("stroke-width", 1.5)
-      .attr("d", function(d){
-        return d3.line()
-          // @ts-ignore
-          .x(function(d) { return x(d.year); })
-          // @ts-ignore
-          .y(function(d) { return y(d.values.p1WinPercentage); })
-          // @ts-ignore
-          (d.values)
-      })
-  }
-
-  drawbarChart(): void {
-    
-    var color = d3.scaleOrdinal()
-      .range(["#fe8320", "#3d86f0", "#6de170"]);
-
-    //Create bar chart axis
-    var years = this.data.map(d => d.year);
-    var surfaceNames = this.data[0].values.map(d => d.surface);
-
-    //Add X axis
-    var x0 = d3
-      .scaleBand()
-      .range([0, this.width])
-      .domain(years)
-      // @ts-ignore
-      .padding([0.5]);
-
-    var xAxis = d3.axisBottom(x0).tickSize(0);
-
-    //Add Y axis
-    var y = d3.scaleLinear()
-        .range([this.height, 0])
-        .domain([0, 100]);
-
-    var yAxis = d3.axisLeft(y);
-
-    //Add scale for subgroups
-    var x1 = d3.scaleBand()
-      .domain(surfaceNames)
-      .range([0, x0.bandwidth()])
-
-    //Draw XY
-    this.svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(xAxis);
-
-    this.svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style('font-weight','bold')
-        .style('fill', 'black')
-      .text("Playing percentage");
-
-    this.svg.selectAll("text").style('fill', 'black')
-
-
-
-    //Slice
-    this.svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
-
-    var slice = this.svg.selectAll(".slice")
-        .data(this.data)
-        .enter().append("g")
-        .attr("class", "g")
-        .attr("transform",function(d) { return "translate(" + x0(d.year) + ",0)"; });
-
-    slice.selectAll("rect")
-        .data(function(d) { return d.values; })
-        .enter().append("rect")
-        .attr("width", 20)
-        // @ts-ignore
-        .attr("x", function(d) { return x1(d.surface); })
-        // @ts-ignore
-        .style("fill", function(d) { return color(d.surface) })
-        .style("margin-left", 15)
-        .attr("y", function(d) { return y(0); })
-        // @ts-ignore
-        .attr("height", function(d) { return this.height - y(0); });
-
-    slice.selectAll("rect")
-      .transition()
-      .delay(function (d) { return Math.random() * 1000; })
-      .duration(1000)
-      // @ts-ignore
-      .attr("y", function (d) { return y(d.playingPercentage); })
-      // @ts-ignore
-      .attr("height", function (d) { return height - y(d.playingPercentage); });;
-
-
-    //Legend
-    var legend = this.svg.selectAll(".legend")
-      .data(this.data[0].values.map(function(d) { return d.surface; }).reverse())
-      .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
-      .style("opacity", "0");
-
-    legend.append("rect")
-        .attr("x", this.width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        // @ts-ignore
-        .style("fill", function(d) { return color(d); });
-
-    legend.append("text")
-        .attr("x", this.width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .style('fill', 'black')
-        .text(function(d) {return d; });
-
-    legend.transition().duration(500).delay(function(d,i){ return 1300 + 100 * i; }).style("opacity","1");
+    // Draw the chart, get a reference the created svg element :
+    let svg_radar2 = RadarChart('.radarChart', data, radarChartOptions2);
   }
 }
+
+var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+  width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+  height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+
+//////////////////////////////////////////////////////////////
+////////////////////////// Data //////////////////////////////
+//////////////////////////////////////////////////////////////
+
+var data = [
+  {
+    name: 'Player',
+    axes: [
+      { axis: 'Clay', value: 42 },
+      { axis: 'Grass', value: 20 },
+      { axis: 'Hard', value: 60 },
+      { axis: 'Carpet', value: 26 },
+      // { axis: 'Information Technology', value: 35 },
+      // { axis: 'Administration', value: 20 },
+    ],
+  },
+  {
+    name: 'Opponent',
+    axes: [
+      { axis: 'Clay', value: 50 },
+      { axis: 'Grass', value: 45 },
+      { axis: 'Hard', value: 20 },
+      { axis: 'Carpet', value: 20 },
+      // { axis: 'Information Technology', value: 25 },
+      // { axis: 'Administration', value: 23 },
+    ],
+  },
+];
+
+const max = Math.max;
+const sin = Math.sin;
+const cos = Math.cos;
+const HALF_PI = Math.PI / 2;
+
+const RadarChart = function RadarChart(parent_selector, data, options) {
+  //Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
+  const wrap = (text, width) => {
+    text.each(function () {
+      var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.4, // ems
+        y = text.attr('y'),
+        x = text.attr('x'),
+        dy = parseFloat(text.attr('dy')),
+        tspan = text
+          .text(null)
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', dy + 'em');
+
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(' '));
+          line = [word];
+          tspan = text
+            .append('tspan')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .text(word);
+        }
+      }
+    });
+  }; //wrap
+
+  const cfg = {
+    w: 600, //Width of the circle
+    h: 600, //Height of the circle
+    margin: { top: 20, right: 20, bottom: 20, left: 20 }, //The margins of the SVG
+    levels: 3, //How many levels or inner circles should there be drawn
+    maxValue: 0, //What is the value that the biggest circle will represent
+    labelFactor: 1.25, //How much farther than the radius of the outer circle should the labels be placed
+    wrapWidth: 60, //The number of pixels after which a label needs to be given a new line
+    opacityArea: 0.35, //The opacity of the area of the blob
+    dotRadius: 4, //The size of the colored circles of each blog
+    opacityCircles: 0.1, //The opacity of the circles of each blob
+    strokeWidth: 2, //The width of the stroke around each blob
+    roundStrokes: false, //If true the area and stroke will follow a round path (cardinal-closed)
+    color: d3.scaleOrdinal(d3.schemeCategory10), //Color function,
+    format: '.2%',
+    unit: '',
+    legend: false,
+  };
+
+  //Put all of the options into a variable called cfg
+  if ('undefined' !== typeof options) {
+    for (var i in options) {
+      if ('undefined' !== typeof options[i]) {
+        cfg[i] = options[i];
+      }
+    } //for i
+  } //if
+
+  //If the supplied maxValue is smaller than the actual one, replace by the max in the data
+  // var maxValue = max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
+  let maxValue = 0;
+  for (let j = 0; j < data.length; j++) {
+    for (let i = 0; i < data[j].axes.length; i++) {
+      data[j].axes[i]['id'] = data[j].name;
+      if (data[j].axes[i]['value'] > maxValue) {
+        maxValue = data[j].axes[i]['value'];
+      }
+    }
+  }
+  maxValue = max(cfg.maxValue, maxValue);
+
+  const allAxis = data[0].axes.map((i, j) => i.axis), //Names of each axis
+    total = allAxis.length, //The number of different axes
+    radius = Math.min(cfg.w / 2, cfg.h / 2), //Radius of the outermost circle
+    Format = d3.format(cfg.format), //Formatting
+    angleSlice = (Math.PI * 2) / total; //The width in radians of each "slice"
+
+  //Scale for the radius
+  const rScale = d3.scaleLinear().range([0, radius]).domain([0, maxValue]);
+
+  /////////////////////////////////////////////////////////
+  //////////// Create the container SVG and g /////////////
+  /////////////////////////////////////////////////////////
+  const parent = d3.select(parent_selector);
+
+  //Remove whatever chart with the same id/class was present before
+  parent.select('svg').remove();
+
+  //Initiate the radar chart SVG
+  let svg = parent
+    .append('svg')
+    .attr('width', cfg.w + cfg.margin.left + cfg.margin.right)
+    .attr('height', cfg.h + cfg.margin.top + cfg.margin.bottom)
+    .attr('class', 'radar');
+
+  //Append a g element
+  let g = svg
+    .append('g')
+    .attr(
+      'transform',
+      'translate(' +
+        (cfg.w / 2 + cfg.margin.left) +
+        ',' +
+        (cfg.h / 2 + cfg.margin.top) +
+        ')'
+    );
+
+  /////////////////////////////////////////////////////////
+  ////////// Glow filter for some extra pizzazz ///////////
+  /////////////////////////////////////////////////////////
+
+  //Filter for the outside glow
+  let filter = g.append('defs').append('filter').attr('id', 'glow'),
+    feGaussianBlur = filter
+      .append('feGaussianBlur')
+      .attr('stdDeviation', '2.5')
+      .attr('result', 'coloredBlur'),
+    feMerge = filter.append('feMerge'),
+    feMergeNode_1 = feMerge.append('feMergeNode').attr('in', 'coloredBlur'),
+    feMergeNode_2 = feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+  /////////////////////////////////////////////////////////
+  /////////////// Draw the Circular grid //////////////////
+  /////////////////////////////////////////////////////////
+
+  //Wrapper for the grid & axes
+  let axisGrid = g.append('g').attr('class', 'axisWrapper');
+
+  //Draw the background circles
+  axisGrid
+    .selectAll('.levels')
+    .data(d3.range(1, cfg.levels + 1).reverse())
+    .enter()
+    .append('circle')
+    .attr('class', 'gridCircle')
+    .attr('r', (d) => (radius / cfg.levels) * d)
+    .style('fill', '#fff')
+    .style('stroke', '#CDCDCD')
+    .style('fill-opacity', cfg.opacityCircles)
+    .style('filter', 'url(#glow)');
+
+  //Text indicating at what % each level is
+  axisGrid
+    .selectAll('.axisLabel')
+    .data(d3.range(1, cfg.levels + 1).reverse())
+    .enter()
+    .append('text')
+    .attr('class', 'axisLabel')
+    .attr('x', 4)
+    .attr('y', (d) => (-d * radius) / cfg.levels)
+    .attr('dy', '0.4em')
+    .style('font-size', '10px')
+    .attr('fill', '#000')
+    .text((d) => Format((maxValue * d) / cfg.levels) + cfg.unit);
+
+  /////////////////////////////////////////////////////////
+  //////////////////// Draw the axes //////////////////////
+  /////////////////////////////////////////////////////////
+
+  //Create the straight lines radiating outward from the center
+  var axis = axisGrid
+    .selectAll('.axis')
+    .data(allAxis)
+    .enter()
+    .append('g')
+    .attr('class', 'axis');
+  //Append the lines
+  axis
+    .append('line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr(
+      'x2',
+      (d, i) => rScale(maxValue * 1.1) * cos(angleSlice * i - HALF_PI)
+    )
+    .attr(
+      'y2',
+      (d, i) => rScale(maxValue * 1.1) * sin(angleSlice * i - HALF_PI)
+    )
+    .attr('class', 'line')
+    .style('stroke', '#cdcdcd')
+    .style('stroke-width', '2px');
+
+  //Append the labels at each axis
+  axis
+    .append('text')
+    .attr('class', 'legend')
+    .style('font-size', '11px')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '0.35em')
+    .attr(
+      'x',
+      (d, i) =>
+        rScale(maxValue * cfg.labelFactor) * cos(angleSlice * i - HALF_PI)
+    )
+    .attr(
+      'y',
+      (d, i) =>
+        rScale(maxValue * cfg.labelFactor) * sin(angleSlice * i - HALF_PI)
+    )
+    .text((d) => d)
+    .call(wrap, cfg.wrapWidth);
+
+  /////////////////////////////////////////////////////////
+  ///////////// Draw the radar chart blobs ////////////////
+  /////////////////////////////////////////////////////////
+
+  //The radial line function
+  const radarLine = d3
+    // .radialLine()
+    .lineRadial()
+    // .curve(d3.curveLinearClosed)
+    .curve(d3.curveCardinalClosed)
+    .radius((d) => rScale(d.value))
+    .angle((d, i) => i * angleSlice);
+
+  if (cfg.roundStrokes) {
+    radarLine.curve(d3.curveCardinalClosed);
+  }
+
+  //Create a wrapper for the blobs
+  const blobWrapper = g
+    .selectAll('.radarWrapper')
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('class', 'radarWrapper');
+
+  //Append the backgrounds
+  blobWrapper
+    .append('path')
+    .attr('class', 'radarArea')
+    .attr('d', (d) => radarLine(d.axes))
+    .style('fill', (d, i) => cfg.color(i))
+    .style('fill-opacity', cfg.opacityArea)
+    .on('mouseover', function (d, i) {
+      //Dim all blobs
+      parent
+        .selectAll('.radarArea')
+        .transition()
+        .duration(200)
+        .style('fill-opacity', 0.1);
+      //Bring back the hovered over blob
+      d3.select(this).transition().duration(200).style('fill-opacity', 0.7);
+    })
+    .on('mouseout', () => {
+      //Bring back all blobs
+      parent
+        .selectAll('.radarArea')
+        .transition()
+        .duration(200)
+        .style('fill-opacity', cfg.opacityArea);
+    });
+
+  //Create the outlines
+  blobWrapper
+    .append('path')
+    .attr('class', 'radarStroke')
+    .attr('d', function (d, i) {
+      return radarLine(d.axes);
+    })
+    .style('stroke-width', cfg.strokeWidth + 'px')
+    .style('stroke', (d, i) => cfg.color(i))
+    .style('fill', 'none')
+    .style('filter', 'url(#glow)');
+
+  //Append the circles
+  blobWrapper
+    .selectAll('.radarCircle')
+    .data((d) => d.axes)
+    .enter()
+    .append('circle')
+    .attr('class', 'radarCircle')
+    .attr('r', cfg.dotRadius)
+    .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
+    .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+    .style('fill', (d) => cfg.color(d.id))
+    .style('fill-opacity', 0.8);
+
+  /////////////////////////////////////////////////////////
+  //////// Append invisible circles for tooltip ///////////
+  /////////////////////////////////////////////////////////
+
+  //Wrapper for the invisible circles on top
+  const blobCircleWrapper = g
+    .selectAll('.radarCircleWrapper')
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('class', 'radarCircleWrapper');
+
+  //Append a set of invisible circles on top for the mouseover pop-up
+  blobCircleWrapper
+    .selectAll('.radarInvisibleCircle')
+    .data((d) => d.axes)
+    .enter()
+    .append('circle')
+    .attr('class', 'radarInvisibleCircle')
+    .attr('r', cfg.dotRadius * 1.5)
+    .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
+    .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+    .style('fill', 'none')
+    .style('pointer-events', 'all')
+    .on('mouseover', function (d, i) {
+      tooltip
+        .attr('x', this.cx.baseVal.value - 10)
+        .attr('y', this.cy.baseVal.value - 10)
+        .transition()
+        .style('display', 'block')
+        .text(Format(d.value) + cfg.unit);
+    })
+    .on('mouseout', function () {
+      tooltip.transition().style('display', 'none').text('');
+    });
+
+  const tooltip = g
+    .append('text')
+    .attr('class', 'tooltip')
+    .attr('x', 0)
+    .attr('y', 0)
+    .style('font-size', '12px')
+    .style('display', 'none')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '0.35em');
+
+  if (cfg.legend !== false && typeof cfg.legend === 'object') {
+    let legendZone = svg.append('g');
+    let names = data.map((el) => el.name);
+    if (cfg.legend.title) {
+      let title = legendZone
+        .append('text')
+        .attr('class', 'title')
+        .attr(
+          'transform',
+          `translate(${cfg.legend.translateX},${cfg.legend.translateY})`
+        )
+        .attr('x', cfg.w - 70)
+        .attr('y', 10)
+        .attr('font-size', '12px')
+        .attr('fill', '#404040')
+        .text(cfg.legend.title);
+    }
+    let legend = legendZone
+      .append('g')
+      .attr('class', 'legend')
+      .attr('height', 100)
+      .attr('width', 200)
+      .attr(
+        'transform',
+        `translate(${cfg.legend.translateX},${cfg.legend.translateY + 20})`
+      );
+    // Create rectangles markers
+    legend
+      .selectAll('rect')
+      .data(names)
+      .enter()
+      .append('rect')
+      .attr('x', cfg.w - 65)
+      .attr('y', (d, i) => i * 20)
+      .attr('width', 10)
+      .attr('height', 10)
+      .style('fill', (d, i) => cfg.color(i));
+    // Create labels
+    legend
+      .selectAll('text')
+      .data(names)
+      .enter()
+      .append('text')
+      .attr('x', cfg.w - 52)
+      .attr('y', (d, i) => i * 20 + 9)
+      .attr('font-size', '11px')
+      .attr('fill', '#737373')
+      .text((d) => d);
+  }
+  return svg;
+};

@@ -41,9 +41,9 @@ import { DivergingbarComponent } from './components/divergingbar/divergingbar.co
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
