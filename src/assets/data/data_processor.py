@@ -246,35 +246,40 @@ def generateLastFiveGamesWithOdds(id):
     d = []
     
     # Steps: 1) get 5 most recent games {all_matches} 2) find corresponding odds {betting_moneyline}
-    x1 = dfm[dfm["player_id"] == id].sort_values("start_date", ascending=False).head(5)
-    x2 = dfm[dfm["opponent_id"] == id].sort_values("start_date", ascending=False).head(5)
+    x1 = dfm[dfm["player_id"] == id].sort_values("start_date", ascending=False).head(50)
+    x2 = dfm[dfm["opponent_id"] == id].sort_values("start_date", ascending=False).head(50)
     
     # 5 most recent games
-    x = x1.merge(x2, how="outer").sort_values("start_date", ascending=False).head(5)
+    x = x1.merge(x2, how="outer").sort_values("start_date", ascending=False)
+    
+    nan_counter = 0
     
     # Find corresponding odds
     # After finding corresponding odds, take average of multiple bookies 
     for index, row in x.iterrows():
-        if row["player_id"] == id:
-            odd = dfo[
-                        (dfo["start_date"] == row["start_date"]) & 
-                        (dfo["team1"] == row["player_id"]) & 
-                        (dfo["team2"] == row["opponent_id"])
-                     ]
-            odd = (odd["odds1"].mean(), True if row["player_victory"] == "t" else False)
-        else:
-            odd = dfo[
-                        (dfo["start_date"] == row["start_date"]) & 
-                        (dfo["team2"] == row["player_id"]) & 
-                        (dfo["team1"] == row["opponent_id"])
-                     ]
-            odd = (odd["odds2"].mean(), True if row["player_victory"] == "f" else False)
-            
-        d.append({
-            "sequence": index+1,
-            "odd": round(odd[0],2),
-            "win": odd[1]
-            })
+        if nan_counter < 5:
+            if row["player_id"] == id:
+                odd = dfo[
+                            (dfo["start_date"] == row["start_date"]) & 
+                            (dfo["team1"] == row["player_id"]) & 
+                            (dfo["team2"] == row["opponent_id"])
+                         ]
+                odd = (odd["odds1"].mean(), True if row["player_victory"] == "t" else False)
+            else:
+                odd = dfo[
+                            (dfo["start_date"] == row["start_date"]) & 
+                            (dfo["team2"] == row["player_id"]) & 
+                            (dfo["team1"] == row["opponent_id"])
+                         ]
+                odd = (odd["odds2"].mean(), True if row["player_victory"] == "f" else False)
+            if not math.isnan(odd[0]):
+                nan_counter += 1
+                d.append({
+                    "sequence": nan_counter,
+                    "odd": round(odd[0],2),
+                    "win": odd[1]
+                    })
+        else: break
     return d
     
 
@@ -331,12 +336,12 @@ def generateOverviewData():
         player = {
             "name": player_name,
             "id": id,
-            "countryCode": str(player_country_2),
-            "gamesPlayed": str(nb_g),
-            "gamesWon": str(nb_g_w),
-            "tournamentsPlayed": str(nb_t),
-            "averageWinningOdd": str(avg_w_o),
-            "averageLosingOdd": str(avg_l_o),
+            "countryCode": str(player_country_2).lower(),
+            "gamesPlayed": int(nb_g),
+            "gamesWon": int(nb_g_w),
+            "tournamentsPlayed": int(nb_t),
+            "averageWinningOdd": round(float(avg_w_o), 2),
+            "averageLosingOdd": round(float(avg_l_o), 2),
             "lastFiveGamesOdds": five_game_odds
         }
 
@@ -354,7 +359,7 @@ def generateOverviewData():
         #       "},")
 
     json_data = json.dumps(player_objects)
-    with open("test.json", "w") as outfile:
+    with open("players.json", "w") as outfile:
         outfile.write(json_data)
 
 def printJSON():
