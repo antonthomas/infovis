@@ -4,13 +4,13 @@
   &:first-of-type {
     color: #fff;
     stroke: #fff;
-    fill: $opp-color;
+    fill: $opp-color-blind;
   }
 
   &:nth-of-type(2) {
     color: #fff;
     stroke: transparent;
-    fill: $player-color;
+    fill: $player-color-blind;
   }
 }
 
@@ -60,11 +60,11 @@
 }
 
 .won {
-  background: $player-color;
+  background: $player-color-blind;
 }
 
 .lost {
-  background: $opp-color;
+  background: $opp-color-blind;
 }
 
 #player-info {
