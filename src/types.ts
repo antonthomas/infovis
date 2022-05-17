@@ -10,4 +10,16 @@ export type Player = {
   lastFiveGamesOdds: { sequence: number; odd: number; win: boolean; }[];
 };
 
+export type PlayerRival = {
+  playerId: string,
+  opponents: {
+    opponentId: string,
+    matchesPlayed: number,
+    matchesWon: number,
+    lastFive: string[]
+  }[]
+}
+
+
+
 export type Surface = 'clay' | 'grass' | 'hard court' | 'carpet';

@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Player } from '../../../types';
+import { Player, PlayerRival } from '../../../types';
 import playerJSON from '../../../assets/data/players.json';
+import playerRivals from '../../../assets/data/playerRivals.json'
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
   players: Player[] = playerJSON;
+  playerRivalMatches: PlayerRival[] = playerRivals
   player: BehaviorSubject<Player> = new BehaviorSubject<Player>(
     this.players[0]
   );
@@ -57,5 +59,9 @@ export class SearchService {
 
   isOpponent(id: string): boolean {
     return id === this.getOpponent().getValue().id;
+  }
+
+  filterRival(pId: string, oid: string): void {
+    console.log(this.playerRivalMatches)
   }
 }

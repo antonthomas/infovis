@@ -91,6 +91,7 @@ export class RivalComponent implements OnInit {
       map((value) => this._filter(value))
     );
     this.drawChart();
+    this.search.filterRival(this.player.id, this.opponent.id)
   }
 
   createSvg(): void {

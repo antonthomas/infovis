@@ -373,4 +373,4 @@ def printJSON():
 # process_diverging_data_players()
 # process_bollekes_data()
 # generateOverviewData()
-printJSON()
+#printJSON()
