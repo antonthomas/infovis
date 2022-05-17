@@ -7,6 +7,7 @@ export type Player = {
   tournamentsPlayed: number;
   averageWinningOdd: number;
   averageLosingOdd: number;
+  lastFiveGamesOdds: { sequence: number; odd: number; win: boolean; }[];
 };
 
 export type Surface = 'clay' | 'grass' | 'hard court' | 'carpet';

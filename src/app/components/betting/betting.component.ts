@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
+import { Player } from '../../.././types';
+import { SearchService } from 'src/app/services/search/search.service';
 import * as d3 from 'd3';
 
 @Component({
@@ -8,15 +10,34 @@ import * as d3 from 'd3';
 })
 export class BettingComponent implements AfterViewInit {
   @Input() htmlId = '';
-  data = [
-    { sequence: 1, odd: 0.48, win: true },
-    { sequence: 2, odd: 0.98, win: false },
-    { sequence: 3, odd: 1.5, win: true },
-    { sequence: 4, odd: 0.87, win: false },
-    { sequence: 5, odd: 3.21, win: true }
-  ]
+  @Input() isOpponent: boolean = false;
+  @Input() player: Player = {
+    name: '',
+    id: '',
+    countryCode: '',
+    gamesPlayed: 0,
+    gamesWon: 0,
+    tournamentsPlayed: 0,
+    averageWinningOdd: 0.0,
+    averageLosingOdd: 0.0,
+    lastFiveGamesOdds: []
+  };
 
-  constructor() { }
+  data = this.player.lastFiveGamesOdds
+
+  constructor(private _search: SearchService) {
+    _search.getPlayer().subscribe((p) => {
+      if (!this.isOpponent) {
+        console.log(_search.getPlayer().getValue().lastFiveGamesOdds)
+      }
+    });
+    _search.getOpponent().subscribe((p) => {
+      if (this.isOpponent) {
+        console.log(_search.getOpponent().getValue().lastFiveGamesOdds)
+
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     let svg: any = d3.select(`#svg-betting-${this.htmlId}`)
@@ -61,10 +82,9 @@ export class BettingComponent implements AfterViewInit {
   }
 
   calcYOffset(odd: number): number {
-    if (odd < 0.5) return 10;
-    else if (odd < 0.9) return 5;
-    else if (odd < 1.11) return 0;
-    else if (odd < 2) return -5;
+    if (odd < 0.45) return 5;
+    else if (odd < 0.55) return 0;
+    else if (odd < 1) return -5;
     else return -10;
   }
 

@@ -36,6 +36,7 @@ export class OverviewComponent implements AfterViewInit {
     tournamentsPlayed: 0,
     averageWinningOdd: 0.0,
     averageLosingOdd: 0.0,
+    lastFiveGamesOdds: []
   };
   @Input() isOpponent: boolean = false;
   @Input() barColor = '';

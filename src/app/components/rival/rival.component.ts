@@ -41,14 +41,14 @@ type Game = {
   encapsulation: ViewEncapsulation.None,
 })
 export class RivalComponent implements OnInit {
-  @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0 };
+  @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
 
   // player1: Player = {
   //   name: 'Roger Federer',
   //   id: 'roger-federer',
   //   countryCode: 'ch',
   // };
-  @Input() opponent: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0 };
+  @Input() opponent: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
   progressbarHeight: number = 30;
   totalGames: number = 100;
   gamesWonPlayer1: number = 60;
