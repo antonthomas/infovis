@@ -28,13 +28,14 @@ export class BettingComponent implements AfterViewInit {
   constructor(private _search: SearchService) {
     _search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
-        console.log(_search.getPlayer().getValue().lastFiveGamesOdds)
+        this.updateData()
+        this.updateChart()
       }
     });
     _search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
-        console.log(_search.getOpponent().getValue().lastFiveGamesOdds)
-
+        this.updateData()
+        this.updateChart()
       }
     });
   }
@@ -79,6 +80,15 @@ export class BettingComponent implements AfterViewInit {
           .style("left", (d3.pointer(e)[0] + 10) + "px");
       })
       .on("mouseout", () => { return tooltip.style("visibility", "hidden"); });
+  }
+
+
+  updateData(): void {
+    this.data = this.player.lastFiveGamesOdds
+  }
+
+  updateChart(): void {
+    let svg: any = d3.select(`#svg-betting-${this.htmlId}`)
   }
 
   calcYOffset(odd: number): number {
