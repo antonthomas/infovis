@@ -26,9 +26,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
 
   data = this.player.lastFiveGamesOdds
 
-  constructor(private _search: SearchService, private colorService: ColorService) {
-
-  }
+  constructor(private _search: SearchService, private colorService: ColorService) { }
 
   ngOnInit(): void {
     this._search.getPlayer().subscribe((p) => {
