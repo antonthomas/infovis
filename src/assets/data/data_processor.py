@@ -5,15 +5,23 @@
 # start_date,end_date,location,court_surface,prize_money,currency,year,player_id,player_name,opponent_id,opponent_name,tournament,round,num_sets,sets_won,games_won,games_against,tiebreaks_won,tiebreaks_total,serve_rating,aces,double_faults,first_serve_made,first_serve_attempted,first_serve_points_made,first_serve_points_attempted,second_serve_points_made,second_serve_points_attempted,break_points_saved,break_points_against,service_games_won,return_rating,first_serve_return_points_made,first_serve_return_points_attempted,second_serve_return_points_made,second_serve_return_points_attempted,break_points_made,break_points_attempted,return_games_played,service_points_won,service_points_attempted,return_points_won,return_points_attempted,total_points_won,total_points,duration,player_victory,retirement,seed,won_first_set,doubles,masters,round_num,nation
 
 import pandas as pd
+import math
 
-top_players = ["Novak Djokovic","Daniil Medvedev","Alexander Zverev","Rafael Nadal","Stefanos Tsitsipas","Matteo Berrettini","Casper Ruud","Andrey Rublev","Carlos Alcaraz","Felix Auger-Aliassime","Cameron Norrie","Jannik Sinner","Taylor Fritz","Hubert Hurkacz","Diego Schwartzman",
-"Denis Shapovalov","Reilly Opelka","Pablo Carreno Busta","Roberto Bautista Agut","Nikoloz Basilashvili","Gael Monfils","Grigor Dimitrov","Marin Cilic","Alex de Minaur","John Isner","Karen Khachanov","Lorenzo Sonego","Alejandro Davidovich Fokina","Frances Tiafoe","Cristian Garin"]
+top_players = ["Novak Djokovic","Daniil Medvedev","Alexander Zverev","Rafael Nadal","Stefanos Tsitsipas","Matteo Berrettini","Casper Ruud","Andrey Rublev","Felix Auger-Aliassime","Cameron Norrie","Jannik Sinner","Taylor Fritz","Hubert Hurkacz","Diego Schwartzman",
+"Denis Shapovalov","Reilly Opelka","Pablo Carreno Busta","Roberto Bautista Agut","Nikoloz Basilashvili","Gael Monfils","Grigor Dimitrov","Marin Cilic","Alex de Minaur","John Isner","Karen Khachanov","Lorenzo Sonego","Alejandro Davidovich Fokina","Frances Tiafoe"]
 
 def name_to_id(name):
     parts = name.lower().split(" ")
     result = ""
     for part in parts:
         result += (part + "-")
+    return result[:-1]
+
+def id_to_name(id):
+    parts = id.lower().split("-")
+    result = ""
+    for part in parts:
+        result += (part + " ")
     return result[:-1]
 
 player_ids = map(name_to_id, top_players)
@@ -41,7 +49,7 @@ def process_all_players():
 
     df = pd.read_csv("all_players.csv")
     # TODO: problem with filtering
-    filtered = df[df["player_id"].isin(player_ids)]
+    filtered = df[df["player_id"].isin(dict.keys())]
     # print(filtered)
 
     ranks = []
@@ -50,9 +58,8 @@ def process_all_players():
 
     # TODO: add ranks to df
     # TODO: write to csv
-    print(ranks)
 
-    return
+    return filtered
 
 def process_diverging_data_all():
     df = pd.read_csv("all_matches_filtered.csv")
@@ -170,7 +177,6 @@ def process_diverging_data_players():
 
 
 def process_bollekes_data():
-    df = pd.read_csv("all_matches_filtered.csv")
 
     a = None
     # 10 last matches of player
@@ -190,8 +196,140 @@ def process_bollekes_data():
     #     opponent_ids = x["team2"]
     #     odds = x["odds1"]
 
+# Moneyline betting: favourite i.e. -150
+def generateAverageBettingOdds(id):
+    df = pd.read_csv("betting_moneyline.csv")
+    avg_w_o = 0.0
+    w_counter = 0
+    avg_l_o = 0.0
+    l_counter = 0
+    
+    
+    x = df[df["team1"] == id]
+    for index, row in x.iterrows():
+        if row["price1"] < row["price2"]:
+            avg_w_o += row["odds1"]
+            w_counter += 1
+        else:
+            avg_l_o += row["odds1"]
+            l_counter += 1
+   
+    
+    x = df[df["team2"] == id]
+    for index, row in x.iterrows():
+        if row["price2"] < row["price1"]:
+            avg_w_o += row["odds2"]
+            w_counter += 1
+        else:
+            avg_l_o += row["odds2"]
+            l_counter += 1
+            
+    avg_w_o = avg_w_o/w_counter
+    avg_l_o = avg_l_o/l_counter     
+            
+    return (avg_w_o,avg_l_o)
+
+def generateLastFiveGamesWithOdds(id):
+    dfm = pd.read_csv("all_matches_filtered.csv")
+    dfo = pd.read_csv("betting_moneyline.csv")
+    """
+        data = [
+            { sequence: 1, odd: 0.48, win: true },
+            { sequence: 2, odd: 0.98, win: false },
+            { sequence: 3, odd: 1.5, win: true },
+            { sequence: 4, odd: 0.87, win: false },
+            { sequence: 5, odd: 3.21, win: true }
+        ]
+    """
+    d = []
+    
+    # Steps: 1) get 5 most recent games {all_matches} 2) find corresponding odds {betting_moneyline}
+    x1 = dfm[dfm["player_id"] == id].sort_values("start_date", ascending=False).head(5)
+    x2 = dfm[dfm["opponent_id"] == id].sort_values("start_date", ascending=False).head(5)
+    
+    # 5 most recent games
+    x = x1.merge(x2, how="outer").sort_values("start_date", ascending=False).head(5)
+    
+    # Find corresponding odds
+    # After finding corresponding odds, take average of multiple bookies 
+    for index, row in x.iterrows():
+        if row["player_id"] == id:
+            odd = dfo[
+                        (dfo["start_date"] == row["start_date"]) & 
+                        (dfo["team1"] == row["player_id"]) & 
+                        (dfo["team2"] == row["opponent_id"])
+                     ]
+            odd = (odd["odds1"].mean(), True if row["player_victory"] == "t" else False)
+        else:
+            odd = dfo[
+                        (dfo["start_date"] == row["start_date"]) & 
+                        (dfo["team2"] == row["player_id"]) & 
+                        (dfo["team1"] == row["opponent_id"])
+                     ]
+            odd = (odd["odds2"].mean(), True if row["player_victory"] == "f" else False)
+            
+        d.append({
+            "sequence": index+1,
+            "odd": round(odd[0],2),
+            "win": odd[1]
+            })
+    return d
+    
+
+def generateOverviewData():
+    # From filtered matches, count nb of games per player
+    df = pd.read_csv("all_matches_filtered.csv")
+
+    players_countries = process_all_players()
+
+    player_ids = map(name_to_id, top_players)
+    rank_player_id_tuple_list = list(enumerate(player_ids, start=1))
+    for (rank, id) in rank_player_id_tuple_list:
+        
+        player_name = id_to_name(id)        
+        player_country = players_countries[players_countries["player_id"] == id].iloc[0]["country"]
+        
+
+        
+        x = df[df["player_id"] == id]
+        
+        #games played
+        nb_g = len(x)
+        
+        #games won
+        nb_g_w = 0
+        for index, row in x.iterrows():
+            nb_g_w += 1 if (row["sets_won"] > row["num_sets"] - row["sets_won"]) else 0
+        
+        #tournaments played
+        nb_t = x.groupby("tournament")["year"].nunique().sum()
+
+        #average winning and losing odds
+        avg_w_o, avg_l_o = generateAverageBettingOdds(id)        
+
+        #last five games odds
+        five_game_odds = generateLastFiveGamesWithOdds(id)
+        
+        print("{\"name\": ", player_name,
+              ", \"id\":", id,
+              ", \"countryCode\": ", player_country,
+              ", \"gamesPlayed\": ", str(nb_g),
+              ", \"gamesWon\": ", str(nb_g_w), 
+              ", \"tournamentsPlayed\": ", str(nb_t),
+              ", \"averageWinningOdd\": ", str(round(avg_w_o,2)),
+              ", \"averageLosingOdd\": ", str(round(avg_l_o, 2)),
+              ", \"lastFiveGamesOdds\": ", five_game_odds,
+              "},")
+
+def printJSON():
+    print("[")
+    generateOverviewData()
+    print("]")
+    
 # process_all_matches()
 # process_all_players()
 # process_diverging_data_all()
 # process_diverging_data_players()
-process_bollekes_data()
+# process_bollekes_data()
+# generateOverviewData()
+printJSON()

@@ -2,11 +2,19 @@
   <app-top-bar></app-top-bar>
 
   <div class="container">
-    <mat-card class="player-overview">
-      <app-overview htmlId="player" [barColor]="playerColor"></app-overview>
+    <mat-card class="overview-player">
+      <app-overview
+        [isOpponent]="false"
+        [player]="player"
+        [barColor]="playerColor"
+      ></app-overview>
     </mat-card>
-    <mat-card class="opponent-overview">
-      <app-overview htmlId="opponent" [barColor]="opponentColor"></app-overview>
+    <mat-card class="overview-opponent">
+      <app-overview
+        [isOpponent]="true"
+        [player]="opponent"
+        [barColor]="opponentColor"
+      ></app-overview>
     </mat-card>
     <mat-card class="head-to-head">
       <app-rival [player]="player" [opponent]="opponent"></app-rival>
@@ -18,6 +26,5 @@
       <app-surface></app-surface>
     </mat-card>
   </div>
-
   <router-outlet></router-outlet>
 </main>

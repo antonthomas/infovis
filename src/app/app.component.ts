@@ -9,6 +9,9 @@ import { ColorService } from './services/color.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  isOpponent: String = "true";
+  isPlayer: String = "false";
+
   title = 'Tennis Betting Dashboard';
   // @ts-ignore
   player: Player;
