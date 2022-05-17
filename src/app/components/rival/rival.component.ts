@@ -8,9 +8,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import * as d3 from 'd3';
 import * as d3Scale from 'd3';
+import { SearchService } from 'src/app/services/search/search.service';
 import { Player } from '../../.././types';
+import { map, Observable, startWith } from 'rxjs';
 
 /**
  * Necessary data:
@@ -64,12 +67,29 @@ export class RivalComponent implements OnInit {
   data: number[] = [this.totalGames, this.gamesWonPlayer1];
   chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
+  playerControl = new FormControl();
+  opponentControl = new FormControl();
+  options: string[] = [];
+  filteredOptionsPlayer: Observable<string[]> | undefined;
+  filteredOptionsOpponent: Observable<string[]> | undefined;
+
   @ViewChild('rivalContainer')
   rivalContainer!: ElementRef;
 
-  constructor() {}
+  constructor(private search: SearchService) {
+    this.options = this.search.getPlayerNames();
+  }
 
   ngOnInit(): void {
+    this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+
+    this.filteredOptionsOpponent = this.opponentControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
     this.drawChart();
   }
 
@@ -110,5 +130,24 @@ export class RivalComponent implements OnInit {
     this.createSvg();
     this.createBars();
     this.createText();
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  updatePlayer(event: any) {
+    console.log('a', event);
+    this.search.setPlayer(event.option.value);
+  }
+
+  // TODO: this method is not being called...
+  // It does work when commenting out first form field in HTML
+  updateOpponent(event: any) {
+    console.log('b', event);
+    this.search.setOpponent(event.option.value);
   }
 }

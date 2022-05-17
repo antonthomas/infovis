@@ -11,9 +11,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import * as d3 from 'd3';
-import { isoFormat, isoParse, pie, PieArcDatum } from 'd3';
+import { PieArcDatum } from 'd3';
 import { Player } from '../../.././types';
 import { SearchService } from 'src/app/services/search/search.service';
+import { ColorService } from 'src/app/services/color.service';
+
+// set the dimensions and margins of the graph
+
+function calcPercent(percent: number) {
+  return [percent, 100 - percent];
+}
 
 interface Data {
   quantity: number;
@@ -64,7 +71,10 @@ export class OverviewComponent implements AfterViewInit {
     },
   ];
 
-  constructor(private _search: SearchService) {
+  constructor(
+    private _search: SearchService,
+    private colorService: ColorService
+  ) {
     _search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
         this.updateData();
@@ -175,8 +185,8 @@ export class OverviewComponent implements AfterViewInit {
   }
 
   primaryColor(): string {
-    if (this.isOpponent) return '#55a6f6';
-    else return '#fd3f1e';
+    if (!this.isOpponent) return this.colorService.opponentColor();
+    else return this.colorService.playerColor();
   }
 
   arcTween(a): any {

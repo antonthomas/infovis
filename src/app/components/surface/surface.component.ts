@@ -10,9 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import * as d3 from 'd3';
-
-const colorRed = '#fd3f1e';
-const colorBlue = '#55a6f6';
+import { ColorService } from 'src/app/services/color.service';
 
 @Component({
   selector: 'app-surface',
@@ -21,6 +19,7 @@ const colorBlue = '#55a6f6';
 })
 // @ts-ignore
 export class SurfaceComponent implements OnInit {
+  constructor(private colorService: ColorService) {}
   ngOnInit(): void {
     var radarChartOptions2 = {
       w: 290,
@@ -29,7 +28,12 @@ export class SurfaceComponent implements OnInit {
       maxValue: 60,
       levels: 6,
       roundStrokes: false,
-      color: d3.scaleOrdinal().range([colorBlue, colorRed]),
+      color: d3
+        .scaleOrdinal()
+        .range([
+          this.colorService.playerColor(),
+          this.colorService.opponentColor(),
+        ]),
       format: '.0f',
       legend: { title: '', translateX: 100, translateY: 20 },
       unit: '$',

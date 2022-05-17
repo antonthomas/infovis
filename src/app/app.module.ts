@@ -12,6 +12,7 @@ import { BettingComponent } from './components/betting/betting.component';
 import { GeoComponent } from './components/geo/geo.component';
 import { RivalComponent } from './components/rival/rival.component';
 import { AngularResizeEventModule } from 'angular-resize-event';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -42,6 +43,7 @@ import { DivergingbarComponent } from './components/divergingbar/divergingbar.co
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
