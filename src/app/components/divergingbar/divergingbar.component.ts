@@ -51,8 +51,8 @@ export class DivergingbarComponent implements AfterViewInit {
         (d) => d.metric
       ),
       xFormat: '+%',
-      width: document.querySelector('.performance-stats').offsetWidth,
-      height: document.querySelector('.performance-stats').offsetHeight,
+      width: document.querySelector('.performance-stats').offsetWidth - 92,
+      height: document.querySelector('.performance-stats').offsetHeight - 88,
       marginRight: 50,
       marginLeft: 50,
     });
@@ -93,7 +93,6 @@ function DivergingBarChart(
   const XopponentLast5 = d3.map(data, xOpponentLast5);
 
   const Y = d3.map(data, y);
-
 
   const concatted = Xplayer.concat(XplayerLast5).concat(Xopponent).concat(XopponentLast5);
 
@@ -203,10 +202,10 @@ function DivergingBarChart(
     .selectAll("circle")
     .data(playerData)
     .join('circle')
-    .attr('fill', "#34506b")
+    .attr('fill', "#006bd7")
     .attr("cx", (i) => xScale(XplayerLast5[i]))
-    .attr("cy", (i) => yScale(Y[i]) + 9)
-    .attr("r", 9);
+    .attr("cy", (i) => yScale(Y[i]) + yScale.bandwidth() / 4)
+    .attr("r", yScale.bandwidth() / 4);
 
 
   // Last 5 matches circle (opponent)
@@ -214,10 +213,10 @@ function DivergingBarChart(
     .selectAll("circle")
     .data(playerData)
     .join('circle')
-    .attr('fill', "#7a3428")
+    .attr('fill', "#c80303")
     .attr("cx", (i) => xScale(XopponentLast5[i]))
-    .attr("cy", (i) => yScale(Y[i]) + yScale.bandwidth() / 2 + 9)
-    .attr("r", 9);
+    .attr("cy", (i) => yScale(Y[i]) + 0.75 * yScale.bandwidth())
+    .attr("r", yScale.bandwidth() / 4);
 
   if (title) bar.append('title').text(title);
 
