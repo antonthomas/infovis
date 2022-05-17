@@ -2,21 +2,75 @@
   <h2>Head-to-head</h2>
   <div id="player-info">
     <div id="player-tag">
-      <img class="flag" src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}" alt="Country of player 1" />
-      <h5>{{ player.name }}</h5>
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}"
+        alt="Country of player 1"
+      />
+      <mat-form-field appearance="standard">
+        <mat-label>Player</mat-label>
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Player"
+          matInput
+          [formControl]="playerControl"
+          [matAutocomplete]="autoPlayer"
+        />
+        <mat-autocomplete
+          #autoPlayer="matAutocomplete"
+          (optionSelected)="updatePlayer($event)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptionsPlayer | async"
+            [value]="option"
+          >
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
     <div id="vs-tag">
       <p>VS</p>
     </div>
     <div id="opponent-tag">
-      <h5>{{ opponent.name }}</h5>
-      <img class="flag" src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}" alt="Country of player 2" />
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}"
+        alt="Country of player 2"
+      />
+      <mat-form-field appearance="standard">
+        <mat-label>Opponent</mat-label>
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Opponent"
+          matInput
+          [formControl]="opponentControl"
+          [matAutocomplete]="autoOpp"
+        />
+        <mat-autocomplete
+          #autoOpp="matAutocomplete"
+          (optionSelected)="updateOpponent($event)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptionsOpponent | async"
+            [value]="option"
+          >
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
   </div>
   <div #rivalContainer id="rival-container"></div>
   <p>Win percentage - all surfaces</p>
   <div id="last-5-games">
-    <mat-card class="game-card" *ngFor="let game of lastFiveGames" [ngClass]="{ won: game.won, lost: !game.won }">
+    <mat-card
+      class="game-card"
+      *ngFor="let game of lastFiveGames"
+      [ngClass]="{ won: game.won, lost: !game.won }"
+    >
       <p class="wl" *ngIf="game.won">W</p>
       <p class="wl" *ngIf="!game.won">L</p>
     </mat-card>

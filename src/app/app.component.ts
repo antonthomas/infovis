@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SearchService } from './services/search/search.service';
 import { Player } from '../types';
+import { ColorService } from './services/color.service';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +15,16 @@ export class AppComponent {
   // @ts-ignore
   opponent: Player;
 
-  constructor(private search: SearchService) {
+  playerColor: string;
+  opponentColor: string;
+
+  constructor(
+    private search: SearchService,
+    private colorService: ColorService
+  ) {
     this.search.getPlayer().subscribe({ next: (p) => (this.player = p) });
     this.search.getOpponent().subscribe({ next: (p) => (this.opponent = p) });
+    this.playerColor = this.colorService.playerColor();
+    this.opponentColor = this.colorService.opponentColor();
   }
 }
