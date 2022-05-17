@@ -331,12 +331,12 @@ def generateOverviewData():
         player = {
             "name": player_name,
             "id": id,
-            "countryCode": player_country_2,
-            "gamesPlayed": nb_g,
-            "gamesWon": nb_g_w,
-            "tournamentsPlayed": nb_t,
-            "averageWinningOdd": avg_w_o,
-            "averageLosingOdd": avg_l_o,
+            "countryCode": str(player_country_2),
+            "gamesPlayed": str(nb_g),
+            "gamesWon": str(nb_g_w),
+            "tournamentsPlayed": str(nb_t),
+            "averageWinningOdd": str(avg_w_o),
+            "averageLosingOdd": str(avg_l_o),
             "lastFiveGamesOdds": five_game_odds
         }
 
