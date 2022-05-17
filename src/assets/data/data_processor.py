@@ -6,6 +6,8 @@
 
 import pandas as pd
 import math
+import pycountry
+import json
 
 top_players = ["Novak Djokovic","Daniil Medvedev","Alexander Zverev","Rafael Nadal","Stefanos Tsitsipas","Matteo Berrettini","Casper Ruud","Andrey Rublev","Felix Auger-Aliassime","Cameron Norrie","Jannik Sinner","Taylor Fritz","Hubert Hurkacz","Diego Schwartzman",
 "Denis Shapovalov","Reilly Opelka","Pablo Carreno Busta","Roberto Bautista Agut","Nikoloz Basilashvili","Gael Monfils","Grigor Dimitrov","Marin Cilic","Alex de Minaur","John Isner","Karen Khachanov","Lorenzo Sonego","Alejandro Davidovich Fokina","Frances Tiafoe"]
@@ -284,11 +286,27 @@ def generateOverviewData():
 
     player_ids = map(name_to_id, top_players)
     rank_player_id_tuple_list = list(enumerate(player_ids, start=1))
+
+    player_objects = []
+
     for (rank, id) in rank_player_id_tuple_list:
         
         player_name = id_to_name(id)        
-        player_country = players_countries[players_countries["player_id"] == id].iloc[0]["country"]
-        
+        player_country_3 = players_countries[players_countries["player_id"] == id].iloc[0]["country"]
+        player_country = pycountry.countries.get(alpha_3=player_country_3)
+        player_country_2 = ""
+        if player_country is not None:
+            player_country_2 = player_country.alpha_2
+        elif player_country_3 == "YUG":
+            player_country_2 = "RS"
+        elif player_country_3 == "Germany":
+            player_country_2 = "DE"
+        elif player_country_3 == "GRE":
+            player_country_2 = "GR"
+        elif player_country_3 == "BUL":
+            player_country_2 = "BG"
+        elif player_country_3 == "CRO":
+            player_country_2 = "HR"
 
         
         x = df[df["player_id"] == id]
@@ -309,17 +327,35 @@ def generateOverviewData():
 
         #last five games odds
         five_game_odds = generateLastFiveGamesWithOdds(id)
+
+        player = {
+            "name": player_name,
+            "id": id,
+            "countryCode": player_country_2,
+            "gamesPlayed": nb_g,
+            "gamesWon": nb_g_w,
+            "tournamentsPlayed": nb_t,
+            "averageWinningOdd": avg_w_o,
+            "averageLosingOdd": avg_l_o,
+            "lastFiveGamesOdds": five_game_odds
+        }
+
+        player_objects.append(player)
         
-        print("{\"name\": ", player_name,
-              ", \"id\":", id,
-              ", \"countryCode\": ", player_country,
-              ", \"gamesPlayed\": ", str(nb_g),
-              ", \"gamesWon\": ", str(nb_g_w), 
-              ", \"tournamentsPlayed\": ", str(nb_t),
-              ", \"averageWinningOdd\": ", str(round(avg_w_o,2)),
-              ", \"averageLosingOdd\": ", str(round(avg_l_o, 2)),
-              ", \"lastFiveGamesOdds\": ", five_game_odds,
-              "},")
+        # print("{\"name\": ", player_name,
+        #       ", \"id\":", id,
+        #       ", \"countryCode\": ", str(player_country_2),
+        #       ", \"gamesPlayed\": ", str(nb_g),
+        #       ", \"gamesWon\": ", str(nb_g_w), 
+        #       ", \"tournamentsPlayed\": ", str(nb_t),
+        #       ", \"averageWinningOdd\": ", str(round(avg_w_o,2)),
+        #       ", \"averageLosingOdd\": ", str(round(avg_l_o, 2)),
+        #       ", \"lastFiveGamesOdds\": ", five_game_odds,
+        #       "},")
+
+    json_data = json.dumps(player_objects)
+    with open("test.json", "w") as outfile:
+        outfile.write(json_data)
 
 def printJSON():
     print("[")
