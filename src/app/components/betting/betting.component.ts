@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { OnInit, AfterViewInit, Component, Input } from '@angular/core';
 import { Player } from '../../.././types';
 import { SearchService } from 'src/app/services/search/search.service';
 import * as d3 from 'd3';
@@ -9,7 +9,7 @@ import { ColorService } from 'src/app/services/color.service';
   templateUrl: './betting.component.html',
   styleUrls: ['./betting.component.scss'],
 })
-export class BettingComponent implements AfterViewInit {
+export class BettingComponent implements OnInit, AfterViewInit {
   @Input() htmlId = '';
   @Input() isOpponent: boolean = false;
   @Input() player: Player = {
@@ -27,13 +27,17 @@ export class BettingComponent implements AfterViewInit {
   data = this.player.lastFiveGamesOdds
 
   constructor(private _search: SearchService, private colorService: ColorService) {
-    _search.getPlayer().subscribe((p) => {
+
+  }
+
+  ngOnInit(): void {
+    this._search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
         this.updateData()
         this.updateChart()
       }
     });
-    _search.getOpponent().subscribe((p) => {
+    this._search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
         this.updateData()
         this.updateChart()
