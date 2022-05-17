@@ -13,7 +13,7 @@ import { SearchService } from 'src/app/services/search/search.service';
 export class TopBarComponent {
   // f = new FormControl();
 
-  constructor(private colorService: ColorService) {
+  constructor() {
     // this.f.valueChanges.subscribe((x) => {
     //   this.colorService.setColorblind(x);
     // });
