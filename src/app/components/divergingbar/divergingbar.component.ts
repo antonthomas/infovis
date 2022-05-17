@@ -50,8 +50,8 @@ export class DivergingbarComponent implements AfterViewInit {
       ),
       xFormat: '+%',
       // xLabel: "← performance metrics →",
-      width: document.querySelector('.performance-stats').offsetWidth,
-      height: document.querySelector('.performance-stats').offsetHeight,
+      width: document.querySelector('.performance-stats').offsetWidth - 92,
+      height: document.querySelector('.performance-stats').offsetHeight - 88,
       marginRight: 50,
       marginLeft: 50,
     });
@@ -67,9 +67,9 @@ function DivergingBarChart(
     y = (d, i) => i, // given d in data, returns the (ordinal) y-value
     title, // given d in data, returns the title text
     marginTop = 30, // top margin, in pixels
-    marginRight = 40, // right margin, in pixels
+    marginRight = 30, // right margin, in pixels
     marginBottom = 10, // bottom margin, in pixels
-    marginLeft = 40, // left margin, in pixels
+    marginLeft = 30, // left margin, in pixels
     width, // outer width of chart, in pixels
     height, // the outer height of the chart, in pixels
     xType = d3.scaleLinear, // type of x-scale
@@ -108,7 +108,8 @@ function DivergingBarChart(
   // Compute the default height.
   if (height === undefined)
     height =
-      Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
+      // Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
+      document.querySelectorAll('.performance-stats')[0].offsetHeight - marginTop - marginBottom - 48;
   if (yRange === undefined) yRange = [marginTop, height - marginBottom];
 
   // Construct scales, axes, and formats.

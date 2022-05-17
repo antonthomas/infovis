@@ -1,13 +1,8 @@
 // http://bl.ocks.org/mthh/7e17b680b35b83b49f1c22a3613bd89f
 //@ts-nocheck
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
+  OnInit
 } from '@angular/core';
 import * as d3 from 'd3';
 import { ColorService } from 'src/app/services/color.service';
@@ -19,12 +14,19 @@ import { ColorService } from 'src/app/services/color.service';
 })
 // @ts-ignore
 export class SurfaceComponent implements OnInit {
-  constructor(private colorService: ColorService) {}
+
+  margin = { top: 50, right: 80, bottom: 50, left: 80 };
+
+  width = document.querySelectorAll('.surface')[0].offsetWidth - this.margin.left - this.margin.right - 32;
+  height = document.querySelectorAll('.surface')[0].offsetHeight - this.margin.top - this.margin.bottom - 48;
+
+  constructor(private colorService: ColorService) { }
+
   ngOnInit(): void {
     var radarChartOptions2 = {
-      w: 290,
-      h: 350,
-      margin: margin,
+      w: this.width,
+      h: this.height,
+      margin: this.margin,
       maxValue: 60,
       levels: 6,
       roundStrokes: false,
@@ -44,9 +46,6 @@ export class SurfaceComponent implements OnInit {
   }
 }
 
-var margin = { top: 50, right: 80, bottom: 50, left: 80 },
-  width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
-  height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
 
 //////////////////////////////////////////////////////////////
 ////////////////////////// Data //////////////////////////////
@@ -120,10 +119,15 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     });
   }; //wrap
 
+  const margin = { top: 50, right: 80, bottom: 50, left: 80 };
+
+  const width = document.querySelectorAll('.surface')[0].offsetWidth - margin.left - margin.right - 32;
+  const height = document.querySelectorAll('.surface')[0].offsetHeight - margin.top - margin.bottom - 48;
+
   const cfg = {
-    w: 600, //Width of the circle
-    h: 600, //Height of the circle
-    margin: { top: 20, right: 20, bottom: 20, left: 20 }, //The margins of the SVG
+    w: width, //Width of the circle
+    h: height, //Height of the circle
+    margin: margin, //The margins of the SVG
     levels: 3, //How many levels or inner circles should there be drawn
     maxValue: 0, //What is the value that the biggest circle will represent
     labelFactor: 1.25, //How much farther than the radius of the outer circle should the labels be placed
@@ -191,10 +195,10 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     .attr(
       'transform',
       'translate(' +
-        (cfg.w / 2 + cfg.margin.left) +
-        ',' +
-        (cfg.h / 2 + cfg.margin.top) +
-        ')'
+      (cfg.w / 2 + cfg.margin.left) +
+      ',' +
+      (cfg.h / 2 + cfg.margin.top) +
+      ')'
     );
 
   /////////////////////////////////////////////////////////

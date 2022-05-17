@@ -3,18 +3,10 @@
 
   <div class="container">
     <mat-card class="overview-player">
-      <app-overview
-        [isOpponent]="false"
-        [player]="player"
-        [barColor]="playerColor"
-      ></app-overview>
+      <app-overview [isOpponent]="false" [player]="player" [barColor]="playerColor"></app-overview>
     </mat-card>
     <mat-card class="overview-opponent">
-      <app-overview
-        [isOpponent]="true"
-        [player]="opponent"
-        [barColor]="opponentColor"
-      ></app-overview>
+      <app-overview [isOpponent]="true" [player]="opponent" [barColor]="opponentColor"></app-overview>
     </mat-card>
     <mat-card class="head-to-head">
       <app-rival [player]="player" [opponent]="opponent"></app-rival>

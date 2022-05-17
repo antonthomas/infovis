@@ -12,3 +12,9 @@
     font-size: 0.8rem !important;
     transform: translateY(-2px);
 }
+
+h2,
+#diverging,
+#diverging>svg {
+    margin-bottom: 0;
+}
