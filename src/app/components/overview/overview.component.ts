@@ -36,6 +36,8 @@ export class OverviewComponent implements AfterViewInit  {
   margin = 40;
   radius = Math.min(this.width, this.height) / 2 - this.margin;
 
+  svg: any;
+
   data: Data[] = [
     {
       quantity: 0, //winning percentage
@@ -84,14 +86,14 @@ export class OverviewComponent implements AfterViewInit  {
       .range(["#fe6262", "#c9c9c9"])
 
 
-    var svg = d3.select(`#${this.player.id}`)
+    this.svg = d3.select(`#${this.player.id}`)
       .append("svg")
       .attr("width", this.width)
       .attr("height", this.height)
       .append("g")
       .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
 
-    const text = svg.append("text")
+    const text = this.svg.append("text")
       .attr("text-anchor", "middle")
       .attr("dy", ".3em")
       .attr("class", "percentage")
@@ -101,13 +103,14 @@ export class OverviewComponent implements AfterViewInit  {
 
     text.text(this.data[0].quantity + "%")
 
-    svg.selectAll('whatever')
+    this.svg.selectAll('whatever')
       .data(data_ready)
       .join('path')
       .attr('d', d3.arc<PieArcDatum<Data>>()
         .innerRadius(59)
         .outerRadius(43)
       )
+      //@ts-ignore
       .attr('fill', d => { return color(d.data.category) as string })
       .style("opacity", 0.7)
   }
