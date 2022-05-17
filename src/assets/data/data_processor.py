@@ -336,29 +336,17 @@ def generateOverviewData():
         player = {
             "name": player_name,
             "id": id,
-            "countryCode": str(player_country_2),
-            "gamesPlayed": str(nb_g),
-            "gamesWon": str(nb_g_w),
-            "tournamentsPlayed": str(nb_t),
-            "averageWinningOdd": str(avg_w_o),
-            "averageLosingOdd": str(avg_l_o),
+            "countryCode": str(player_country_2).lower(),
+            "gamesPlayed": int(nb_g),
+            "gamesWon": int(nb_g_w),
+            "tournamentsPlayed": int(nb_t),
+            "averageWinningOdd": round(float(avg_w_o), 2),
+            "averageLosingOdd": round(float(avg_l_o), 2),
             "lastFiveGamesOdds": five_game_odds
         }
 
         player_objects.append(player)
         
-<<<<<<< HEAD
-        print("{\"name\": \"", player_name, "\"",
-              ", \"id\": \"", id, "\"",
-              ", \"countryCode\": \"", player_country.lower(), "\"",
-              ", \"gamesPlayed\": ", str(nb_g),
-              ", \"gamesWon\": ", str(nb_g_w), 
-              ", \"tournamentsPlayed\": ", str(nb_t),
-              ", \"averageWinningOdd\": ", str(round(avg_w_o,2)),
-              ", \"averageLosingOdd\": ", str(round(avg_l_o, 2)),
-              ", \"lastFiveGamesOdds\": ", five_game_odds,
-              "},")
-=======
         # print("{\"name\": ", player_name,
         #       ", \"id\":", id,
         #       ", \"countryCode\": ", str(player_country_2),
@@ -371,9 +359,8 @@ def generateOverviewData():
         #       "},")
 
     json_data = json.dumps(player_objects)
-    with open("test.json", "w") as outfile:
+    with open("players.json", "w") as outfile:
         outfile.write(json_data)
->>>>>>> 752863a61835d5967b3d067c29c0175360758671
 
 def printJSON():
     print("[")
