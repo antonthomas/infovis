@@ -81,7 +81,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
           ? this.colorService.playerColor()
           : this.colorService.opponentColor()
       )
-      .on('mouseover', (e: Event, d: any) => {
+      .on('mouseover', (e: Event, d: any) => {       
         tooltip.text(`${d.win ? 'Win' : 'Loss'} @ ${d.odd}`);
         tooltip.style('visibility', 'visible');
       })

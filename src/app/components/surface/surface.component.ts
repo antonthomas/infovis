@@ -27,8 +27,8 @@ export class SurfaceComponent implements OnInit {
       w: this.width,
       h: this.height,
       margin: this.margin,
-      maxValue: 60,
-      levels: 6,
+      maxValue: 100,
+      levels: 5,
       roundStrokes: false,
       color: d3
         .scaleOrdinal()
@@ -38,7 +38,7 @@ export class SurfaceComponent implements OnInit {
         ]),
       format: '.0f',
       legend: { title: '', translateX: 100, translateY: 20 },
-      unit: '$',
+      unit: '%',
     };
 
     // Draw the chart, get a reference the created svg element :

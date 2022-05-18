@@ -25,14 +25,14 @@ export class DivergingbarComponent implements AfterViewInit {
   }
 
   data = [
-    { player: 60, opponent: 50, average: 90, playerLast5: 55, OpponentLast5: 90, metric: '1st serve' },
-    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve' },
-    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win' },
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win' },
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win' },
-    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault' },
-    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save' },
-    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against' },
+    { player: 60, opponent: 50, average: 90, playerLast5: 55, OpponentLast5: 90, metric: '1st serve', info: 'This means how good the player ' },
+    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve' ,info: 'This means how good the player '},
+    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win' ,info: 'This means how good the player '},
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win' ,info: 'This means how good the player '},
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win' ,info: 'This means how good the player '},
+    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault' ,info: 'This means how good the player '},
+    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save' ,info: 'This means how good the player '},
+    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against' ,info: 'This means how good the player '},
   ];
 
   chart: any = null;
@@ -45,6 +45,7 @@ export class DivergingbarComponent implements AfterViewInit {
       xOpponent: (d) => d.average / d.opponent - 1,
       xOpponentLast5: (d) => d.average / d.OpponentLast5 - 1,
       y: (d) => d.metric,
+      info: (d) => d.info,
       yDomain: d3.groupSort(
         this.data,
         ([d]) => d.average - d.player,
@@ -68,6 +69,7 @@ function DivergingBarChart(
     xOpponent = (d) => d,
     xOpponentLast5 = (d) => d,
     y = (d, i) => i, // given d in data, returns the (ordinal) y-value
+    info = (d) => d,
     title, // given d in data, returns the title text
     marginTop = 30, // top margin, in pixels
     marginRight = 30, // right margin, in pixels
@@ -89,8 +91,12 @@ function DivergingBarChart(
   const Xplayer = d3.map(data, xPlayer);
   const XplayerLast5 = d3.map(data, xPlayerLast5);
 
+  console.log(data.info);
+  
   const Xopponent = d3.map(data, xOpponent);
   const XopponentLast5 = d3.map(data, xOpponentLast5);
+
+  const Yinfo = d3.map(data, info);  
 
   const Y = d3.map(data, y);
 
@@ -169,6 +175,16 @@ function DivergingBarChart(
         .text(xLabel)
     );
 
+  let tooltip = d3
+    .select(`#diverging`)
+    .append('div')
+    .style('position', 'absolute')
+    .style('visibility', 'hidden')
+    .style('background', '#eee')
+    .style('padding', '10px')
+    .style('border-radius', '4px');
+
+    
   const bar = svg
     .append('g')
     .selectAll('rect')
@@ -181,7 +197,23 @@ function DivergingBarChart(
     .attr('x', (i) => Math.min(xScale(0), xScale(Xplayer[i])))
     .attr('y', (i) => yScale(Y[i]))
     .attr('width', (i) => Math.abs(xScale(Xplayer[i]) - xScale(0)))
-    .attr('height', yScale.bandwidth() / 2);
+    .attr('height', yScale.bandwidth() / 2)
+    .on('mouseover', (e: Event, d: any) => {
+      console.log(d);
+      
+      tooltip.text(d);
+      tooltip.style('visibility', 'visible');
+    })
+    .on('mousemove', (e: Event) => {
+      return (
+        tooltip
+          .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
+          .style('left', d3.pointer(e)[0] + 10 + 'px')
+      );
+    })
+    .on('mouseout', () => {
+      return tooltip.style('visibility', 'hidden');
+    });
 
   svg
     .append('g')
