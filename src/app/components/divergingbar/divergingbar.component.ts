@@ -122,7 +122,7 @@ export class DivergingbarComponent implements AfterViewInit {
       xPlayer: (d) => (d.player - d.average) / 100,
       xPlayerLast5: (d) => (d.playerLast5 - d.average) / 100,
       xOpponent: (d) => (d.opponent - d.average) / 100,
-      xOpponentLast5: (d) => (d.OpponentLast5 - d.average) / 100,
+      xOpponentLast5: (d) => (d.opponentLast5 - d.average) / 100,
       y: (d) => d.metric,
       info: (d) => d.info,
       yDomain: d3.groupSort(

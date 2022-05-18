@@ -96,7 +96,6 @@ export class SearchService {
     var o = p.opponents.filter(
       (x: SingleOpponentPerformanceStats) => x.opponentId == oId
     )[0];
-    console.log(o.values);
     return o.values;
   }
 }
