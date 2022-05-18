@@ -20,27 +20,97 @@ let opponentColor = '';
   encapsulation: ViewEncapsulation.None,
 })
 export class DivergingbarComponent implements AfterViewInit {
-  constructor(private colorService: ColorService, private _search: SearchService) {
+  constructor(
+    private colorService: ColorService,
+    private _search: SearchService
+  ) {
     playerColor = this.colorService.playerColor();
     opponentColor = this.colorService.opponentColor();
   }
 
   data = [
-    { player: 60, opponent: 50, average: 90, playerLast5: 55, OpponentLast5: 90, metric: '1st serve', info: 'First serve being in, compared to the average' },
-    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve', info: 'Second serve being in, compared to the average' },
-    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win', info: 'Tie break win, compared to the average' },
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win', info: 'Games where the player was serving and won, compared to the average' },
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win', info: 'Games where the other player was serving and won, compared to the average' },
-    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault', info: 'Double faults, compared to the average' },
-    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save', info: 'Break points that the player recovered from, compared to the average' },
-    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against', info: 'How many Break points the player had (won or lost), compared to the average' },
+    {
+      player: 60,
+      opponent: 50,
+      average: 90,
+      playerLast5: 55,
+      OpponentLast5: 90,
+      metric: '1st serve',
+      info: 'First serve being in, compared to the average',
+    },
+    {
+      player: 60,
+      opponent: 60,
+      average: 50,
+      playerLast5: 55,
+      OpponentLast5: 45,
+      metric: '2nd serve',
+      info: 'Second serve being in, compared to the average',
+    },
+    {
+      player: 60,
+      opponent: 70,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Tie break win',
+      info: 'Tie break win, compared to the average',
+    },
+    {
+      player: 30,
+      opponent: 30,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Service games win',
+      info: 'Games where the player was serving and won, compared to the average',
+    },
+    {
+      player: 30,
+      opponent: 30,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Return games win',
+      info: 'Games where the other player was serving and won, compared to the average',
+    },
+    {
+      player: 40,
+      opponent: 35,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Double Fault',
+      info: 'Double faults, compared to the average',
+    },
+    {
+      player: 80,
+      opponent: 50,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Break point save',
+      info: 'Break points that the player recovered from, compared to the average',
+    },
+    {
+      player: 40,
+      opponent: 70,
+      average: 50,
+      playerLast5: 30,
+      OpponentLast5: 45,
+      metric: 'Break point against',
+      info: 'How many Break points the player had (won or lost), compared to the average',
+    },
   ];
 
   chart: any = null;
   @Input() htmlId = '';
 
   ngAfterViewInit(): void {
-    this._search.filterPerformance(this._search.getPlayer().value.id, this._search.getOpponent().value.id)
+    this._search.filterPerformance(
+      this._search.getPlayer().value.id,
+      this._search.getOpponent().value.id
+    );
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
       xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
@@ -100,7 +170,9 @@ function DivergingBarChart(
 
   const Y = d3.map(data, y);
 
-  const concatted = Xplayer.concat(XplayerLast5).concat(Xopponent).concat(XopponentLast5);
+  const concatted = Xplayer.concat(XplayerLast5)
+    .concat(Xopponent)
+    .concat(XopponentLast5);
 
   // Compute default domains, and unique the y-domain.
   if (xDomain === undefined) xDomain = d3.extent(concatted);
@@ -110,7 +182,9 @@ function DivergingBarChart(
   // Omit any data not present in the y-domain.
   // Lookup the x-value for a given y-value.
   const playerData = d3.range(Xplayer.length).filter((i) => yDomain.has(Y[i]));
-  const playerLast5Data = d3.range(XplayerLast5.length).filter((i) => yDomain.has(Y[i]));
+  const playerLast5Data = d3
+    .range(XplayerLast5.length)
+    .filter((i) => yDomain.has(Y[i]));
   const opponentData = d3
     .range(Xopponent.length)
     .filter((i) => yDomain.has(Y[i]));
@@ -127,7 +201,10 @@ function DivergingBarChart(
   if (height === undefined)
     height =
       // Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
-      document.querySelectorAll('.performance-stats')[0].offsetHeight - marginTop - marginBottom - 48;
+      document.querySelectorAll('.performance-stats')[0].offsetHeight -
+      marginTop -
+      marginBottom -
+      48;
   if (yRange === undefined) yRange = [marginTop, height - marginBottom];
 
   // Construct scales, axes, and formats.
@@ -184,7 +261,6 @@ function DivergingBarChart(
     .style('padding', '10px')
     .style('border-radius', '4px');
 
-
   const bar = svg
     .append('g')
     .selectAll('rect')
@@ -203,11 +279,9 @@ function DivergingBarChart(
       tooltip.style('visibility', 'visible');
     })
     .on('mousemove', (e: Event) => {
-      return (
-        tooltip
-          .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
-          .style('left', d3.pointer(e)[0] + 10 + 'px')
-      );
+      return tooltip
+        .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
+        .style('left', d3.pointer(e)[0] + 10 + 'px');
     })
     .on('mouseout', () => {
       return tooltip.style('visibility', 'hidden');
@@ -231,36 +305,35 @@ function DivergingBarChart(
       tooltip.style('visibility', 'visible');
     })
     .on('mousemove', (e: Event) => {
-      return (
-        tooltip
-          .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
-          .style('left', d3.pointer(e)[0] + 10 + 'px')
-      );
+      return tooltip
+        .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
+        .style('left', d3.pointer(e)[0] + 10 + 'px');
     })
     .on('mouseout', () => {
       return tooltip.style('visibility', 'hidden');
     });
 
   // Last 5 matches circle (player)
-  svg.append('g')
-    .selectAll("circle")
+  svg
+    .append('g')
+    .selectAll('circle')
     .data(playerData)
     .join('circle')
-    .attr('fill', "#006bd7")
-    .attr("cx", (i) => xScale(XplayerLast5[i]))
-    .attr("cy", (i) => yScale(Y[i]) + yScale.bandwidth() / 4)
-    .attr("r", yScale.bandwidth() / 4);
-
+    .attr('fill', '#006bd7')
+    .attr('cx', (i) => xScale(XplayerLast5[i]))
+    .attr('cy', (i) => yScale(Y[i]) + yScale.bandwidth() / 4)
+    .attr('r', yScale.bandwidth() / 4);
 
   // Last 5 matches circle (opponent)
-  svg.append('g')
-    .selectAll("circle")
+  svg
+    .append('g')
+    .selectAll('circle')
     .data(playerData)
     .join('circle')
-    .attr('fill', "#c80303")
-    .attr("cx", (i) => xScale(XopponentLast5[i]))
-    .attr("cy", (i) => yScale(Y[i]) + 0.75 * yScale.bandwidth())
-    .attr("r", yScale.bandwidth() / 4);
+    .attr('fill', '#c80303')
+    .attr('cx', (i) => xScale(XopponentLast5[i]))
+    .attr('cy', (i) => yScale(Y[i]) + 0.75 * yScale.bandwidth())
+    .attr('r', yScale.bandwidth() / 4);
 
   if (title) bar.append('title').text(title);
 
