@@ -2,14 +2,32 @@
   <h2>Head-to-head</h2>
   <div id="player-info">
     <div id="player-tag">
-      <img class="flag" src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}" alt="Country of player 1" />
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + player.countryCode + '.svg' }}"
+        alt="Country of player 1"
+      />
       <mat-form-field id="player-form-field" appearance="standard">
         <mat-label>Player</mat-label>
-        <input type="text" placeholder="Pick one" aria-label="Player" matInput [formControl]="playerControl"
-          [matAutocomplete]="autoPlayer" />
-        <mat-autocomplete #autoPlayer="matAutocomplete" (optionSelected)="updatePlayer($event)">
-          <mat-option *ngFor="let option of filteredOptionsPlayer | async" [value]="option">
-            {{ option }}
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Player"
+          matInput
+          [formControl]="playerControl"
+          [matAutocomplete]="autoPlayer"
+          value="{{ playerControl.value | titlecase }}"
+          (click)="clear(true)"
+        />
+        <mat-autocomplete
+          #autoPlayer="matAutocomplete"
+          (optionSelected)="updatePlayer($event)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptionsPlayer | async"
+            [value]="option"
+          >
+            {{ option | titlecase }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -20,24 +38,51 @@
     <div id="opponent-tag">
       <mat-form-field id="opponent-form-field" appearance="standard">
         <mat-label>Opponent</mat-label>
-        <input type="text" placeholder="Pick one" aria-label="Opponent" matInput [formControl]="opponentControl"
-          [matAutocomplete]="autoOpp" />
-        <mat-autocomplete #autoOpp="matAutocomplete" (optionSelected)="updateOpponent($event)">
-          <mat-option *ngFor="let option of filteredOptionsOpponent | async" [value]="option">
-            {{ option }}
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Opponent"
+          matInput
+          [formControl]="opponentControl"
+          [matAutocomplete]="autoOpp"
+          value="{{ opponentControl.value | titlecase }}"
+          (click)="clear(false)"
+        />
+        <mat-autocomplete
+          #autoOpp="matAutocomplete"
+          (optionSelected)="updateOpponent($event)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptionsOpponent | async"
+            [value]="option"
+          >
+            {{ option | titlecase }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <img class="flag" src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}" alt="Country of player 2" />
+      <img
+        class="flag"
+        src="{{ 'assets/flags/4x3/' + opponent.countryCode + '.svg' }}"
+        alt="Country of player 2"
+      />
     </div>
   </div>
   <div #rivalContainer id="rival-container"></div>
   <p>Win percentage - all surfaces</p>
   <div id="last-5-games">
-    <mat-card class="game-card" *ngFor="let game of lastFiveGames" [ngClass]="{ won: game.won, lost: !game.won }">
-      <p class="wl" *ngIf="game.won">W</p>
-      <p class="wl" *ngIf="!game.won">L</p>
+    <mat-card
+      class="game-card"
+      *ngFor="let game of lastFiveGames"
+      [ngClass]="{ won: game === 'W', lost: game === 'L', na: game === 'NA' }"
+    >
+      <p class="wl">{{ game }}</p>
     </mat-card>
-    <p>Last 5 games - all surfaces</p>
+    <!-- lastFiveGames = {{ lastFiveGames }} -->
+    <p *ngIf="lastFiveGames.length > 0">
+      Last {{ lastFiveGames.length }} games - all surfaces
+    </p>
+    <h3 style="color: black" *ngIf="lastFiveGames.length === 0">
+      No head-to-head games found
+    </h3>
   </div>
 </div>

@@ -24,7 +24,7 @@ def extractInfo(matches):
         
     return (matches_played, matches_won, last_five)
 
-def processCouple(pId, oId):
+def processPair(pId, oId):
     all_matches = df[(df["player_id"] == pId) & (df["opponent_id"] == oId)]
     return extractInfo(all_matches)
     # print(pId, " v.s. ", oId)
@@ -40,7 +40,7 @@ def processPlayer(id):
         }
     for opponent in opponent_ids:
         if opponent != id:
-            info = processCouple(id, opponent)
+            info = processPair(id, opponent)
             info_dict = {
                 "opponentId": opponent,
                 "matchesPlayed": info[0],

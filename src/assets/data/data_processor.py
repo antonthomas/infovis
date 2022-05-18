@@ -118,7 +118,7 @@ def process_diverging_data_all():
 
 def div_or_zero(numerator, denominator):
     if denominator != 0:
-        return numerator / denominator
+        return round((numerator / denominator) * 100, 0)
     return 0
 
 
@@ -362,15 +362,9 @@ def generateOverviewData():
     with open("players.json", "w") as outfile:
         outfile.write(json_data)
 
-def printJSON():
-    print("[")
-    generateOverviewData()
-    print("]")
-    
 # process_all_matches()
 # process_all_players()
 # process_diverging_data_all()
 # process_diverging_data_players()
 # process_bollekes_data()
 # generateOverviewData()
-#printJSON()
