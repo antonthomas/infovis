@@ -119,10 +119,10 @@ export class DivergingbarComponent implements AfterViewInit {
     document.querySelector('#diverging > svg')?.remove()
 
     this.chart = DivergingBarChart(this.data, {
-      xPlayer: (d) => d.average / d.player - 1,
-      xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
-      xOpponent: (d) => d.average / d.opponent - 1,
-      xOpponentLast5: (d) => d.average / d.OpponentLast5 - 1,
+      xPlayer: (d) => (d.player - d.average) / 100,
+      xPlayerLast5: (d) => (d.playerLast5 - d.average) / 100,
+      xOpponent: (d) => (d.opponent - d.average) / 100,
+      xOpponentLast5: (d) => (d.OpponentLast5 - d.average) / 100,
       y: (d) => d.metric,
       info: (d) => d.info,
       yDomain: d3.groupSort(
@@ -192,7 +192,8 @@ function DivergingBarChart(
 
   const Y = d3.map(data, y);
 
-  const concatted = Xplayer.concat(XplayerLast5)
+  const concatted = Xplayer
+    .concat(XplayerLast5)
     .concat(Xopponent)
     .concat(XopponentLast5);
 
