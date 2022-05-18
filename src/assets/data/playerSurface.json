@@ -1,1 +1,253 @@
-[{"name": "novak djokovic", "axes": [{"axis": "Hard", "value": 88.16}, {"axis": "Clay", "value": 82.83}, {"axis": "Grass", "value": 91.11}, {"axis": "Carpet", "value": 0}]}, {"name": "daniil medvedev", "axes": [{"axis": "Hard", "value": 53.94}, {"axis": "Clay", "value": 67.62}, {"axis": "Grass", "value": 65.91}, {"axis": "Carpet", "value": 77.78}]}, {"name": "alexander zverev", "axes": [{"axis": "Hard", "value": 64.5}, {"axis": "Clay", "value": 69.41}, {"axis": "Grass", "value": 67.44}, {"axis": "Carpet", "value": 0}]}, {"name": "rafael nadal", "axes": [{"axis": "Hard", "value": 79.58}, {"axis": "Clay", "value": 89.53}, {"axis": "Grass", "value": 69.57}, {"axis": "Carpet", "value": 0}]}, {"name": "stefanos tsitsipas", "axes": [{"axis": "Hard", "value": 61.61}, {"axis": "Grass", "value": 67.74}, {"axis": "Clay", "value": 73.0}, {"axis": "Carpet", "value": 57.14}]}, {"name": "matteo berrettini", "axes": [{"axis": "Hard", "value": 51.69}, {"axis": "Clay", "value": 67.74}, {"axis": "Grass", "value": 60.0}, {"axis": "Carpet", "value": 73.68}]}, {"name": "casper ruud", "axes": [{"axis": "Clay", "value": 65.22}, {"axis": "Hard", "value": 64.76}, {"axis": "Grass", "value": 42.86}, {"axis": "Carpet", "value": 0}]}, {"name": "andrey rublev", "axes": [{"axis": "Hard", "value": 50.59}, {"axis": "Clay", "value": 64.52}, {"axis": "Grass", "value": 72.73}, {"axis": "Carpet", "value": 71.43}]}, {"name": "felix auger aliassime", "axes": [{"axis": "Hard", "value": 66.07}, {"axis": "Clay", "value": 75.32}, {"axis": "Grass", "value": 60.0}, {"axis": "Carpet", "value": 0.0}]}, {"name": "cameron norrie", "axes": [{"axis": "Grass", "value": 27.27}, {"axis": "Hard", "value": 71.76}, {"axis": "Clay", "value": 57.69}, {"axis": "Carpet", "value": 0}]}, {"name": "jannik sinner", "axes": [{"axis": "Clay", "value": 61.64}, {"axis": "Carpet", "value": 0.0}, {"axis": "Hard", "value": 66.67}]}, {"name": "taylor fritz", "axes": [{"axis": "Hard", "value": 59.26}, {"axis": "Clay", "value": 64.71}, {"axis": "Grass", "value": 56.82}, {"axis": "Carpet", "value": 0}]}, {"name": "hubert hurkacz", "axes": [{"axis": "Hard", "value": 65.48}, {"axis": "Clay", "value": 64.77}, {"axis": "Grass", "value": 36.36}, {"axis": "Carpet", "value": 40.0}]}, {"name": "diego schwartzman", "axes": [{"axis": "Clay", "value": 64.68}, {"axis": "Hard", "value": 52.0}, {"axis": "Grass", "value": 11.11}, {"axis": "Carpet", "value": 0}]}, {"name": "denis shapovalov", "axes": [{"axis": "Hard", "value": 69.68}, {"axis": "Clay", "value": 67.59}, {"axis": "Grass", "value": 70.59}, {"axis": "Carpet", "value": 0}]}, {"name": "reilly opelka", "axes": [{"axis": "Hard", "value": 53.12}, {"axis": "Clay", "value": 66.97}, {"axis": "Grass", "value": 63.64}, {"axis": "Carpet", "value": 0}]}, {"name": "pablo carreno busta", "axes": [{"axis": "Clay", "value": 70.12}, {"axis": "Hard", "value": 44.75}, {"axis": "Carpet", "value": 100.0}, {"axis": "Grass", "value": 0.0}]}, {"name": "roberto bautista agut", "axes": [{"axis": "Hard", "value": 64.0}, {"axis": "Clay", "value": 59.57}, {"axis": "Grass", "value": 72.73}, {"axis": "Carpet", "value": 0}]}, {"name": "nikoloz basilashvili", "axes": [{"axis": "Hard", "value": 43.46}, {"axis": "Clay", "value": 55.12}, {"axis": "Grass", "value": 42.31}, {"axis": "Carpet", "value": 72.22}]}, {"name": "gael monfils", "axes": [{"axis": "Hard", "value": 67.7}, {"axis": "Clay", "value": 61.9}, {"axis": "Grass", "value": 62.86}, {"axis": "Carpet", "value": 0}]}, {"name": "grigor dimitrov", "axes": [{"axis": "Hard", "value": 65.2}, {"axis": "Clay", "value": 61.04}, {"axis": "Grass", "value": 64.86}, {"axis": "Carpet", "value": 0}]}, {"name": "marin cilic", "axes": [{"axis": "Hard", "value": 70.98}, {"axis": "Clay", "value": 62.67}, {"axis": "Grass", "value": 74.55}, {"axis": "Carpet", "value": 0}]}, {"name": "alex de minaur", "axes": [{"axis": "Hard", "value": 51.89}, {"axis": "Clay", "value": 64.89}, {"axis": "Carpet", "value": 77.78}, {"axis": "Grass", "value": 71.74}]}, {"name": "john isner", "axes": [{"axis": "Hard", "value": 64.68}, {"axis": "Clay", "value": 59.7}, {"axis": "Grass", "value": 65.0}, {"axis": "Carpet", "value": 0}]}, {"name": "karen khachanov", "axes": [{"axis": "Hard", "value": 62.34}, {"axis": "Clay", "value": 65.62}, {"axis": "Grass", "value": 66.67}, {"axis": "Carpet", "value": 0.0}]}, {"name": "lorenzo sonego", "axes": [{"axis": "Clay", "value": 60.58}, {"axis": "Hard", "value": 63.24}, {"axis": "Carpet", "value": 50.0}, {"axis": "Grass", "value": 40.0}]}, {"name": "alejandro davidovich fokina", "axes": [{"axis": "Clay", "value": 66.36}, {"axis": "Hard", "value": 69.14}, {"axis": "Carpet", "value": 73.33}, {"axis": "Grass", "value": 77.78}]}, {"name": "frances tiafoe", "axes": [{"axis": "Hard", "value": 57.96}, {"axis": "Clay", "value": 67.74}, {"axis": "Grass", "value": 50.0}, {"axis": "Carpet", "value": 0}]}]
+[
+  {
+    "name": "novak djokovic",
+    "axes": [
+      { "axis": "Hard", "value": 88.16 },
+      { "axis": "Clay", "value": 82.83 },
+      { "axis": "Grass", "value": 91.11 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "daniil medvedev",
+    "axes": [
+      { "axis": "Hard", "value": 53.94 },
+      { "axis": "Clay", "value": 67.62 },
+      { "axis": "Grass", "value": 65.91 },
+      { "axis": "Carpet", "value": 77.78 }
+    ]
+  },
+  {
+    "name": "alexander zverev",
+    "axes": [
+      { "axis": "Hard", "value": 64.5 },
+      { "axis": "Clay", "value": 69.41 },
+      { "axis": "Grass", "value": 67.44 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "rafael nadal",
+    "axes": [
+      { "axis": "Hard", "value": 79.58 },
+      { "axis": "Clay", "value": 89.53 },
+      { "axis": "Grass", "value": 69.57 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "stefanos tsitsipas",
+    "axes": [
+      { "axis": "Hard", "value": 61.61 },
+      { "axis": "Grass", "value": 67.74 },
+      { "axis": "Clay", "value": 73.0 },
+      { "axis": "Carpet", "value": 57.14 }
+    ]
+  },
+  {
+    "name": "matteo berrettini",
+    "axes": [
+      { "axis": "Hard", "value": 51.69 },
+      { "axis": "Clay", "value": 67.74 },
+      { "axis": "Grass", "value": 60.0 },
+      { "axis": "Carpet", "value": 73.68 }
+    ]
+  },
+  {
+    "name": "casper ruud",
+    "axes": [
+      { "axis": "Clay", "value": 65.22 },
+      { "axis": "Hard", "value": 64.76 },
+      { "axis": "Grass", "value": 42.86 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "andrey rublev",
+    "axes": [
+      { "axis": "Hard", "value": 50.59 },
+      { "axis": "Clay", "value": 64.52 },
+      { "axis": "Grass", "value": 72.73 },
+      { "axis": "Carpet", "value": 71.43 }
+    ]
+  },
+  {
+    "name": "felix auger aliassime",
+    "axes": [
+      { "axis": "Hard", "value": 66.07 },
+      { "axis": "Clay", "value": 75.32 },
+      { "axis": "Grass", "value": 60.0 },
+      { "axis": "Carpet", "value": 0.0 }
+    ]
+  },
+  {
+    "name": "cameron norrie",
+    "axes": [
+      { "axis": "Grass", "value": 27.27 },
+      { "axis": "Hard", "value": 71.76 },
+      { "axis": "Clay", "value": 57.69 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "jannik sinner",
+    "axes": [
+      { "axis": "Clay", "value": 61.64 },
+      { "axis": "Carpet", "value": 0.0 },
+      { "axis": "Hard", "value": 66.67 }
+    ]
+  },
+  {
+    "name": "taylor fritz",
+    "axes": [
+      { "axis": "Hard", "value": 59.26 },
+      { "axis": "Clay", "value": 64.71 },
+      { "axis": "Grass", "value": 56.82 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "hubert hurkacz",
+    "axes": [
+      { "axis": "Hard", "value": 65.48 },
+      { "axis": "Clay", "value": 64.77 },
+      { "axis": "Grass", "value": 36.36 },
+      { "axis": "Carpet", "value": 40.0 }
+    ]
+  },
+  {
+    "name": "diego schwartzman",
+    "axes": [
+      { "axis": "Clay", "value": 64.68 },
+      { "axis": "Hard", "value": 52.0 },
+      { "axis": "Grass", "value": 11.11 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "denis shapovalov",
+    "axes": [
+      { "axis": "Hard", "value": 69.68 },
+      { "axis": "Clay", "value": 67.59 },
+      { "axis": "Grass", "value": 70.59 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "reilly opelka",
+    "axes": [
+      { "axis": "Hard", "value": 53.12 },
+      { "axis": "Clay", "value": 66.97 },
+      { "axis": "Grass", "value": 63.64 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "pablo carreno busta",
+    "axes": [
+      { "axis": "Clay", "value": 70.12 },
+      { "axis": "Hard", "value": 44.75 },
+      { "axis": "Carpet", "value": 100.0 },
+      { "axis": "Grass", "value": 0.0 }
+    ]
+  },
+  {
+    "name": "roberto bautista agut",
+    "axes": [
+      { "axis": "Hard", "value": 64.0 },
+      { "axis": "Clay", "value": 59.57 },
+      { "axis": "Grass", "value": 72.73 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "nikoloz basilashvili",
+    "axes": [
+      { "axis": "Hard", "value": 43.46 },
+      { "axis": "Clay", "value": 55.12 },
+      { "axis": "Grass", "value": 42.31 },
+      { "axis": "Carpet", "value": 72.22 }
+    ]
+  },
+  {
+    "name": "gael monfils",
+    "axes": [
+      { "axis": "Hard", "value": 67.7 },
+      { "axis": "Clay", "value": 61.9 },
+      { "axis": "Grass", "value": 62.86 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "grigor dimitrov",
+    "axes": [
+      { "axis": "Hard", "value": 65.2 },
+      { "axis": "Clay", "value": 61.04 },
+      { "axis": "Grass", "value": 64.86 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "marin cilic",
+    "axes": [
+      { "axis": "Hard", "value": 70.98 },
+      { "axis": "Clay", "value": 62.67 },
+      { "axis": "Grass", "value": 74.55 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "alex de minaur",
+    "axes": [
+      { "axis": "Hard", "value": 51.89 },
+      { "axis": "Clay", "value": 64.89 },
+      { "axis": "Carpet", "value": 77.78 },
+      { "axis": "Grass", "value": 71.74 }
+    ]
+  },
+  {
+    "name": "john isner",
+    "axes": [
+      { "axis": "Hard", "value": 64.68 },
+      { "axis": "Clay", "value": 59.7 },
+      { "axis": "Grass", "value": 65.0 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  },
+  {
+    "name": "karen khachanov",
+    "axes": [
+      { "axis": "Hard", "value": 62.34 },
+      { "axis": "Clay", "value": 65.62 },
+      { "axis": "Grass", "value": 66.67 },
+      { "axis": "Carpet", "value": 0.0 }
+    ]
+  },
+  {
+    "name": "lorenzo sonego",
+    "axes": [
+      { "axis": "Clay", "value": 60.58 },
+      { "axis": "Hard", "value": 63.24 },
+      { "axis": "Carpet", "value": 50.0 },
+      { "axis": "Grass", "value": 40.0 }
+    ]
+  },
+  {
+    "name": "alejandro davidovich fokina",
+    "axes": [
+      { "axis": "Clay", "value": 66.36 },
+      { "axis": "Hard", "value": 69.14 },
+      { "axis": "Carpet", "value": 73.33 },
+      { "axis": "Grass", "value": 77.78 }
+    ]
+  },
+  {
+    "name": "frances tiafoe",
+    "axes": [
+      { "axis": "Hard", "value": 57.96 },
+      { "axis": "Clay", "value": 67.74 },
+      { "axis": "Grass", "value": 50.0 },
+      { "axis": "Carpet", "value": 0 }
+    ]
+  }
+]
