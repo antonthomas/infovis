@@ -5,10 +5,14 @@ import {
   PlayerRival,
   OpponentGame,
   PlayerSurface,
+  PerformanceStats,
+  OpponentsPerformanceStats,
+  SingleOpponentPerformanceStats,
 } from '../../../types';
 import playerJSON from '../../../assets/data/players.json';
 import playerRivalSurface from '../../../assets/data/playerSurface.json';
 import playerRivals from '../../../assets/data/playerRivals.json';
+import allPerformanceStats from '../../../assets/data/performanceStats.json';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +21,7 @@ export class SearchService {
   players: Player[] = playerJSON;
   playerRivalMatches: PlayerRival[] = playerRivals;
   playerSurfaces: PlayerSurface[] = playerRivalSurface;
+  allPerformance: OpponentsPerformanceStats[] = allPerformanceStats;
   player: BehaviorSubject<Player> = new BehaviorSubject<Player>(
     this.players[0]
   );
@@ -80,9 +85,18 @@ export class SearchService {
     var playerSurface = this.playerSurfaces.filter(
       (x: PlayerSurface) => x.name == pName || x.name == oName
     );
-    console.log('----------------');
-    console.log(pName);
     if (playerSurface[0].name == oName) playerSurface.reverse();
     return playerSurface;
+  }
+
+  filterPerformance(pId: string, oId: string): PerformanceStats[] {
+    var p = this.allPerformance.filter(
+      (x: OpponentsPerformanceStats) => x.playerId == pId
+    )[0];
+    var o = p.opponents.filter(
+      (x: SingleOpponentPerformanceStats) => x.opponentId == oId
+    )[0];
+    console.log(o.values);
+    return o.values;
   }
 }

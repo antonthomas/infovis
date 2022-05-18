@@ -34,4 +34,23 @@ export type PlayerSurface = {
   }[];
 };
 
+export type PerformanceStats = {
+  player: number;
+  opponent: number;
+  average: number;
+  playerLast5: number;
+  opponentLast5: number;
+  metric: string;
+};
+
+export type SingleOpponentPerformanceStats = {
+  opponentId: string;
+  values: PerformanceStats[];
+};
+
+export type OpponentsPerformanceStats = {
+  playerId: string;
+  opponents: SingleOpponentPerformanceStats[];
+};
+
 export type Surface = 'clay' | 'grass' | 'hard court' | 'carpet';

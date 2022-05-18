@@ -8,6 +8,7 @@ import {
 
 import * as d3 from 'd3';
 import { ColorService } from 'src/app/services/color.service';
+import { SearchService } from 'src/app/services/search/search.service';
 
 let playerColor = '';
 let opponentColor = '';
@@ -19,7 +20,7 @@ let opponentColor = '';
   encapsulation: ViewEncapsulation.None,
 })
 export class DivergingbarComponent implements AfterViewInit {
-  constructor(private colorService: ColorService) {
+  constructor(private colorService: ColorService, private _search: SearchService) {
     playerColor = this.colorService.playerColor();
     opponentColor = this.colorService.opponentColor();
   }
@@ -39,6 +40,7 @@ export class DivergingbarComponent implements AfterViewInit {
   @Input() htmlId = '';
 
   ngAfterViewInit(): void {
+    this._search.filterPerformance(this._search.getPlayer().value.id, this._search.getOpponent().value.id)
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
       xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
