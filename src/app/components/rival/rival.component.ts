@@ -44,14 +44,34 @@ type Game = {
   encapsulation: ViewEncapsulation.None,
 })
 export class RivalComponent implements OnInit {
-  @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
+  @Input() player: Player = {
+    name: '',
+    id: '',
+    countryCode: '',
+    gamesPlayed: 0,
+    gamesWon: 0,
+    tournamentsPlayed: 0,
+    averageWinningOdd: 0.0,
+    averageLosingOdd: 0.0,
+    lastFiveGamesOdds: [],
+  };
 
   // player1: Player = {
   //   name: 'Roger Federer',
   //   id: 'roger-federer',
   //   countryCode: 'ch',
   // };
-  @Input() opponent: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
+  @Input() opponent: Player = {
+    name: '',
+    id: '',
+    countryCode: '',
+    gamesPlayed: 0,
+    gamesWon: 0,
+    tournamentsPlayed: 0,
+    averageWinningOdd: 0.0,
+    averageLosingOdd: 0.0,
+    lastFiveGamesOdds: [],
+  };
   progressbarHeight: number = 30;
   totalGames: number = 100;
   gamesWonPlayer1: number = 60;
@@ -64,7 +84,8 @@ export class RivalComponent implements OnInit {
     { won: true },
   ];
 
-  data: number[] = [this.totalGames, this.gamesWonPlayer1];
+  progressbarData: number[] = [this.totalGames, this.gamesWonPlayer1];
+  progressbarTextData: number[] = [0.64, 0.36];
   chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
   playerControl = new FormControl();
@@ -81,14 +102,28 @@ export class RivalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var opponentGame = this.search.filterRival(this.player.id, this.opponent.id)
-    this.lastFiveGames = opponentGame.lastFive
-    this.data = [opponentGame.matchesPlayed, opponentGame.matchesWon]
+    // const opponentGame = this.search.filterRival(
+    //   this.player.id,
+    //   this.opponent.id
+    // );
+    // this.lastFiveGames = opponentGame.lastFive;
+    // this.progressbarData = [
+    //   opponentGame.matchesPlayed,
+    //   opponentGame.matchesWon,
+    // ];
+    // this.progressbarTextData = [
+    //   (opponentGame.matchesWon / opponentGame.matchesPlayed) * 100,
+    //   ((opponentGame.matchesPlayed - opponentGame.matchesWon) /
+    //     opponentGame.matchesPlayed) *
+    //     100,
+    // ];
 
-    console.log(this.totalGames)
-    console.log(this.gamesWonPlayer1)
+    // console.log(this.progressbarTextData);
 
-    
+    // console.log('Total games', this.progressbarData[0]);
+    // console.log('Games won player', this.progressbarData[1]);
+    this.updateData();
+
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -98,7 +133,7 @@ export class RivalComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
-    this.drawChart();    
+    this.drawChart();
   }
 
   createSvg(): void {
@@ -113,21 +148,42 @@ export class RivalComponent implements OnInit {
   createBars(): void {
     this.chart
       .selectAll('rect')
-      .data(this.data)
+      .data(this.progressbarData)
       .enter()
       .append('rect')
-      .attr('width', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr(
+        'width',
+        d3Scale.scaleLinear([0, '100%']).domain([0, this.progressbarData[0]])
+      )
       .attr('height', this.progressbarHeight);
   }
 
   createText(): void {
-    this.chart
-      .selectAll('text')
-      .data(this.data)
-      .enter()
+    const text1 = this.chart
+      .selectAll('text:first-of-type')
+      .data([this.progressbarTextData[0]])
+      .enter();
+
+    const text2 = this.chart
+      .selectAll('text:nth-of-type(2)')
+      .data([this.progressbarTextData[1]])
+      .enter();
+
+    text1
       .append('text')
-      .attr('x', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr('x', '30')
       .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
+      .attr('font-weight', 'bold')
+      .attr('dx', -3) // padding-right
+      .attr('dy', '.35em') // vertical-align: middle
+      .attr('text-anchor', 'end') // text-align: right
+      .text((x) => x + '%');
+
+    text2
+      .append('text')
+      .attr('x', '100%')
+      .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
+      .attr('font-weight', 'bold')
       .attr('dx', -3) // padding-right
       .attr('dy', '.35em') // vertical-align: middle
       .attr('text-anchor', 'end') // text-align: right
@@ -157,5 +213,16 @@ export class RivalComponent implements OnInit {
   updateOpponent(event: any) {
     console.log('b', event);
     this.search.setOpponent(event.option.value);
+  }
+
+  updateData() {
+    const game = this.search.filterRival(this.player.id, this.opponent.id);
+    this.lastFiveGames = game.lastFive;
+    this.progressbarData = [game.matchesPlayed, game.matchesWon];
+    const winPercentagePlayer = Math.round(
+      (game.matchesWon / game.matchesPlayed) * 100
+    );
+    this.progressbarTextData = [winPercentagePlayer, 100 - winPercentagePlayer];
+    console.log(this.progressbarTextData);
   }
 }

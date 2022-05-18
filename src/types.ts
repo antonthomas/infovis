@@ -7,28 +7,31 @@ export type Player = {
   tournamentsPlayed: number;
   averageWinningOdd: number;
   averageLosingOdd: number;
-  lastFiveGamesOdds: { sequence: number; odd: number; win: boolean; }[];
+  lastFiveGamesOdds: { sequence: number; odd: number; win: boolean }[];
+};
+
+type Game = {
+  won: boolean;
 };
 
 export type OpponentGame = {
-  opponentId: string,
-  matchesPlayed: number,
-  matchesWon: number,
-  lastFive: {won: boolean}[]
-}
+  opponentId: string;
+  matchesPlayed: number;
+  matchesWon: number; // matches won by the player (not the opponent)
+  lastFive: { won: boolean }[];
+};
 
 export type PlayerRival = {
-  playerId: string,
-  opponents: OpponentGame[]
-}
+  playerId: string;
+  opponents: OpponentGame[];
+};
 
 export type PlayerSurface = {
-  name: string,
+  name: string;
   axes: {
-    axis: string, value: number
-  }[]
-}
-
-
+    axis: string;
+    value: number;
+  }[];
+};
 
 export type Surface = 'clay' | 'grass' | 'hard court' | 'carpet';
