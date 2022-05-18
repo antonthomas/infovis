@@ -82,7 +82,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
           : this.colorService.opponentColor()
       )
       .on('mouseover', (e: Event, d: any) => {
-        tooltip.text('Odd: ' + d.odd);
+        tooltip.text(`${d.win ? 'Win' : 'Loss'} @ ${d.odd}`);
         tooltip.style('visibility', 'visible');
       })
       .on('mousemove', (e: Event) => {
@@ -137,14 +137,13 @@ export class BettingComponent implements OnInit, AfterViewInit {
           : this.colorService.opponentColor()
       )
       .on('mouseover', (e: Event, d: any) => {
-        tooltip.text('Odd: ' + d.odd);
+        tooltip.text(`${d.win ? 'Win' : 'Loss'} @ ${d.odd}`);
         tooltip.style('visibility', 'visible');
       })
       .on('mousemove', (e: Event) => {
         return (
           tooltip
             .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
-            // .style("top", (d3.pointer(e)[1] + svg.node().getBBox().y2 - 200) + "px")
             .style('left', d3.pointer(e)[0] + 10 + 'px')
         );
       })
