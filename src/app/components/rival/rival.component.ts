@@ -221,8 +221,6 @@ export class RivalComponent implements AfterViewInit {
     }
 
     this.game = game;
-
-    console.log('Matches played: ', game.matchesPlayed);
   }
 
   updateView() {
@@ -235,9 +233,6 @@ export class RivalComponent implements AfterViewInit {
 
     const barPlayer = d3.select('.progressbar-bar:nth-of-type(2)');
     const barOpponent = d3.select('.progressbar-bar:nth-of-type(1)');
-
-    const pct: string = this.progressbarTextData[0] + '%';
-    console.log('pct', pct);
 
     if (this.game.matchesPlayed === 0) {
       barPlayer
