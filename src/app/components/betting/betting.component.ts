@@ -31,13 +31,16 @@ export class BettingComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this._search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
-        this.updateData()
+        this.player = p
+        this.data = this.player.lastFiveGamesOdds
         this.updateChart()
       }
     });
+
     this._search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
-        this.updateData()
+        this.player = p
+        this.data = this.player.lastFiveGamesOdds
         this.updateChart()
       }
     });
@@ -46,9 +49,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     let svg: any = d3.select(`#svg-betting-${this.htmlId}`);
     // @ts-ignore
-    const width =
-      // @ts-ignore
-      d3.select('.player-overview').node().getBoundingClientRect().width - 32;
+    const width = d3.select('.player-overview').node().getBoundingClientRect().width - 32;
 
     svg
       .append('line')
@@ -63,7 +64,6 @@ export class BettingComponent implements OnInit, AfterViewInit {
       .select(`#betting-${this.htmlId}`)
       .append('div')
       .style('position', 'absolute')
-      .style('z-index', '10')
       .style('visibility', 'hidden')
       .style('background', '#eee')
       .style('padding', '10px')
@@ -82,7 +82,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
           : this.colorService.opponentColor()
       )
       .on('mouseover', (e: Event, d: any) => {
-        tooltip.text('Odd: ' + d.odd);
+        tooltip.text(`${d.win ? 'Win' : 'Loss'} @ ${d.odd}`);
         tooltip.style('visibility', 'visible');
       })
       .on('mousemove', (e: Event) => {
@@ -96,11 +96,6 @@ export class BettingComponent implements OnInit, AfterViewInit {
       .on('mouseout', () => {
         return tooltip.style('visibility', 'hidden');
       });
-  }
-
-
-  updateData(): void {
-    this.data = this.player.lastFiveGamesOdds
   }
 
   updateChart(): void {
@@ -142,14 +137,13 @@ export class BettingComponent implements OnInit, AfterViewInit {
           : this.colorService.opponentColor()
       )
       .on('mouseover', (e: Event, d: any) => {
-        tooltip.text('Odd: ' + d.odd);
+        tooltip.text(`${d.win ? 'Win' : 'Loss'} @ ${d.odd}`);
         tooltip.style('visibility', 'visible');
       })
       .on('mousemove', (e: Event) => {
         return (
           tooltip
             .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
-            // .style("top", (d3.pointer(e)[1] + svg.node().getBBox().y2 - 200) + "px")
             .style('left', d3.pointer(e)[0] + 10 + 'px')
         );
       })
