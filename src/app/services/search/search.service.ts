@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Player, PlayerRival, OpponentGame } from '../../../types';
 import playerJSON from '../../../assets/data/players.json';
-import playerRivals from '../../../assets/data/playerRivals.json'
+import playerRivals from '../../../assets/data/playerRivals.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
   players: Player[] = playerJSON;
-  playerRivalMatches: PlayerRival[] = playerRivals
+  playerRivalMatches: PlayerRival[] = playerRivals;
   player: BehaviorSubject<Player> = new BehaviorSubject<Player>(
     this.players[0]
   );
@@ -62,8 +62,12 @@ export class SearchService {
   }
 
   filterRival(pId: string, oId: string): OpponentGame {
-    var playerGames = this.playerRivalMatches.filter((x:PlayerRival) => (x.playerId === pId))
-    var playerRivalPair = playerGames[0].opponents.filter(o => o.opponentId == oId)
-    return playerRivalPair[0]
+    const playerGames = this.playerRivalMatches.filter(
+      (x: PlayerRival) => x.playerId === pId
+    );
+    const playerRivalPair = playerGames[0].opponents.filter(
+      (o) => o.opponentId == oId
+    );
+    return playerRivalPair[0];
   }
 }
