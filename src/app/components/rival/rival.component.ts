@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -33,11 +34,6 @@ export class RivalComponent implements AfterViewInit {
     lastFiveGamesOdds: [],
   };
 
-  // player1: Player = {
-  //   name: 'Roger Federer',
-  //   id: 'roger-federer',
-  //   countryCode: 'ch',
-  // };
   @Input() opponent: Player = {
     name: '',
     id: '',
@@ -49,14 +45,11 @@ export class RivalComponent implements AfterViewInit {
     averageLosingOdd: 0.0,
     lastFiveGamesOdds: [],
   };
-  progressbarHeight: number = 30;
-  totalGames: number = 100;
-  gamesWonPlayer1: number = 60;
-  gamesWonPlayer2: number = 40;
-  lastFiveGames: ('W' | 'L' | 'NA')[] = ['NA', 'NA', 'NA', 'NA', 'NA'];
+  lastFiveGames: ('W' | 'L' | 'NA')[] = [];
 
-  progressbarData: number[] = [this.totalGames, this.gamesWonPlayer1];
-  progressbarTextData: number[] = [0.64, 0.36];
+  progressbarHeight: number = 30;
+  progressbarData: number[] = [];
+  progressbarTextData: number[] = [];
   chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
   playerControl = new FormControl();
@@ -74,11 +67,10 @@ export class RivalComponent implements AfterViewInit {
   constructor(
     private search: SearchService,
     private colorService: ColorService
-  ) {
-    this.options = this.search.getPlayerNames();
-  }
+  ) {}
 
   ngAfterViewInit(): void {
+    this.options = this.search.getPlayerNames();
     this.playerControl.setValue(this.player.name);
     this.opponentControl.setValue(this.opponent.name);
 
@@ -104,6 +96,7 @@ export class RivalComponent implements AfterViewInit {
 
     this.updateData();
     this.drawChart();
+    this.updateView();
   }
 
   createSvg(): void {
