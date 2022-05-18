@@ -143,14 +143,20 @@ export class RivalComponent implements OnInit {
   }
 
   updatePlayer(event: any) {
-    console.log('a', event);
     this.search.setPlayer(event.option.value);
   }
 
   // TODO: this method is not being called...
   // It does work when commenting out first form field in HTML
   updateOpponent(event: any) {
-    console.log('b', event);
     this.search.setOpponent(event.option.value);
+  }
+
+  clear(player: boolean) {
+    if (player) {
+      this.playerControl.setValue('')
+    } else {
+      this.opponentControl.setValue('')
+    }
   }
 }

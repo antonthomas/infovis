@@ -6,7 +6,7 @@
       <mat-form-field id="player-form-field" appearance="standard">
         <mat-label>Player</mat-label>
         <input type="text" placeholder="Pick one" aria-label="Player" matInput [formControl]="playerControl"
-          [matAutocomplete]="autoPlayer" />
+          [matAutocomplete]="autoPlayer" value="{{ playerControl.value | titlecase }}" (click)="clear(true)" />
         <mat-autocomplete #autoPlayer="matAutocomplete" (optionSelected)="updatePlayer($event)">
           <mat-option *ngFor="let option of filteredOptionsPlayer | async" [value]="option">
             {{ option | titlecase }}
@@ -21,7 +21,7 @@
       <mat-form-field id="opponent-form-field" appearance="standard">
         <mat-label>Opponent</mat-label>
         <input type="text" placeholder="Pick one" aria-label="Opponent" matInput [formControl]="opponentControl"
-          [matAutocomplete]="autoOpp" value="{{ opponentControl.value | titlecase }}" />
+          [matAutocomplete]="autoOpp" value="{{ opponentControl.value | titlecase }}" />
         <mat-autocomplete #autoOpp="matAutocomplete" (optionSelected)="updateOpponent($event)">
           <mat-option *ngFor="let option of filteredOptionsOpponent | async" [value]="option">
             {{ option | titlecase }}
