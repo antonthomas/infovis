@@ -77,6 +77,12 @@
     >
       <p class="wl">{{ game }}</p>
     </mat-card>
-    <p>Last 5 games - all surfaces</p>
+    <!-- lastFiveGames = {{ lastFiveGames }} -->
+    <p *ngIf="lastFiveGames.length > 0">
+      Last {{ lastFiveGames.length }} games - all surfaces
+    </p>
+    <h3 style="color: black" *ngIf="lastFiveGames.length === 0">
+      No head-to-head games found
+    </h3>
   </div>
 </div>

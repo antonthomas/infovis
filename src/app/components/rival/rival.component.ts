@@ -204,15 +204,15 @@ export class RivalComponent implements AfterViewInit {
     }
 
     if (game.lastFive.length < 5) {
-      const remaining = 5 - game.lastFive.length;
+      // const remaining = 5 - game.lastFive.length;
       this.lastFiveGames = game.lastFive.map((g) => {
         if (g.won === true) return 'W';
         else return 'L';
       });
-      for (let i = 0; i < remaining; i++) {
-        this.lastFiveGames.push('NA');
-      }
-      console.log(this.lastFiveGames);
+      // for (let i = 0; i < remaining; i++) {
+      //   this.lastFiveGames.push('NA');
+      // }
+      // console.log(this.lastFiveGames);
     } else {
       this.lastFiveGames = game.lastFive.map((g) => {
         if (g.won === true) return 'W';
