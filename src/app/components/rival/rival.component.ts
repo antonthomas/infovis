@@ -1,8 +1,6 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
-  HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -14,28 +12,7 @@ import * as d3Scale from 'd3';
 import { SearchService } from 'src/app/services/search/search.service';
 import { Player, OpponentGame } from '../../.././types';
 import { map, Observable, startWith } from 'rxjs';
-
-/**
- * Necessary data:
- *  - Player 1
- *    -> name
- *    -> nationality + flag
- *  - Player 2
- *    -> name
- *    -> nationality + flag
- *  - Amount of games between p1 & p2 played on surface x
- *    -> Including who won
- *  - Last 5 games between p1 & p2 played on surface x
- *    -> Including who won
- *
- * Tutorials:
- *  - https://bl.ocks.org/sarahob/1e291c95c4169ddabb77bbd10b6a7ef7
- *  - http://bl.ocks.org/nelliemckesson/5315143
- */
-
-type Game = {
-  won: boolean;
-};
+import { ColorService } from 'src/app/services/color.service';
 
 @Component({
   selector: 'app-rival',
@@ -56,11 +33,6 @@ export class RivalComponent implements OnInit {
     lastFiveGamesOdds: [],
   };
 
-  // player1: Player = {
-  //   name: 'Roger Federer',
-  //   id: 'roger-federer',
-  //   countryCode: 'ch',
-  // };
   @Input() opponent: Player = {
     name: '',
     id: '',
@@ -76,13 +48,7 @@ export class RivalComponent implements OnInit {
   totalGames: number = 100;
   gamesWonPlayer1: number = 60;
   gamesWonPlayer2: number = 40;
-  lastFiveGames: Game[] = [
-    { won: true },
-    { won: false },
-    { won: true },
-    { won: false },
-    { won: true },
-  ];
+  lastFiveGames: ('W' | 'L' | 'NA')[] = ['NA', 'NA', 'NA', 'NA', 'NA'];
 
   progressbarData: number[] = [this.totalGames, this.gamesWonPlayer1];
   progressbarTextData: number[] = [0.64, 0.36];
@@ -94,36 +60,20 @@ export class RivalComponent implements OnInit {
   filteredOptionsPlayer: Observable<string[]> | undefined;
   filteredOptionsOpponent: Observable<string[]> | undefined;
 
+  // @ts-ignore
+  game: OpponentGame = null;
+
   @ViewChild('rivalContainer')
   rivalContainer!: ElementRef;
 
-  constructor(private search: SearchService) {
+  constructor(
+    private search: SearchService,
+    private colorService: ColorService
+  ) {
     this.options = this.search.getPlayerNames();
   }
 
   ngOnInit(): void {
-    // const opponentGame = this.search.filterRival(
-    //   this.player.id,
-    //   this.opponent.id
-    // );
-    // this.lastFiveGames = opponentGame.lastFive;
-    // this.progressbarData = [
-    //   opponentGame.matchesPlayed,
-    //   opponentGame.matchesWon,
-    // ];
-    // this.progressbarTextData = [
-    //   (opponentGame.matchesWon / opponentGame.matchesPlayed) * 100,
-    //   ((opponentGame.matchesPlayed - opponentGame.matchesWon) /
-    //     opponentGame.matchesPlayed) *
-    //     100,
-    // ];
-
-    // console.log(this.progressbarTextData);
-
-    // console.log('Total games', this.progressbarData[0]);
-    // console.log('Games won player', this.progressbarData[1]);
-    this.updateData();
-
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -133,6 +83,18 @@ export class RivalComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+
+    this.search.getPlayer().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.search.getOpponent().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.updateData();
     this.drawChart();
   }
 
@@ -151,6 +113,10 @@ export class RivalComponent implements OnInit {
       .data(this.progressbarData)
       .enter()
       .append('rect')
+      .attr('color', '#fff')
+      .attr('stroke', '#fff')
+      .attr('fill', this.colorService.NAColor())
+      .attr('class', 'progressbar-bar')
       .attr(
         'width',
         d3Scale.scaleLinear([0, '100%']).domain([0, this.progressbarData[0]])
@@ -171,6 +137,7 @@ export class RivalComponent implements OnInit {
 
     text1
       .append('text')
+      .attr('id', 'progressbar-text-1')
       .attr('x', '30')
       .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
       .attr('font-weight', 'bold')
@@ -181,6 +148,7 @@ export class RivalComponent implements OnInit {
 
     text2
       .append('text')
+      .attr('id', 'progressbar-text-2')
       .attr('x', '100%')
       .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
       .attr('font-weight', 'bold')
@@ -204,25 +172,93 @@ export class RivalComponent implements OnInit {
   }
 
   updatePlayer(event: any) {
-    console.log('a', event);
     this.search.setPlayer(event.option.value);
   }
 
-  // TODO: this method is not being called...
-  // It does work when commenting out first form field in HTML
   updateOpponent(event: any) {
-    console.log('b', event);
     this.search.setOpponent(event.option.value);
   }
 
   updateData() {
     const game = this.search.filterRival(this.player.id, this.opponent.id);
-    this.lastFiveGames = game.lastFive;
-    this.progressbarData = [game.matchesPlayed, game.matchesWon];
-    const winPercentagePlayer = Math.round(
-      (game.matchesWon / game.matchesPlayed) * 100
-    );
-    this.progressbarTextData = [winPercentagePlayer, 100 - winPercentagePlayer];
-    console.log(this.progressbarTextData);
+
+    if (game.matchesPlayed === 0) {
+      this.progressbarTextData = [0, 0];
+    } else {
+      this.progressbarData = [game.matchesPlayed, game.matchesWon];
+      let winPercentagePlayer = Math.round(
+        (game.matchesWon / game.matchesPlayed) * 100
+      );
+      this.progressbarTextData = [
+        winPercentagePlayer,
+        100 - winPercentagePlayer,
+      ];
+    }
+
+    if (game.lastFive.length < 5) {
+      const remaining = 5 - game.lastFive.length;
+      this.lastFiveGames = game.lastFive.map((g) => {
+        if (g.won === true) return 'W';
+        else return 'L';
+      });
+      for (let i = 0; i < remaining; i++) {
+        this.lastFiveGames.push('NA');
+      }
+      console.log(this.lastFiveGames);
+    } else {
+      this.lastFiveGames = game.lastFive.map((g) => {
+        if (g.won === true) return 'W';
+        else return 'L';
+      });
+    }
+
+    this.game = game;
+  }
+
+  updateView() {
+    this.updateProgessbarView();
+  }
+
+  updateProgessbarView() {
+    d3.select('#progressbar-text-1').text(this.progressbarTextData[0] + '%');
+    d3.select('#progressbar-text-2').text(this.progressbarTextData[1] + '%');
+
+    const barPlayer = d3.select('.progressbar-bar:nth-of-type(2)');
+    const barOpponent = d3.select('.progressbar-bar:nth-of-type(1)');
+
+    const pct: string = this.progressbarTextData[0] + '%';
+    console.log('pct', pct);
+
+    if (this.game.matchesPlayed === 0) {
+      barPlayer
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.NAColor())
+        .attr('width', this.progressbarTextData[0] + '%');
+      barOpponent
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.NAColor())
+        .attr('width', '100%');
+    } else {
+      barPlayer
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.playerColor())
+        .attr('width', this.progressbarTextData[0] + '%');
+      barOpponent
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.opponentColor())
+        .attr('width', '100%');
+    }
+
+    // bars
+    //   .transition()
+    //   .duration(800)
+    //   .attr(
+    //     'width',
+    //     d3Scale.scaleLinear([0, '100%']).domain([0, this.progressbarData[0]])
+    //   );
   }
 }

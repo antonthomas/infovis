@@ -43,7 +43,7 @@ export class OverviewComponent implements AfterViewInit {
     tournamentsPlayed: 0,
     averageWinningOdd: 0.0,
     averageLosingOdd: 0.0,
-    lastFiveGamesOdds: []
+    lastFiveGamesOdds: [],
   };
   @Input() isOpponent: boolean = false;
   @Input() barColor = '';
@@ -122,7 +122,6 @@ export class OverviewComponent implements AfterViewInit {
       })
       .sort(null)(this.data);
 
-    // const donutId = this.isOpponent ? '#opponentDonut' : '#playerDonut';
     const path = d3.select(`#${this.player.id}`).selectAll('path').data(pie);
     const arc = d3.arc<PieArcDatum<Data>>().innerRadius(59).outerRadius(43);
 
@@ -130,9 +129,7 @@ export class OverviewComponent implements AfterViewInit {
 
     const id = !this.isOpponent ? '#opponentText' : '#playerText';
     const text = d3.select(id);
-    console.log(text);
     text.text(this.data[0].quantity + '%');
-    console.log(this.data[0].quantity);
   }
 
   drawChart(): void {
