@@ -37,14 +37,12 @@ export class SearchService {
   }
 
   setPlayer(name: string) {
-    console.log('Set player', name);
     let player: Player | undefined = this.players.find((p) => p.name === name);
     if (player) this.player.next(player);
     else console.error("setPlayer: player with 'name'" + name + 'not found.');
   }
 
   setOpponent(name: string) {
-    console.log('Set opponent', name);
     let opponent: Player | undefined = this.players.find(
       (p) => p.name === name
     );

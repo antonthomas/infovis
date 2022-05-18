@@ -1,8 +1,8 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   Input,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -20,7 +20,7 @@ import { ColorService } from 'src/app/services/color.service';
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RivalComponent implements OnInit {
+export class RivalComponent implements AfterViewInit {
   @Input() player: Player = {
     name: '',
     id: '',
@@ -33,6 +33,11 @@ export class RivalComponent implements OnInit {
     lastFiveGamesOdds: [],
   };
 
+  // player1: Player = {
+  //   name: 'Roger Federer',
+  //   id: 'roger-federer',
+  //   countryCode: 'ch',
+  // };
   @Input() opponent: Player = {
     name: '',
     id: '',
@@ -73,7 +78,7 @@ export class RivalComponent implements OnInit {
     this.options = this.search.getPlayerNames();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.playerControl.setValue(this.player.name);
     this.opponentControl.setValue(this.opponent.name);
 
