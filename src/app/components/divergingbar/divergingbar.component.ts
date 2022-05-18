@@ -20,22 +20,19 @@ let opponentColor = '';
   encapsulation: ViewEncapsulation.None,
 })
 export class DivergingbarComponent implements AfterViewInit {
-  player: Player = null;
-  opponent: Player = null;
-
   constructor(
     private colorService: ColorService,
-    private search: SearchService
+    private _search: SearchService
   ) {
     playerColor = this.colorService.playerColor();
     opponentColor = this.colorService.opponentColor();
 
-    search.getPlayer().subscribe((p) => {
+    _search.getPlayer().subscribe((p) => {
       this.player = p;
       this.updateData();
       this.updateView();
     });
-    search.getOpponent().subscribe((o) => {
+    _search.getOpponent().subscribe((o) => {
       this.opponent = o;
       this.updateData();
       this.updateView();
@@ -50,7 +47,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 55,
       OpponentLast5: 90,
       metric: '1st serve',
-      info: 'This means how good the player ',
+      info: 'First serve being in, compared to the average',
     },
     {
       player: 60,
@@ -59,8 +56,9 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 55,
       OpponentLast5: 45,
       metric: '2nd serve',
-      info: 'This means how good the player ',
+      info: 'Second serve being in, compared to the average',
     },
+
     {
       player: 60,
       opponent: 70,
@@ -68,7 +66,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Tie break win',
-      info: 'This means how good the player ',
+      info: 'Tie break win, compared to the average',
     },
     {
       player: 30,
@@ -77,7 +75,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Service games win',
-      info: 'This means how good the player ',
+      info: 'Games where the player was serving and won, compared to the average',
     },
     {
       player: 30,
@@ -86,7 +84,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Return games win',
-      info: 'This means how good the player ',
+      info: 'Games where the other player was serving and won, compared to the average',
     },
     {
       player: 40,
@@ -95,7 +93,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Double Fault',
-      info: 'This means how good the player ',
+      info: 'Double faults, compared to the average',
     },
     {
       player: 80,
@@ -104,7 +102,7 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Break point save',
-      info: 'This means how good the player ',
+      info: 'Break points that the player recovered from, compared to the average',
     },
     {
       player: 40,
@@ -113,18 +111,18 @@ export class DivergingbarComponent implements AfterViewInit {
       playerLast5: 30,
       OpponentLast5: 45,
       metric: 'Break point against',
-      info: 'This means how good the player ',
+      info: 'How many Break points the player had (won or lost), compared to the average',
     },
   ];
 
   chart: any = null;
   @Input() htmlId = '';
 
-  updateData() {
-    this.data = this.search.filterPerformance(this.player.id, this.opponent.id);
-  }
-
-  updateView() {
+  ngAfterViewInit(): void {
+    this._search.filterPerformance(
+      this._search.getPlayer().value.id,
+      this._search.getOpponent().value.id
+    );
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
       xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
