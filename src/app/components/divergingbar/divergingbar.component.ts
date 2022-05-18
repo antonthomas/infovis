@@ -26,13 +26,13 @@ export class DivergingbarComponent implements AfterViewInit {
 
   data = [
     { player: 60, opponent: 50, average: 90, playerLast5: 55, OpponentLast5: 90, metric: '1st serve', info: 'This means how good the player ' },
-    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve' ,info: 'This means how good the player '},
-    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win' ,info: 'This means how good the player '},
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win' ,info: 'This means how good the player '},
-    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win' ,info: 'This means how good the player '},
-    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault' ,info: 'This means how good the player '},
-    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save' ,info: 'This means how good the player '},
-    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against' ,info: 'This means how good the player '},
+    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve', info: 'This means how good the player ' },
+    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win', info: 'This means how good the player ' },
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win', info: 'This means how good the player ' },
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win', info: 'This means how good the player ' },
+    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault', info: 'This means how good the player ' },
+    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save', info: 'This means how good the player ' },
+    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against', info: 'This means how good the player ' },
   ];
 
   chart: any = null;
@@ -91,12 +91,10 @@ function DivergingBarChart(
   const Xplayer = d3.map(data, xPlayer);
   const XplayerLast5 = d3.map(data, xPlayerLast5);
 
-  console.log(data.info);
-  
   const Xopponent = d3.map(data, xOpponent);
   const XopponentLast5 = d3.map(data, xOpponentLast5);
 
-  const Yinfo = d3.map(data, info);  
+  const Yinfo = d3.map(data, info);
 
   const Y = d3.map(data, y);
 
@@ -184,7 +182,7 @@ function DivergingBarChart(
     .style('padding', '10px')
     .style('border-radius', '4px');
 
-    
+
   const bar = svg
     .append('g')
     .selectAll('rect')
@@ -199,9 +197,7 @@ function DivergingBarChart(
     .attr('width', (i) => Math.abs(xScale(Xplayer[i]) - xScale(0)))
     .attr('height', yScale.bandwidth() / 2)
     .on('mouseover', (e: Event, d: any) => {
-      console.log(d);
-      
-      tooltip.text(d);
+      tooltip.text(data[d].info);
       tooltip.style('visibility', 'visible');
     })
     .on('mousemove', (e: Event) => {
