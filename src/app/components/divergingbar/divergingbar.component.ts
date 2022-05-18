@@ -318,7 +318,19 @@ function DivergingBarChart(
     .attr('x', (i) => Math.min(xScale(0), xScale(Xopponent[i])))
     .attr('y', (i) => yScale(Y[i]) + yScale.bandwidth() / 2)
     .attr('width', (i) => Math.abs(xScale(Xopponent[i]) - xScale(0)))
-    .attr('height', yScale.bandwidth() / 2);
+    .attr('height', yScale.bandwidth() / 2)
+    .on('mouseover', (e: Event, d: any) => {
+      tooltip.text(data[d].info);
+      tooltip.style('visibility', 'visible');
+    })
+    .on('mousemove', (e: Event) => {
+      return tooltip
+        .style('margin-top', `${d3.pointer(e)[1] - 50}px`)
+        .style('left', d3.pointer(e)[0] + 10 + 'px');
+    })
+    .on('mouseout', () => {
+      return tooltip.style('visibility', 'hidden');
+    });
 
   // Last 5 matches circle (player)
   svg
