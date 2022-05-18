@@ -2,9 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  HostListener,
   Input,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -43,7 +41,7 @@ type Game = {
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RivalComponent implements OnInit {
+export class RivalComponent implements AfterViewInit {
   @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
 
   // player1: Player = {
@@ -80,7 +78,7 @@ export class RivalComponent implements OnInit {
     this.options = this.search.getPlayerNames();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.playerControl.setValue(this.player.name)
     this.opponentControl.setValue(this.opponent.name)
 
