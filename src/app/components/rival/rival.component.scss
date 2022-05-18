@@ -4,13 +4,13 @@
   &:first-of-type {
     color: #fff;
     stroke: #fff;
-    fill: $opp-color;
+    fill: $opp-color-blind;
   }
 
   &:nth-of-type(2) {
     color: #fff;
     stroke: transparent;
-    fill: $player-color;
+    fill: $player-color-blind;
   }
 }
 
@@ -60,11 +60,11 @@
 }
 
 .won {
-  background: $player-color;
+  background: $player-color-blind;
 }
 
 .lost {
-  background: $opp-color;
+  background: $opp-color-blind;
 }
 
 #player-info {
@@ -77,21 +77,38 @@
 
   #player-tag {
     grid-area: player;
-    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    #player-form-field {
+      margin-left: 8px;
+      margin-bottom: 10px;
+    }
   }
 
   #vs-tag {
     grid-area: vs;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     p {
       font-size: 1.2rem;
+      margin: 0;
     }
   }
 
   #opponent-tag {
     grid-area: opponent;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    #opponent-form-field {
+      margin-right: 8px;
+      margin-bottom: 10px;
+    }
   }
 
   .flag {

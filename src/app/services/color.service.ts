@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ColorService {
-  private colorblind: boolean = false;
+  private colorblind: boolean = true;
 
   private playerColorBlind: string = '#6dadee';
   opponentColorBlind: string = '#ea6f59';
@@ -12,10 +12,10 @@ export class ColorService {
   private _playerColor: string = '#6fd371';
   private _opponentColor: string = '#ea6f59';
 
-  constructor() {}
+  constructor() { }
 
   setColorblind(b: boolean): void {
-    this.colorblind = true;
+    this.colorblind = b;
   }
 
   playerColor(): string {

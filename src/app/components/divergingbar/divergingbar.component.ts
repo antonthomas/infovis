@@ -25,14 +25,14 @@ export class DivergingbarComponent implements AfterViewInit {
   }
 
   data = [
-    { player: 60, opponent: 50, average: 90, metric: '1st serve' },
-    { player: 60, opponent: 60, average: 50, metric: '2nd serve' },
-    { player: 60, opponent: 70, average: 50, metric: 'Tie break win' },
-    { player: 30, opponent: 30, average: 50, metric: 'Service games win' },
-    { player: 30, opponent: 30, average: 50, metric: 'Return games win' },
-    { player: 40, opponent: 35, average: 50, metric: 'Double Fault' },
-    { player: 80, opponent: 50, average: 50, metric: 'Break point save' },
-    { player: 40, opponent: 70, average: 50, metric: 'Break point against' },
+    { player: 60, opponent: 50, average: 90, playerLast5: 55, OpponentLast5: 90, metric: '1st serve' },
+    { player: 60, opponent: 60, average: 50, playerLast5: 55, OpponentLast5: 45, metric: '2nd serve' },
+    { player: 60, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Tie break win' },
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Service games win' },
+    { player: 30, opponent: 30, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Return games win' },
+    { player: 40, opponent: 35, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Double Fault' },
+    { player: 80, opponent: 50, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point save' },
+    { player: 40, opponent: 70, average: 50, playerLast5: 30, OpponentLast5: 45, metric: 'Break point against' },
   ];
 
   chart: any = null;
@@ -41,7 +41,9 @@ export class DivergingbarComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
+      xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
       xOpponent: (d) => d.average / d.opponent - 1,
+      xOpponentLast5: (d) => d.average / d.OpponentLast5 - 1,
       y: (d) => d.metric,
       yDomain: d3.groupSort(
         this.data,
@@ -49,9 +51,8 @@ export class DivergingbarComponent implements AfterViewInit {
         (d) => d.metric
       ),
       xFormat: '+%',
-      // xLabel: "← performance metrics →",
-      width: document.querySelector('.performance-stats').offsetWidth,
-      height: document.querySelector('.performance-stats').offsetHeight,
+      width: document.querySelector('.performance-stats').offsetWidth - 92,
+      height: document.querySelector('.performance-stats').offsetHeight - 88,
       marginRight: 50,
       marginLeft: 50,
     });
@@ -63,13 +64,15 @@ function DivergingBarChart(
   data,
   {
     xPlayer = (d) => d, // given d in data, returns the (quantitative) x-value
+    xPlayerLast5 = (d) => d,
     xOpponent = (d) => d,
+    xOpponentLast5 = (d) => d,
     y = (d, i) => i, // given d in data, returns the (ordinal) y-value
     title, // given d in data, returns the title text
     marginTop = 30, // top margin, in pixels
-    marginRight = 40, // right margin, in pixels
+    marginRight = 30, // right margin, in pixels
     marginBottom = 10, // bottom margin, in pixels
-    marginLeft = 40, // left margin, in pixels
+    marginLeft = 30, // left margin, in pixels
     width, // outer width of chart, in pixels
     height, // the outer height of the chart, in pixels
     xType = d3.scaleLinear, // type of x-scale
@@ -84,20 +87,29 @@ function DivergingBarChart(
 ) {
   // Compute values.
   const Xplayer = d3.map(data, xPlayer);
+  const XplayerLast5 = d3.map(data, xPlayerLast5);
+
   const Xopponent = d3.map(data, xOpponent);
+  const XopponentLast5 = d3.map(data, xOpponentLast5);
 
   const Y = d3.map(data, y);
 
+  const concatted = Xplayer.concat(XplayerLast5).concat(Xopponent).concat(XopponentLast5);
+
   // Compute default domains, and unique the y-domain.
-  if (xDomain === undefined) xDomain = d3.extent(Xplayer);
+  if (xDomain === undefined) xDomain = d3.extent(concatted);
   if (yDomain === undefined) yDomain = Y;
   yDomain = new d3.InternSet(yDomain);
 
   // Omit any data not present in the y-domain.
   // Lookup the x-value for a given y-value.
   const playerData = d3.range(Xplayer.length).filter((i) => yDomain.has(Y[i]));
+  const playerLast5Data = d3.range(XplayerLast5.length).filter((i) => yDomain.has(Y[i]));
   const opponentData = d3
     .range(Xopponent.length)
+    .filter((i) => yDomain.has(Y[i]));
+  const opponentLast5Data = d3
+    .range(XopponentLast5.length)
     .filter((i) => yDomain.has(Y[i]));
   const YX = d3.rollup(
     playerData,
@@ -108,13 +120,14 @@ function DivergingBarChart(
   // Compute the default height.
   if (height === undefined)
     height =
-      Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
+      // Math.ceil((yDomain.size + yPadding) * 25) + marginTop + marginBottom;
+      document.querySelectorAll('.performance-stats')[0].offsetHeight - marginTop - marginBottom - 48;
   if (yRange === undefined) yRange = [marginTop, height - marginBottom];
 
   // Construct scales, axes, and formats.
   const xScale = xType(xDomain, xRange);
   const yScale = d3.scaleBand(yDomain, yRange).padding(yPadding);
-  const xAxis = d3.axisTop(xScale).ticks(width / 80, xFormat);
+  const xAxis = d3.axisTop(xScale).ticks(width / 80);
   const yAxis = d3.axisLeft(yScale).tickSize(0).tickPadding(6);
   const format = xScale.tickFormat(100, xFormat);
 
@@ -170,7 +183,7 @@ function DivergingBarChart(
     .attr('width', (i) => Math.abs(xScale(Xplayer[i]) - xScale(0)))
     .attr('height', yScale.bandwidth() / 2);
 
-  const bar2 = svg
+  svg
     .append('g')
     .selectAll('rect')
     .data(opponentData)
@@ -183,6 +196,27 @@ function DivergingBarChart(
     .attr('y', (i) => yScale(Y[i]) + yScale.bandwidth() / 2)
     .attr('width', (i) => Math.abs(xScale(Xopponent[i]) - xScale(0)))
     .attr('height', yScale.bandwidth() / 2);
+
+  // Last 5 matches circle (player)
+  svg.append('g')
+    .selectAll("circle")
+    .data(playerData)
+    .join('circle')
+    .attr('fill', "#006bd7")
+    .attr("cx", (i) => xScale(XplayerLast5[i]))
+    .attr("cy", (i) => yScale(Y[i]) + yScale.bandwidth() / 4)
+    .attr("r", yScale.bandwidth() / 4);
+
+
+  // Last 5 matches circle (opponent)
+  svg.append('g')
+    .selectAll("circle")
+    .data(playerData)
+    .join('circle')
+    .attr('fill', "#c80303")
+    .attr("cx", (i) => xScale(XopponentLast5[i]))
+    .attr("cy", (i) => yScale(Y[i]) + 0.75 * yScale.bandwidth())
+    .attr("r", yScale.bandwidth() / 4);
 
   if (title) bar.append('title').text(title);
 
