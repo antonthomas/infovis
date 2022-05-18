@@ -362,15 +362,9 @@ def generateOverviewData():
     with open("players.json", "w") as outfile:
         outfile.write(json_data)
 
-def printJSON():
-    print("[")
-    generateOverviewData()
-    print("]")
-    
 # process_all_matches()
 # process_all_players()
 # process_diverging_data_all()
 # process_diverging_data_players()
 # process_bollekes_data()
 # generateOverviewData()
-#printJSON()
