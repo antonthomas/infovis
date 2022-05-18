@@ -4,14 +4,13 @@ import {
   AfterViewInit,
   Component,
   Input,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3';
 import { Player } from '../../.././types';
 import { SearchService } from 'src/app/services/search/search.service';
 import { ColorService } from 'src/app/services/color.service';
-
 
 interface Data {
   quantity: number;
@@ -62,7 +61,10 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  constructor(private _search: SearchService, private colorService: ColorService) { }
+  constructor(
+    private _search: SearchService,
+    private colorService: ColorService
+  ) {}
 
   ngOnInit(): void {
     this._search.getPlayer().subscribe((p) => {
@@ -172,7 +174,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   primaryColor(): string {
-    if (!this.isOpponent) return this.colorService.opponentColor();
+    if (this.isOpponent) return this.colorService.opponentColor();
     else return this.colorService.playerColor();
   }
 
