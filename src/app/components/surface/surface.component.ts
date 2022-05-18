@@ -1,10 +1,6 @@
 // http://bl.ocks.org/mthh/7e17b680b35b83b49f1c22a3613bd89f
 //@ts-nocheck
-import {
-  AfterViewInit,
-  Component,
-  OnInit
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import { ColorService } from 'src/app/services/color.service';
 import { SearchService } from 'src/app/services/search/search.service';
@@ -16,66 +12,76 @@ import { SearchService } from 'src/app/services/search/search.service';
 })
 // @ts-ignore
 export class SurfaceComponent implements OnInit {
-
   margin = { top: 50, right: 80, bottom: 50, left: 80 };
 
-  width = document.querySelectorAll('.surface')[0].offsetWidth - this.margin.left - this.margin.right - 32;
-  height = document.querySelectorAll('.surface')[0].offsetHeight - this.margin.top - this.margin.bottom - 48;
+  width =
+    document.querySelectorAll('.surface')[0].offsetWidth -
+    this.margin.left -
+    this.margin.right -
+    32;
+  height =
+    document.querySelectorAll('.surface')[0].offsetHeight -
+    this.margin.top -
+    this.margin.bottom -
+    48;
 
-  data = [
-    {
-      name: 'Player',
-      axes: [
-        { axis: 'Clay', value: 42 },
-        { axis: 'Grass', value: 20 },
-        { axis: 'Hard', value: 60 },
-        { axis: 'Carpet', value: 26 },
-        // { axis: 'Information Technology', value: 35 },
-        // { axis: 'Administration', value: 20 },
-      ],
-    },
-    {
-      name: 'Opponent',
-      axes: [
-        { axis: 'Clay', value: 50 },
-        { axis: 'Grass', value: 45 },
-        { axis: 'Hard', value: 20 },
-        { axis: 'Carpet', value: 20 },
-        // { axis: 'Information Technology', value: 25 },
-        // { axis: 'Administration', value: 23 },
-      ],
-    },
-  ];
+  radarChartOptions = {
+    w: this.width,
+    h: this.height,
+    margin: this.margin,
+    maxValue: 100,
+    levels: 5,
+    roundStrokes: false,
+    color: d3
+      .scaleOrdinal()
+      .range([
+        this.colorService.playerColor(),
+        this.colorService.opponentColor(),
+      ]),
+    format: '.0f',
+    legend: { title: '', translateX: 100, translateY: 20 },
+    unit: '%',
+  };
 
-  constructor(private colorService: ColorService, private search: SearchService) { }
+  data = [];
+
+  constructor(
+    private colorService: ColorService,
+    private search: SearchService
+  ) {}
 
   ngOnInit(): void {
-    var radarChartOptions2 = {
-      w: this.width,
-      h: this.height,
-      margin: this.margin,
-      maxValue: 100,
-      levels: 5,
-      roundStrokes: false,
-      color: d3
-        .scaleOrdinal()
-        .range([
-          this.colorService.playerColor(),
-          this.colorService.opponentColor(),
-        ]),
-      format: '.0f',
-      legend: { title: '', translateX: 100, translateY: 20 },
-      unit: '%',
-    };
+    this.search.getPlayer().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.search.getOpponent().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.updateData();
 
     // Draw the chart, get a reference the created svg element :
-    let svg_radar2 = RadarChart('.radarChart', this.data, radarChartOptions2);
+    let svg_radar = RadarChart(
+      '.radarChart',
+      this.data,
+      this.radarChartOptions
+    );
+  }
 
-    this.data = this.search.filterSurface(this.search.getPlayer().getValue().name, this.search.getOpponent().getValue().name)
-    console.log(this.data)
+  updateData(): void {
+    this.data = this.search.filterSurface(
+      this.search.getPlayer().getValue().name,
+      this.search.getOpponent().getValue().name
+    );
+  }
+
+  updateView(): void {
+    RadarChart('.radarChart', this.data, this.radarChartOptions);
   }
 }
-
 
 //////////////////////////////////////////////////////////////
 ////////////////////////// Data //////////////////////////////
@@ -85,9 +91,7 @@ const sin = Math.sin;
 const cos = Math.cos;
 const HALF_PI = Math.PI / 2;
 
-
 const RadarChart = function RadarChart(parent_selector, data, options) {
-
   //Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
   const wrap = (text, width) => {
     text.each(function () {
@@ -127,8 +131,16 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 
   const margin = { top: 50, right: 80, bottom: 50, left: 80 };
 
-  const width = document.querySelectorAll('.surface')[0].offsetWidth - margin.left - margin.right - 32;
-  const height = document.querySelectorAll('.surface')[0].offsetHeight - margin.top - margin.bottom - 48;
+  const width =
+    document.querySelectorAll('.surface')[0].offsetWidth -
+    margin.left -
+    margin.right -
+    32;
+  const height =
+    document.querySelectorAll('.surface')[0].offsetHeight -
+    margin.top -
+    margin.bottom -
+    48;
 
   const cfg = {
     w: width, //Width of the circle
@@ -201,10 +213,10 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     .attr(
       'transform',
       'translate(' +
-      (cfg.w / 2 + cfg.margin.left) +
-      ',' +
-      (cfg.h / 2 + cfg.margin.top) +
-      ')'
+        (cfg.w / 2 + cfg.margin.left) +
+        ',' +
+        (cfg.h / 2 + cfg.margin.top) +
+        ')'
     );
 
   /////////////////////////////////////////////////////////
@@ -379,11 +391,11 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     .style('fill', (d) => cfg.color(d.id))
     .style('fill-opacity', 0.8);
 
-  /////////////////////////////////////////////////////////
-  //////// Append invisible circles for tooltip ///////////
-  /////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////
+  ////// Append invisible circles for tooltip ///////////
+  ///////////////////////////////////////////////////////
 
-  //Wrapper for the invisible circles on top
+  // Wrapper for the invisible circles on top
   const blobCircleWrapper = g
     .selectAll('.radarCircleWrapper')
     .data(data)
@@ -391,7 +403,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     .append('g')
     .attr('class', 'radarCircleWrapper');
 
-  //Append a set of invisible circles on top for the mouseover pop-up
+  let haah = 33.2;
+  // Append a set of invisible circles on top for the mouseover pop-up
   blobCircleWrapper
     .selectAll('.radarInvisibleCircle')
     .data((d) => d.axes)
@@ -408,8 +421,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
         .attr('x', this.cx.baseVal.value - 10)
         .attr('y', this.cy.baseVal.value - 10)
         .transition()
-        .style('display', 'block')
-        .text(Format(d.value) + cfg.unit);
+        .style('display', 'block');
+      // .text(Format(d.value) + cfg.unit); DA WEIRK NI!!!
     })
     .on('mouseout', function () {
       tooltip.transition().style('display', 'none').text('');
