@@ -24,18 +24,7 @@ export class DivergingbarComponent implements AfterViewInit {
     private colorService: ColorService,
     private _search: SearchService
   ) {
-    playerColor = this.colorService.playerColor();
-    opponentColor = this.colorService.opponentColor();
 
-    this._search.getPlayer().subscribe((p) => {
-      this.updateData();
-      this.updateView();
-    });
-
-    this._search.getOpponent().subscribe((o) => {
-      this.updateData();
-      this.updateView();
-    });
   }
 
   player: Player = null;
@@ -127,6 +116,8 @@ export class DivergingbarComponent implements AfterViewInit {
   }
 
   updateView() {
+    document.querySelector('#diverging > svg')?.remove()
+
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
       xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
@@ -149,8 +140,18 @@ export class DivergingbarComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.updateData();
-    this.updateView();
+    playerColor = this.colorService.playerColor();
+    opponentColor = this.colorService.opponentColor();
+
+    this._search.getPlayer().subscribe((p) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this._search.getOpponent().subscribe((o) => {
+      this.updateData();
+      this.updateView();
+    });
   }
 }
 
@@ -274,7 +275,7 @@ function DivergingBarChart(
     );
 
   let tooltip = d3
-    .select(`#diverging`)
+    .select('#diverging')
     .append('div')
     .style('position', 'absolute')
     .style('visibility', 'hidden')
