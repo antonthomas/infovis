@@ -16,6 +16,8 @@
           matInput
           [formControl]="playerControl"
           [matAutocomplete]="autoPlayer"
+          value="{{ playerControl.value | titlecase }}"
+          (click)="clear(true)"
         />
         <mat-autocomplete
           #autoPlayer="matAutocomplete"
@@ -25,7 +27,7 @@
             *ngFor="let option of filteredOptionsPlayer | async"
             [value]="option"
           >
-            {{ option }}
+            {{ option | titlecase }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -43,6 +45,8 @@
           matInput
           [formControl]="opponentControl"
           [matAutocomplete]="autoOpp"
+          value="{{ opponentControl.value | titlecase }}"
+          (click)="clear(false)"
         />
         <mat-autocomplete
           #autoOpp="matAutocomplete"
@@ -52,7 +56,7 @@
             *ngFor="let option of filteredOptionsOpponent | async"
             [value]="option"
           >
-            {{ option }}
+            {{ option | titlecase }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

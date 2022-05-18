@@ -1,14 +1,10 @@
 // @ts-nocheck
 import {
+  OnInit,
   AfterViewInit,
   Component,
-  ElementRef,
-  HostListener,
   Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3';
@@ -16,11 +12,6 @@ import { Player } from '../../.././types';
 import { SearchService } from 'src/app/services/search/search.service';
 import { ColorService } from 'src/app/services/color.service';
 
-// set the dimensions and margins of the graph
-
-function calcPercent(percent: number) {
-  return [percent, 100 - percent];
-}
 
 interface Data {
   quantity: number;
@@ -33,7 +24,7 @@ interface Data {
   styleUrls: ['./overview.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OverviewComponent implements AfterViewInit {
+export class OverviewComponent implements OnInit, AfterViewInit {
   @Input() player: Player = {
     name: '',
     id: '',
@@ -71,17 +62,16 @@ export class OverviewComponent implements AfterViewInit {
     },
   ];
 
-  constructor(
-    private _search: SearchService,
-    private colorService: ColorService
-  ) {
-    _search.getPlayer().subscribe((p) => {
+  constructor(private _search: SearchService, private colorService: ColorService) { }
+
+  ngOnInit(): void {
+    this._search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
         this.updateData();
         this.updateChart();
       }
     });
-    _search.getOpponent().subscribe((p) => {
+    this._search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
         this.updateData();
         this.updateChart();
@@ -90,8 +80,8 @@ export class OverviewComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.isOpponent) this.player = this._search.getOpponent().getValue();
-    else this.player = this._search.getPlayer().getValue();
+    if (!this.isOpponent) this.player = this._search.getPlayer().getValue();
+    else this.opponent = this._search.getPlayer().getValue();
 
     this.updateData();
     this.drawChart();

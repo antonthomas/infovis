@@ -74,6 +74,9 @@ export class RivalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.playerControl.setValue(this.player.name);
+    this.opponentControl.setValue(this.opponent.name);
+
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -213,6 +216,8 @@ export class RivalComponent implements OnInit {
     }
 
     this.game = game;
+
+    console.log('Matches played: ', game.matchesPlayed);
   }
 
   updateView() {
@@ -252,13 +257,13 @@ export class RivalComponent implements OnInit {
         .attr('fill', this.colorService.opponentColor())
         .attr('width', '100%');
     }
+  }
 
-    // bars
-    //   .transition()
-    //   .duration(800)
-    //   .attr(
-    //     'width',
-    //     d3Scale.scaleLinear([0, '100%']).domain([0, this.progressbarData[0]])
-    //   );
+  clear(player: boolean) {
+    if (player) {
+      this.playerControl.setValue('');
+    } else {
+      this.opponentControl.setValue('');
+    }
   }
 }
