@@ -12,7 +12,7 @@ export class ColorService {
   private _playerColor: string = '#6fd371';
   private _opponentColor: string = '#ea6f59';
 
-  constructor() { }
+  constructor() {}
 
   setColorblind(b: boolean): void {
     this.colorblind = b;
@@ -26,5 +26,10 @@ export class ColorService {
   opponentColor(): string {
     if (this.colorblind) return this.opponentColorBlind;
     else return this._opponentColor;
+  }
+
+  // Color for 'Not Available'
+  NAColor(): string {
+    return '#bfbfbd';
   }
 }

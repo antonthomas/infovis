@@ -2,9 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  HostListener,
   Input,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -12,30 +10,9 @@ import { FormControl } from '@angular/forms';
 import * as d3 from 'd3';
 import * as d3Scale from 'd3';
 import { SearchService } from 'src/app/services/search/search.service';
-import { Player } from '../../.././types';
+import { Player, OpponentGame } from '../../.././types';
 import { map, Observable, startWith } from 'rxjs';
-
-/**
- * Necessary data:
- *  - Player 1
- *    -> name
- *    -> nationality + flag
- *  - Player 2
- *    -> name
- *    -> nationality + flag
- *  - Amount of games between p1 & p2 played on surface x
- *    -> Including who won
- *  - Last 5 games between p1 & p2 played on surface x
- *    -> Including who won
- *
- * Tutorials:
- *  - https://bl.ocks.org/sarahob/1e291c95c4169ddabb77bbd10b6a7ef7
- *  - http://bl.ocks.org/nelliemckesson/5315143
- */
-
-type Game = {
-  won: boolean;
-};
+import { ColorService } from 'src/app/services/color.service';
 
 @Component({
   selector: 'app-rival',
@@ -43,28 +20,43 @@ type Game = {
   styleUrls: ['./rival.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class RivalComponent implements OnInit {
-  @Input() player: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
+export class RivalComponent implements AfterViewInit {
+  @Input() player: Player = {
+    name: '',
+    id: '',
+    countryCode: '',
+    gamesPlayed: 0,
+    gamesWon: 0,
+    tournamentsPlayed: 0,
+    averageWinningOdd: 0.0,
+    averageLosingOdd: 0.0,
+    lastFiveGamesOdds: [],
+  };
 
   // player1: Player = {
   //   name: 'Roger Federer',
   //   id: 'roger-federer',
   //   countryCode: 'ch',
   // };
-  @Input() opponent: Player = { name: '', id: '', countryCode: '', gamesPlayed: 0, gamesWon: 0, tournamentsPlayed: 0, averageWinningOdd: 0.0, averageLosingOdd: 0.0, lastFiveGamesOdds: [] };
+  @Input() opponent: Player = {
+    name: '',
+    id: '',
+    countryCode: '',
+    gamesPlayed: 0,
+    gamesWon: 0,
+    tournamentsPlayed: 0,
+    averageWinningOdd: 0.0,
+    averageLosingOdd: 0.0,
+    lastFiveGamesOdds: [],
+  };
   progressbarHeight: number = 30;
   totalGames: number = 100;
   gamesWonPlayer1: number = 60;
   gamesWonPlayer2: number = 40;
-  lastFiveGames: Game[] = [
-    { won: true },
-    { won: false },
-    { won: true },
-    { won: false },
-    { won: true },
-  ];
+  lastFiveGames: ('W' | 'L' | 'NA')[] = ['NA', 'NA', 'NA', 'NA', 'NA'];
 
-  data: number[] = [this.totalGames, this.gamesWonPlayer1];
+  progressbarData: number[] = [this.totalGames, this.gamesWonPlayer1];
+  progressbarTextData: number[] = [0.64, 0.36];
   chart!: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
 
   playerControl = new FormControl();
@@ -73,14 +65,23 @@ export class RivalComponent implements OnInit {
   filteredOptionsPlayer: Observable<string[]> | undefined;
   filteredOptionsOpponent: Observable<string[]> | undefined;
 
+  // @ts-ignore
+  game: OpponentGame = null;
+
   @ViewChild('rivalContainer')
   rivalContainer!: ElementRef;
 
-  constructor(private search: SearchService) {
+  constructor(
+    private search: SearchService,
+    private colorService: ColorService
+  ) {
     this.options = this.search.getPlayerNames();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.playerControl.setValue(this.player.name);
+    this.opponentControl.setValue(this.opponent.name);
+
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -90,6 +91,18 @@ export class RivalComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+
+    this.search.getPlayer().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.search.getOpponent().subscribe((_) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this.updateData();
     this.drawChart();
   }
 
@@ -105,21 +118,48 @@ export class RivalComponent implements OnInit {
   createBars(): void {
     this.chart
       .selectAll('rect')
-      .data(this.data)
+      .data(this.progressbarData)
       .enter()
       .append('rect')
-      .attr('width', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr('color', '#fff')
+      .attr('stroke', '#fff')
+      .attr('fill', this.colorService.NAColor())
+      .attr('class', 'progressbar-bar')
+      .attr(
+        'width',
+        d3Scale.scaleLinear([0, '100%']).domain([0, this.progressbarData[0]])
+      )
       .attr('height', this.progressbarHeight);
   }
 
   createText(): void {
-    this.chart
-      .selectAll('text')
-      .data(this.data)
-      .enter()
+    const text1 = this.chart
+      .selectAll('text:first-of-type')
+      .data([this.progressbarTextData[0]])
+      .enter();
+
+    const text2 = this.chart
+      .selectAll('text:nth-of-type(2)')
+      .data([this.progressbarTextData[1]])
+      .enter();
+
+    text1
       .append('text')
-      .attr('x', d3Scale.scaleLinear([0, '100%']).domain([0, 100]))
+      .attr('id', 'progressbar-text-1')
+      .attr('x', '30')
       .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
+      .attr('font-weight', 'bold')
+      .attr('dx', -3) // padding-right
+      .attr('dy', '.35em') // vertical-align: middle
+      .attr('text-anchor', 'end') // text-align: right
+      .text((x) => x + '%');
+
+    text2
+      .append('text')
+      .attr('id', 'progressbar-text-2')
+      .attr('x', '100%')
+      .attr('y', this.progressbarHeight / 2) // y position of the text inside bar
+      .attr('font-weight', 'bold')
       .attr('dx', -3) // padding-right
       .attr('dy', '.35em') // vertical-align: middle
       .attr('text-anchor', 'end') // text-align: right
@@ -140,14 +180,95 @@ export class RivalComponent implements OnInit {
   }
 
   updatePlayer(event: any) {
-    console.log('a', event);
     this.search.setPlayer(event.option.value);
   }
 
-  // TODO: this method is not being called...
-  // It does work when commenting out first form field in HTML
   updateOpponent(event: any) {
-    console.log('b', event);
     this.search.setOpponent(event.option.value);
+  }
+
+  updateData() {
+    const game = this.search.filterRival(this.player.id, this.opponent.id);
+
+    if (game.matchesPlayed === 0) {
+      this.progressbarTextData = [0, 0];
+    } else {
+      this.progressbarData = [game.matchesPlayed, game.matchesWon];
+      let winPercentagePlayer = Math.round(
+        (game.matchesWon / game.matchesPlayed) * 100
+      );
+      this.progressbarTextData = [
+        winPercentagePlayer,
+        100 - winPercentagePlayer,
+      ];
+    }
+
+    if (game.lastFive.length < 5) {
+      // const remaining = 5 - game.lastFive.length;
+      this.lastFiveGames = game.lastFive.map((g) => {
+        if (g.won === true) return 'W';
+        else return 'L';
+      });
+      // for (let i = 0; i < remaining; i++) {
+      //   this.lastFiveGames.push('NA');
+      // }
+      // console.log(this.lastFiveGames);
+    } else {
+      this.lastFiveGames = game.lastFive.map((g) => {
+        if (g.won === true) return 'W';
+        else return 'L';
+      });
+    }
+
+    this.game = game;
+
+    console.log('Matches played: ', game.matchesPlayed);
+  }
+
+  updateView() {
+    this.updateProgessbarView();
+  }
+
+  updateProgessbarView() {
+    d3.select('#progressbar-text-1').text(this.progressbarTextData[0] + '%');
+    d3.select('#progressbar-text-2').text(this.progressbarTextData[1] + '%');
+
+    const barPlayer = d3.select('.progressbar-bar:nth-of-type(2)');
+    const barOpponent = d3.select('.progressbar-bar:nth-of-type(1)');
+
+    const pct: string = this.progressbarTextData[0] + '%';
+    console.log('pct', pct);
+
+    if (this.game.matchesPlayed === 0) {
+      barPlayer
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.NAColor())
+        .attr('width', this.progressbarTextData[0] + '%');
+      barOpponent
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.NAColor())
+        .attr('width', '100%');
+    } else {
+      barPlayer
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.playerColor())
+        .attr('width', this.progressbarTextData[0] + '%');
+      barOpponent
+        .transition()
+        .duration(800)
+        .attr('fill', this.colorService.opponentColor())
+        .attr('width', '100%');
+    }
+  }
+
+  clear(player: boolean) {
+    if (player) {
+      this.playerControl.setValue('');
+    } else {
+      this.opponentControl.setValue('');
+    }
   }
 }

@@ -1,14 +1,10 @@
 // @ts-nocheck
 import {
+  OnInit,
   AfterViewInit,
   Component,
-  ElementRef,
-  HostListener,
   Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import * as d3 from 'd3';
 import { PieArcDatum } from 'd3';
@@ -16,11 +12,6 @@ import { Player } from '../../.././types';
 import { SearchService } from 'src/app/services/search/search.service';
 import { ColorService } from 'src/app/services/color.service';
 
-// set the dimensions and margins of the graph
-
-function calcPercent(percent: number) {
-  return [percent, 100 - percent];
-}
 
 interface Data {
   quantity: number;
@@ -33,7 +24,7 @@ interface Data {
   styleUrls: ['./overview.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OverviewComponent implements AfterViewInit {
+export class OverviewComponent implements OnInit, AfterViewInit {
   @Input() player: Player = {
     name: '',
     id: '',
@@ -43,7 +34,7 @@ export class OverviewComponent implements AfterViewInit {
     tournamentsPlayed: 0,
     averageWinningOdd: 0.0,
     averageLosingOdd: 0.0,
-    lastFiveGamesOdds: []
+    lastFiveGamesOdds: [],
   };
   @Input() isOpponent: boolean = false;
   @Input() barColor = '';
@@ -71,17 +62,16 @@ export class OverviewComponent implements AfterViewInit {
     },
   ];
 
-  constructor(
-    private _search: SearchService,
-    private colorService: ColorService
-  ) {
-    _search.getPlayer().subscribe((p) => {
+  constructor(private _search: SearchService, private colorService: ColorService) { }
+
+  ngOnInit(): void {
+    this._search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
         this.updateData();
         this.updateChart();
       }
     });
-    _search.getOpponent().subscribe((p) => {
+    this._search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
         this.updateData();
         this.updateChart();
@@ -90,8 +80,8 @@ export class OverviewComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.isOpponent) this.player = this._search.getOpponent().getValue();
-    else this.player = this._search.getPlayer().getValue();
+    if (!this.isOpponent) this.player = this._search.getPlayer().getValue();
+    else this.opponent = this._search.getPlayer().getValue();
 
     this.updateData();
     this.drawChart();
@@ -122,7 +112,6 @@ export class OverviewComponent implements AfterViewInit {
       })
       .sort(null)(this.data);
 
-    // const donutId = this.isOpponent ? '#opponentDonut' : '#playerDonut';
     const path = d3.select(`#${this.player.id}`).selectAll('path').data(pie);
     const arc = d3.arc<PieArcDatum<Data>>().innerRadius(59).outerRadius(43);
 
@@ -130,9 +119,7 @@ export class OverviewComponent implements AfterViewInit {
 
     const id = !this.isOpponent ? '#opponentText' : '#playerText';
     const text = d3.select(id);
-    console.log(text);
     text.text(this.data[0].quantity + '%');
-    console.log(this.data[0].quantity);
   }
 
   drawChart(): void {
