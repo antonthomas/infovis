@@ -10,14 +10,20 @@ export type Player = {
   lastFiveGamesOdds: { sequence: number; odd: number; win: boolean; }[];
 };
 
+type Game = {
+  won: boolean
+}
+
+export type OpponentGame = {
+  opponentId: string,
+  matchesPlayed: number,
+  matchesWon: number,
+  lastFive: {won: boolean}[]
+}
+
 export type PlayerRival = {
   playerId: string,
-  opponents: {
-    opponentId: string,
-    matchesPlayed: number,
-    matchesWon: number,
-    lastFive: string[]
-  }[]
+  opponents: OpponentGame[]
 }
 
 

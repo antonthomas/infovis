@@ -20,7 +20,7 @@ def extractInfo(matches):
     
     last_five = []
     for index, row in matches.head(5).iterrows():
-        last_five.append("W" if (row["player_victory"] == "t") else "L")
+        last_five.append({"won": True} if (row["player_victory"] == "t") else {"won": False})
         
     return (matches_played, matches_won, last_five)
 

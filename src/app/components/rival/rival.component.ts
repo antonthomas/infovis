@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 import * as d3 from 'd3';
 import * as d3Scale from 'd3';
 import { SearchService } from 'src/app/services/search/search.service';
-import { Player } from '../../.././types';
+import { Player, OpponentGame } from '../../.././types';
 import { map, Observable, startWith } from 'rxjs';
 
 /**
@@ -81,6 +81,14 @@ export class RivalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var opponentGame = this.search.filterRival(this.player.id, this.opponent.id)
+    this.lastFiveGames = opponentGame.lastFive
+    this.data = [opponentGame.matchesPlayed, opponentGame.matchesWon]
+
+    console.log(this.totalGames)
+    console.log(this.gamesWonPlayer1)
+
+    
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -90,8 +98,7 @@ export class RivalComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
-    this.drawChart();
-    this.search.filterRival(this.player.id, this.opponent.id)
+    this.drawChart();    
   }
 
   createSvg(): void {
