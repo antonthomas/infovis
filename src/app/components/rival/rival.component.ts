@@ -81,6 +81,9 @@ export class RivalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.playerControl.setValue(this.player.name)
+    this.opponentControl.setValue(this.opponent.name)
+
     this.filteredOptionsPlayer = this.playerControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
