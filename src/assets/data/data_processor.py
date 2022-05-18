@@ -118,7 +118,7 @@ def process_diverging_data_all():
 
 def div_or_zero(numerator, denominator):
     if denominator != 0:
-        return numerator / denominator
+        return round((numerator / denominator) * 100, 0)
     return 0
 
 
