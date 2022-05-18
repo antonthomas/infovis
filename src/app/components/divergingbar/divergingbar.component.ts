@@ -26,7 +26,20 @@ export class DivergingbarComponent implements AfterViewInit {
   ) {
     playerColor = this.colorService.playerColor();
     opponentColor = this.colorService.opponentColor();
+
+    this._search.getPlayer().subscribe((p) => {
+      this.updateData();
+      this.updateView();
+    });
+
+    this._search.getOpponent().subscribe((o) => {
+      this.updateData();
+      this.updateView();
+    });
   }
+
+  player: Player = null;
+  opponent: Player = null;
 
   data = [
     {
@@ -106,11 +119,14 @@ export class DivergingbarComponent implements AfterViewInit {
   chart: any = null;
   @Input() htmlId = '';
 
-  ngAfterViewInit(): void {
-    this._search.filterPerformance(
+  updateData() {
+    this.data = this._search.filterPerformance(
       this._search.getPlayer().value.id,
       this._search.getOpponent().value.id
     );
+  }
+
+  updateView() {
     this.chart = DivergingBarChart(this.data, {
       xPlayer: (d) => d.average / d.player - 1,
       xPlayerLast5: (d) => d.average / d.playerLast5 - 1,
@@ -130,6 +146,11 @@ export class DivergingbarComponent implements AfterViewInit {
       marginLeft: 50,
     });
     document.querySelector('#diverging').appendChild(this.chart);
+  }
+
+  ngAfterViewInit(): void {
+    this.updateData();
+    this.updateView();
   }
 }
 
