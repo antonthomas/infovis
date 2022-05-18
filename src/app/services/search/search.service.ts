@@ -34,14 +34,12 @@ export class SearchService {
   }
 
   setPlayer(name: string) {
-    console.log('Set player', name);
     let player: Player | undefined = this.players.find((p) => p.name === name);
     if (player) this.player.next(player);
     else console.error("setPlayer: player with 'name'" + name + 'not found.');
   }
 
   setOpponent(name: string) {
-    console.log('Set opponent', name);
     let opponent: Player | undefined = this.players.find(
       (p) => p.name === name
     );
@@ -66,9 +64,13 @@ export class SearchService {
   }
 
   filterRival(pId: string, oId: string): OpponentGame {
-    var playerGames = this.playerRivalMatches.filter((x:PlayerRival) => (x.playerId === pId))
-    var playerRivalPair = playerGames[0].opponents.filter(o => o.opponentId == oId)
-    return playerRivalPair[0]
+    const playerGames = this.playerRivalMatches.filter(
+      (x: PlayerRival) => x.playerId === pId
+    );
+    const playerRivalPair = playerGames[0].opponents.filter(
+      (o) => o.opponentId == oId
+    );
+    return playerRivalPair[0];
   }
 
   filterSurface(pName: string, oName: string): PlayerSurface[] {
