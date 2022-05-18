@@ -25,30 +25,25 @@ export class SurfaceComponent implements OnInit {
     this.margin.bottom -
     48;
 
-  data = [
-    {
-      name: 'Player',
-      axes: [
-        { axis: 'Clay', value: 42 },
-        { axis: 'Grass', value: 20 },
-        { axis: 'Hard', value: 60 },
-        { axis: 'Carpet', value: 26 },
-        // { axis: 'Information Technology', value: 35 },
-        // { axis: 'Administration', value: 20 },
-      ],
-    },
-    {
-      name: 'Opponent',
-      axes: [
-        { axis: 'Clay', value: 50 },
-        { axis: 'Grass', value: 45 },
-        { axis: 'Hard', value: 20 },
-        { axis: 'Carpet', value: 20 },
-        // { axis: 'Information Technology', value: 25 },
-        // { axis: 'Administration', value: 23 },
-      ],
-    },
-  ];
+  radarChartOptions = {
+    w: this.width,
+    h: this.height,
+    margin: this.margin,
+    maxValue: 100,
+    levels: 5,
+    roundStrokes: false,
+    color: d3
+      .scaleOrdinal()
+      .range([
+        this.colorService.playerColor(),
+        this.colorService.opponentColor(),
+      ]),
+    format: '.0f',
+    legend: { title: '', translateX: 100, translateY: 20 },
+    unit: '%',
+  };
+
+  data = [];
 
   constructor(
     private colorService: ColorService,
@@ -66,28 +61,14 @@ export class SurfaceComponent implements OnInit {
       this.updateView();
     });
 
-    var radarChartOptions = {
-      w: this.width,
-      h: this.height,
-      margin: this.margin,
-      maxValue: 100,
-      levels: 5,
-      roundStrokes: false,
-      color: d3
-        .scaleOrdinal()
-        .range([
-          this.colorService.playerColor(),
-          this.colorService.opponentColor(),
-        ]),
-      format: '.0f',
-      legend: { title: '', translateX: 100, translateY: 20 },
-      unit: '%',
-    };
+    this.updateData();
 
     // Draw the chart, get a reference the created svg element :
-    let svg_radar = RadarChart('.radarChart', this.data, radarChartOptions);
-
-    this.updateData();
+    let svg_radar = RadarChart(
+      '.radarChart',
+      this.data,
+      this.radarChartOptions
+    );
   }
 
   updateData(): void {
@@ -98,61 +79,7 @@ export class SurfaceComponent implements OnInit {
   }
 
   updateView(): void {
-    const cfg = {
-      w: width, //Width of the circle
-      h: height, //Height of the circle
-      margin: margin, //The margins of the SVG
-      levels: 3, //How many levels or inner circles should there be drawn
-      maxValue: 0, //What is the value that the biggest circle will represent
-      labelFactor: 1.25, //How much farther than the radius of the outer circle should the labels be placed
-      wrapWidth: 60, //The number of pixels after which a label needs to be given a new line
-      opacityArea: 0.35, //The opacity of the area of the blob
-      dotRadius: 4, //The size of the colored circles of each blog
-      opacityCircles: 0.1, //The opacity of the circles of each blob
-      strokeWidth: 2, //The width of the stroke around each blob
-      roundStrokes: false, //If true the area and stroke will follow a round path (cardinal-closed)
-      color: d3.scaleOrdinal(d3.schemeCategory10), //Color function,
-      format: '.2%',
-      unit: '',
-      legend: false,
-    };
-
-    const radarWrapper = d3.selectAll('.radarWrapper').data(data);
-
-    d3.selectAll('.radarArea')
-      .attr('d', (d) => radarLine(d.axes))
-      .style('fill', (d, i) => cfg.color(i))
-      .style('fill-opacity', cfg.opacityArea)
-      .on('mouseover', function (d, i) {
-        //Dim all blobs
-        parent
-          .selectAll('.radarArea')
-          .transition()
-          .duration(200)
-          .style('fill-opacity', 0.1);
-        //Bring back the hovered over blob
-        d3.select(this).transition().duration(200).style('fill-opacity', 0.7);
-      })
-      .on('mouseout', () => {
-        //Bring back all blobs
-        parent
-          .selectAll('.radarArea')
-          .transition()
-          .duration(200)
-          .style('fill-opacity', cfg.opacityArea);
-      });
-
-    //Create the outlines
-    d3.selectAll('.radarStroke')
-      .transition()
-      .duration(800)
-      .attr('d', function (d, i) {
-        return radarLine(d.axes);
-      })
-      .style('stroke-width', cfg.strokeWidth + 'px')
-      .style('stroke', (d, i) => cfg.color(i))
-      .style('fill', 'none')
-      .style('filter', 'url(#glow)');
+    RadarChart('.radarChart', this.data, this.radarChartOptions);
   }
 }
 
@@ -452,112 +379,113 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
     .style('filter', 'url(#glow)');
 
   //Append the circles
-  // blobWrapper
-  //   .selectAll('.radarCircle')
-  //   .data((d) => d.axes)
-  //   .enter()
-  //   .append('circle')
-  //   .attr('class', 'radarCircle')
-  //   .attr('r', cfg.dotRadius)
-  //   .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
-  //   .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
-  //   .style('fill', (d) => cfg.color(d.id))
-  //   .style('fill-opacity', 0.8);
+  blobWrapper
+    .selectAll('.radarCircle')
+    .data((d) => d.axes)
+    .enter()
+    .append('circle')
+    .attr('class', 'radarCircle')
+    .attr('r', cfg.dotRadius)
+    .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
+    .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+    .style('fill', (d) => cfg.color(d.id))
+    .style('fill-opacity', 0.8);
 
-  /////////////////////////////////////////////////////////
-  //////// Append invisible circles for tooltip ///////////
-  /////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////
+  ////// Append invisible circles for tooltip ///////////
+  ///////////////////////////////////////////////////////
 
-  //Wrapper for the invisible circles on top
-  // const blobCircleWrapper = g
-  //   .selectAll('.radarCircleWrapper')
-  //   .data(data)
-  //   .enter()
-  //   .append('g')
-  //   .attr('class', 'radarCircleWrapper');
+  // Wrapper for the invisible circles on top
+  const blobCircleWrapper = g
+    .selectAll('.radarCircleWrapper')
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('class', 'radarCircleWrapper');
 
-  //Append a set of invisible circles on top for the mouseover pop-up
-  // blobCircleWrapper
-  //   .selectAll('.radarInvisibleCircle')
-  //   .data((d) => d.axes)
-  //   .enter()
-  //   .append('circle')
-  //   .attr('class', 'radarInvisibleCircle')
-  //   .attr('r', cfg.dotRadius * 1.5)
-  //   .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
-  //   .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
-  //   .style('fill', 'none')
-  //   .style('pointer-events', 'all')
-  //   .on('mouseover', function (d, i) {
-  // tooltip
-  //   .attr('x', this.cx.baseVal.value - 10)
-  //   .attr('y', this.cy.baseVal.value - 10)
-  //   .transition()
-  //   .style('display', 'block')
-  //   .text(Format(d.value) + cfg.unit);
-  // })
-  // .on('mouseout', function () {
-  //   tooltip.transition().style('display', 'none').text('');
-  // });
+  let haah = 33.2;
+  // Append a set of invisible circles on top for the mouseover pop-up
+  blobCircleWrapper
+    .selectAll('.radarInvisibleCircle')
+    .data((d) => d.axes)
+    .enter()
+    .append('circle')
+    .attr('class', 'radarInvisibleCircle')
+    .attr('r', cfg.dotRadius * 1.5)
+    .attr('cx', (d, i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
+    .attr('cy', (d, i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+    .style('fill', 'none')
+    .style('pointer-events', 'all')
+    .on('mouseover', function (d, i) {
+      tooltip
+        .attr('x', this.cx.baseVal.value - 10)
+        .attr('y', this.cy.baseVal.value - 10)
+        .transition()
+        .style('display', 'block');
+      // .text(Format(d.value) + cfg.unit); DA WEIRK NI!!!
+    })
+    .on('mouseout', function () {
+      tooltip.transition().style('display', 'none').text('');
+    });
 
-  // const tooltip = g
-  //   .append('text')
-  //   .attr('class', 'tooltip')
-  //   .attr('x', 0)
-  //   .attr('y', 0)
-  //   .style('font-size', '12px')
-  //   .style('display', 'none')
-  //   .attr('text-anchor', 'middle')
-  //   .attr('dy', '0.35em');
+  const tooltip = g
+    .append('text')
+    .attr('class', 'tooltip')
+    .attr('x', 0)
+    .attr('y', 0)
+    .style('font-size', '12px')
+    .style('display', 'none')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '0.35em');
 
-  // if (cfg.legend !== false && typeof cfg.legend === 'object') {
-  //   let legendZone = svg.append('g');
-  //   let names = data.map((el) => el.name);
-  //   if (cfg.legend.title) {
-  //     let title = legendZone
-  //       .append('text')
-  //       .attr('class', 'title')
-  //       .attr(
-  //         'transform',
-  //         `translate(${cfg.legend.translateX},${cfg.legend.translateY})`
-  //       )
-  //       .attr('x', cfg.w - 70)
-  //       .attr('y', 10)
-  //       .attr('font-size', '12px')
-  //       .attr('fill', '#404040')
-  //       .text(cfg.legend.title);
-  //   }
-  //   let legend = legendZone
-  //     .append('g')
-  //     .attr('class', 'legend')
-  //     .attr('height', 100)
-  //     .attr('width', 200)
-  //     .attr(
-  //       'transform',
-  //       `translate(${cfg.legend.translateX},${cfg.legend.translateY + 20})`
-  //     );
-  //   // Create rectangles markers
-  //   legend
-  //     .selectAll('rect')
-  //     .data(names)
-  //     .enter()
-  //     .append('rect')
-  //     .attr('x', cfg.w - 65)
-  //     .attr('y', (d, i) => i * 20)
-  //     .attr('width', 10)
-  //     .attr('height', 10)
-  //     .style('fill', (d, i) => cfg.color(i));
-  //   // Create labels
-  //   legend
-  //     .selectAll('text')
-  //     .data(names)
-  //     .enter()
-  //     .append('text')
-  //     .attr('x', cfg.w - 52)
-  //     .attr('y', (d, i) => i * 20 + 9)
-  //     .attr('font-size', '11px')
-  //     .attr('fill', '#737373')
-  //     .text((d) => d);
-  // }
+  if (cfg.legend !== false && typeof cfg.legend === 'object') {
+    let legendZone = svg.append('g');
+    let names = data.map((el) => el.name);
+    if (cfg.legend.title) {
+      let title = legendZone
+        .append('text')
+        .attr('class', 'title')
+        .attr(
+          'transform',
+          `translate(${cfg.legend.translateX},${cfg.legend.translateY})`
+        )
+        .attr('x', cfg.w - 70)
+        .attr('y', 10)
+        .attr('font-size', '12px')
+        .attr('fill', '#404040')
+        .text(cfg.legend.title);
+    }
+    let legend = legendZone
+      .append('g')
+      .attr('class', 'legend')
+      .attr('height', 100)
+      .attr('width', 200)
+      .attr(
+        'transform',
+        `translate(${cfg.legend.translateX},${cfg.legend.translateY + 20})`
+      );
+    // Create rectangles markers
+    legend
+      .selectAll('rect')
+      .data(names)
+      .enter()
+      .append('rect')
+      .attr('x', cfg.w - 65)
+      .attr('y', (d, i) => i * 20)
+      .attr('width', 10)
+      .attr('height', 10)
+      .style('fill', (d, i) => cfg.color(i));
+    // Create labels
+    legend
+      .selectAll('text')
+      .data(names)
+      .enter()
+      .append('text')
+      .attr('x', cfg.w - 52)
+      .attr('y', (d, i) => i * 20 + 9)
+      .attr('font-size', '11px')
+      .attr('fill', '#737373')
+      .text((d) => d);
+  }
   return svg;
 };
