@@ -31,13 +31,16 @@ export class BettingComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this._search.getPlayer().subscribe((p) => {
       if (!this.isOpponent) {
-        this.updateData()
+        this.player = p
+        this.data = this.player.lastFiveGamesOdds
         this.updateChart()
       }
     });
+
     this._search.getOpponent().subscribe((p) => {
       if (this.isOpponent) {
-        this.updateData()
+        this.player = p
+        this.data = this.player.lastFiveGamesOdds
         this.updateChart()
       }
     });
@@ -46,9 +49,7 @@ export class BettingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     let svg: any = d3.select(`#svg-betting-${this.htmlId}`);
     // @ts-ignore
-    const width =
-      // @ts-ignore
-      d3.select('.player-overview').node().getBoundingClientRect().width - 32;
+    const width = d3.select('.player-overview').node().getBoundingClientRect().width - 32;
 
     svg
       .append('line')
@@ -63,7 +64,6 @@ export class BettingComponent implements OnInit, AfterViewInit {
       .select(`#betting-${this.htmlId}`)
       .append('div')
       .style('position', 'absolute')
-      .style('z-index', '10')
       .style('visibility', 'hidden')
       .style('background', '#eee')
       .style('padding', '10px')
@@ -96,11 +96,6 @@ export class BettingComponent implements OnInit, AfterViewInit {
       .on('mouseout', () => {
         return tooltip.style('visibility', 'hidden');
       });
-  }
-
-
-  updateData(): void {
-    this.data = this.player.lastFiveGamesOdds
   }
 
   updateChart(): void {
