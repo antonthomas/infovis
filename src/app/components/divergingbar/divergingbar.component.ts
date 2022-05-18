@@ -124,7 +124,6 @@ export class DivergingbarComponent implements AfterViewInit {
       xOpponent: (d) => (d.opponent - d.average) / 100,
       xOpponentLast5: (d) => (d.opponentLast5 - d.average) / 100,
       y: (d) => d.metric,
-      info: (d) => d.info,
       yDomain: d3.groupSort(
         this.data,
         ([d]) => d.average - d.player,
@@ -163,7 +162,16 @@ function DivergingBarChart(
     xOpponent = (d) => d,
     xOpponentLast5 = (d) => d,
     y = (d, i) => i, // given d in data, returns the (ordinal) y-value
-    info = (d) => d,
+    info = [
+      'First serve being in, compared to the average',
+      'Second serve being in, compared to the average',
+      'Tie break win, compared to the average',
+      'Games where the player was serving and won, compared to the average',
+      'Games where the other player was serving and won, compared to the average',
+      'Double faults, compared to the average',
+      'Break points that the player recovered from, compared to the average',
+      'How many Break points the player had (won or lost), compared to the average'
+    ],
     title, // given d in data, returns the title text
     marginTop = 30, // top margin, in pixels
     marginRight = 30, // right margin, in pixels
@@ -187,8 +195,6 @@ function DivergingBarChart(
 
   const Xopponent = d3.map(data, xOpponent);
   const XopponentLast5 = d3.map(data, xOpponentLast5);
-
-  const Yinfo = d3.map(data, info);
 
   const Y = d3.map(data, y);
 
@@ -298,7 +304,7 @@ function DivergingBarChart(
     .attr('width', (i) => Math.abs(xScale(Xplayer[i]) - xScale(0)))
     .attr('height', yScale.bandwidth() / 2)
     .on('mouseover', (e: Event, d: any) => {
-      tooltip.text(data[d].info);
+      tooltip.text(info[d]);
       tooltip.style('visibility', 'visible');
     })
     .on('mousemove', (e: Event) => {
@@ -324,7 +330,7 @@ function DivergingBarChart(
     .attr('width', (i) => Math.abs(xScale(Xopponent[i]) - xScale(0)))
     .attr('height', yScale.bandwidth() / 2)
     .on('mouseover', (e: Event, d: any) => {
-      tooltip.text(data[d].info);
+      tooltip.text(info[d]);
       tooltip.style('visibility', 'visible');
     })
     .on('mousemove', (e: Event) => {
