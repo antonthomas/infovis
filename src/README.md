@@ -1,17 +1,13 @@
-# Informatievisulatie (Groep 1)
+# Getting started
 
-This is a test project to demonstrate using Intern with Angular 4+. It contains [all of the specs](https://angular.io/generated/live-examples/testing/app-specs.eplnkr.html) from Angular's test guide as well as [some extras](https://angular.io/generated/live-examples/testing/bag-specs.eplnkr.html). Specs have been reformatted and converted to using Intern best practices as outlined below.
-
-## Get started
-
-### Clone the repo
+## Clone the repo
 
 ```shell
 git clone https://github.com/antonthomas/infovis
 cd infovis
 ```
 
-### Install npm packages
+## Install npm packages
 
 Install the `npm` packages described in the `package.json` and verify that it works:
 
@@ -20,11 +16,13 @@ npm install
 npm start
 ```
 
-The `npm start` command builds (compiles TypeScript and copies assets) the application into `dist/`, watches for changes to the source files, and runs `lite-server` on port `3000`.
+The `npm start` command builds (compiles TypeScript and copies assets) the application into `dist/`, watches for changes to the source files, and runs `lite-server` on port `4200`.
+
+> **_NOTE:_** It is also possible to run `ng serve -o`, which automatically serves the application and opens it in your default browser when it is ready.
 
 Shut it down manually with `Ctrl-C`.
 
-#### npm scripts
+### npm scripts
 
 These are the most useful commands defined in `package.json`:
 
